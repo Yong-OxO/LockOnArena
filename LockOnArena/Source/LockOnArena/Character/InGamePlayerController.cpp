@@ -10,8 +10,7 @@
 AInGamePlayerController::AInGamePlayerController()
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset (TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/DT_CharacterController.DT_CharacterController'"));
-	DataTableAsset.Object;
-	WeaponTableRow = 
+	WeaponTableRow = DataTableAsset.Object;
 	IMC_Default = WeaponTableRow->InputMappingContext;
 }
 
