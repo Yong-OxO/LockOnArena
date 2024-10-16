@@ -8,6 +8,11 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedActionKeyMapping.h"
 
+namespace FPathName
+{
+	
+}
+
 class FUtils
 {
 

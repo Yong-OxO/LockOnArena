@@ -10,6 +10,7 @@ class UInputMappingContext;
 class UAction;
 struct FInputActionValue;
 class ADefaultCharacter;
+class UCharacterMovementComponent;
 
 USTRUCT()
 struct LOCKONARENA_API FCharacterControllerTableRow : public FTableRowBase
@@ -39,17 +40,36 @@ protected:
 protected:
 	UInputMappingContext* IMC_Default = nullptr;
 
+	UFUNCTION()
 	virtual void OnMove(const FInputActionValue& InValue);
 
+	UFUNCTION()
+	virtual void OnLook(const FInputActionValue& InValue);
+
+	UFUNCTION()
+	virtual void OnJump(const FInputActionValue& InValue);
+
+	UFUNCTION()
+	virtual void OnStopJump(const FInputActionValue& InValue);
+
+
 protected:
-	float MoveForwardSpeed = 500.f;
-	float MoveRightSpeed = 450.f;
+	float MoveForwardSpeed = 1.0f;
+	float MoveBackwardSpeed = 0.7f;
+	float MoveRightSpeed = 0.8f;
+
+public:
+	UPROPERTY(EditAnywhere)
+	float Sensitivity = 1.0f;
+
 
 protected:
 	//UPROPERTY(EditAnywhere, meta = (RowType = "/Script/KDT3D.WeaponTableRow"))
-	//FDataTableRowHandle DataTableRowHandle;
 
-	const FCharacterControllerTableRow* WeaponTableRow = nullptr;
+	UDataTable* DataTable = nullptr;
+	// Controller 상태 변경시 TableRow도 변경 필요
+	const FCharacterControllerTableRow* ControllerTableRow = nullptr;
 	ADefaultCharacter* ControlledCharacter = nullptr;
 
+	UCharacterMovementComponent* CharacterMovement;
 };
