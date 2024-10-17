@@ -10,7 +10,7 @@
 
 AInGamePlayerController::AInGamePlayerController()
 {
-
+	PrimaryActorTick.bCanEverTick = true;
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset (TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/DT_CharacterController.DT_CharacterController'"));
 	DataTable = DataTableAsset.Object;
@@ -18,7 +18,6 @@ AInGamePlayerController::AInGamePlayerController()
 
 	IMC_Default = ControllerTableRow->InputMappingContext;
 	Sensitivity = 0.7f;
-	
 }
 
 void AInGamePlayerController::BeginPlay()
@@ -33,6 +32,7 @@ void AInGamePlayerController::BeginPlay()
 	CharacterMovement = ControlledCharacter->GetCharacterMovement();
 	CharacterMovement->JumpZVelocity = 530.f;
 	CharacterMovement->AirControl = 0.2f;
+	CharacterMovement->MaxWalkSpeed = WalkSpeed;
 }
 
 void AInGamePlayerController::SetupInputComponent()
@@ -41,22 +41,46 @@ void AInGamePlayerController::SetupInputComponent()
 
 	UEnhancedInputComponent* EnhanedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 
-	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Move")))
+	// Input Action Mapping
+	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Move"))) // Move
 	{
 		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnMove);
 	}
-	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Look")))
+
+	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Look"))) // Look
 	{
 		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnLook);
 	}
-	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Jump")))
+
+	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Jump"))) // Jump
 	{
 		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnJump);
 	}
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Jump")))
 	{
-		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnJump);
+		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Completed, this, &ThisClass::StopJump);
 	}
+
+	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Run"))) // Run
+	{
+		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnRun);
+	}	
+	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Run")))
+	{
+		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Completed, this, &ThisClass::StopRun);
+	}
+
+
+}
+
+void AInGamePlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	if (bIsRun) { ToRun(DeltaTime); }
+	else { ToWalk(DeltaTime); }
+	
+	UE_LOG(LogTemp, Display, TEXT("MaxWalkSpeed : %f"),CharacterMovement->MaxWalkSpeed);
 }
 
 void AInGamePlayerController::OnMove(const FInputActionValue& InValue)
@@ -109,8 +133,45 @@ void AInGamePlayerController::OnJump(const FInputActionValue& InValue)
 	}
 }
 
-void AInGamePlayerController::OnStopJump(const FInputActionValue& InValue)
+void AInGamePlayerController::StopJump(const FInputActionValue& InValue)
 {
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 	ControlledCharacter->StopJumping();
+}
+
+void AInGamePlayerController::OnRun(const FInputActionValue& InValue)
+{
+	bIsRun = true;
+}
+
+void AInGamePlayerController::StopRun(const FInputActionValue& InValue)
+{
+	bIsRun = false;
+}
+
+void AInGamePlayerController::ToRun(const float DeltaTime)
+{
+	// 여기서 조건 검사하고 Tick 실행까지 결정할지 말지
+	float Alpha = 20 * DeltaTime;
+	if (Alpha < 1)
+	{
+		CharacterMovement->MaxWalkSpeed = UKismetMathLibrary::Lerp(CharacterMovement->MaxWalkSpeed, RunSpeed, Alpha);
+	}
+	else
+	{
+		CharacterMovement->MaxWalkSpeed = UKismetMathLibrary::Lerp(CharacterMovement->MaxWalkSpeed, RunSpeed, 1);
+	}
+}
+
+void AInGamePlayerController::ToWalk(const float DeltaTime)
+{
+	float Alpha = 20 * DeltaTime;
+	if (Alpha < 1)
+	{
+		CharacterMovement->MaxWalkSpeed = UKismetMathLibrary::Lerp(CharacterMovement->MaxWalkSpeed, WalkSpeed, Alpha);
+	}
+	else
+	{
+		CharacterMovement->MaxWalkSpeed = UKismetMathLibrary::Lerp(CharacterMovement->MaxWalkSpeed, WalkSpeed, 1);
+	}
 }

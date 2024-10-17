@@ -2,19 +2,28 @@
 
 
 #include "Character/DefaultCharacter.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "CharacterStateComponent.h"
 
 // Sets default values
 ADefaultCharacter::ADefaultCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Weapon_Static	= CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon_Static"));
+	Weapon_Static->SetupAttachment(GetMesh(), TEXT("WeaponSocket"));
+	Weapon_Skeletal = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon_Skeletal"));
+	Weapon_Skeletal->SetupAttachment(GetMesh(), TEXT("WeaponSocket"));
+	/*static ConstructorHelpers::FObjectFinder<AActor> WeaponAsset(TEXT("/Script/Engine.Blueprint'/Game/Blueprint/Actor/Weapon/BP_Rifle.BP_Rifle'"));
+	Weapon_Static->SetStaticMesh(WeaponAsset.Object);*/
 }
 
 // Called when the game starts or when spawned
 void ADefaultCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	
 }
 

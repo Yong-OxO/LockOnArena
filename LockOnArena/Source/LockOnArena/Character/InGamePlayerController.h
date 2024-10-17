@@ -33,7 +33,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
-
+	virtual void Tick(float DeltaTime) override;
 	//virtual void OnPossess(APawn* InPawn);
 	
 
@@ -50,13 +50,27 @@ protected:
 	virtual void OnJump(const FInputActionValue& InValue);
 
 	UFUNCTION()
-	virtual void OnStopJump(const FInputActionValue& InValue);
+	virtual void StopJump(const FInputActionValue& InValue);
+
+	UFUNCTION()
+	virtual void OnRun(const FInputActionValue& InValue);
+	UFUNCTION()
+	virtual void StopRun(const FInputActionValue& InValue);
+
+protected:
+	UFUNCTION()
+	virtual void ToRun(const float DeltaTime);
+	UFUNCTION()
+	virtual void ToWalk(const float DeltaTime);
 
 
 protected:
 	float MoveForwardSpeed = 1.0f;
 	float MoveBackwardSpeed = 0.7f;
 	float MoveRightSpeed = 0.8f;
+	bool bIsRun = false;
+	double WalkSpeed = 400.f;
+	double RunSpeed = WalkSpeed * 1.5;
 
 public:
 	UPROPERTY(EditAnywhere)
