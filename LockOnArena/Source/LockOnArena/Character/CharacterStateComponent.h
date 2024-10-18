@@ -21,9 +21,12 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual  bool CanAttack() const { return bCanAttack; }
+	virtual  bool CanMove() const { return bCanMove; }
+
 public:
 	bool bCanMove = true;
-	bool bCanAttack = false;
+	bool bCanAttack = true;
 	float MaxHp = 100.f;
 	float CurrentHp = 100.f;
 };

@@ -5,26 +5,35 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "CharacterStateComponent.h"
+#include "Actor/Weapon/WeaponChildActorComponent.h"
+#include "Subsystem/WeaponSubsystem.h"
 
 // Sets default values
 ADefaultCharacter::ADefaultCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	Weapon_Static	= CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon_Static"));
-	Weapon_Static->SetupAttachment(GetMesh(), TEXT("WeaponSocket"));
-	Weapon_Skeletal = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon_Skeletal"));
-	Weapon_Skeletal->SetupAttachment(GetMesh(), TEXT("WeaponSocket"));
+	// @TODO : RowName namespace
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/DT_BaseCharacter.DT_BaseCharacter'"));
+	DataTable = DataTableAsset.Object;
+	DataTableRow = DataTable->FindRow<FDefaultCharacterTableRow>(FName("Basic"), TEXT("Character DataTableRow"));
+
+
+	Weapon = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("Weapon"));
+	Weapon->SetupAttachment(GetMesh(), TEXT("WeaponSocket"));
+
+	CharacterState = CreateDefaultSubobject<UCharacterStateComponent>(TEXT("CharacterState"));
 	/*static ConstructorHelpers::FObjectFinder<AActor> WeaponAsset(TEXT("/Script/Engine.Blueprint'/Game/Blueprint/Actor/Weapon/BP_Rifle.BP_Rifle'"));
 	Weapon_Static->SetStaticMesh(WeaponAsset.Object);*/
+	
 }
 
 // Called when the game starts or when spawned
 void ADefaultCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	
+
+	Weapon->SetData(DataTableRow->WeaponTableRowHandle);
 }
 
 // Called every frame
@@ -39,5 +48,10 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ADefaultCharacter::SetData(const FDataTableRowHandle& InRowHandle)
+{
+	int a = 10;
 }
 

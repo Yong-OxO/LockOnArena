@@ -14,5 +14,5 @@ class LOCKONARENA_API ARifleBase : public AWeaponBase
 {
 	GENERATED_BODY()
 public:
-	virtual void Attack();
+	virtual void Attack() override;
 };

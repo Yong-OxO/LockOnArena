@@ -3,3 +3,9 @@
 
 #include "Actor/Weapon/RifleBase.h"
 
+void ARifleBase::Attack()
+{
+	Super::Attack();
+
+	UE_LOG(LogTemp, Warning, TEXT("Rifle Attack"));
+}

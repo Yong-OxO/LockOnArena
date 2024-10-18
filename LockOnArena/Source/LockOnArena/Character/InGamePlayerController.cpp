@@ -6,7 +6,8 @@
 #include "Misc/Utils.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
-
+#include "Actor/Weapon/WeaponBase.h"
+#include "Actor/Weapon/WeaponChildActorComponent.h"
 
 AInGamePlayerController::AInGamePlayerController()
 {
@@ -14,6 +15,7 @@ AInGamePlayerController::AInGamePlayerController()
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset (TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/DT_CharacterController.DT_CharacterController'"));
 	DataTable = DataTableAsset.Object;
+	// @TODO : RowName namespace
 	ControllerTableRow = DataTable->FindRow<FCharacterControllerTableRow>(FName("DefaultAction"), TEXT("PlayerController DataTable"));
 
 	IMC_Default = ControllerTableRow->InputMappingContext;
@@ -70,7 +72,10 @@ void AInGamePlayerController::SetupInputComponent()
 		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Completed, this, &ThisClass::StopRun);
 	}
 
-
+	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Attack"))) // Attack
+	{
+		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnAttack);
+	}
 }
 
 void AInGamePlayerController::Tick(float DeltaTime)
@@ -86,6 +91,7 @@ void AInGamePlayerController::Tick(float DeltaTime)
 void AInGamePlayerController::OnMove(const FInputActionValue& InValue)
 {
 	// @TODO : 움직일 수 있는 상황인지 조건 체크
+	// @TODO : 좌 우 뒤 움직임 전환 부드럽게
 	
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 
@@ -147,6 +153,15 @@ void AInGamePlayerController::OnRun(const FInputActionValue& InValue)
 void AInGamePlayerController::StopRun(const FInputActionValue& InValue)
 {
 	bIsRun = false;
+}
+
+void AInGamePlayerController::OnAttack(const FInputActionValue& InValue)
+{
+	//WeaponClass
+	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
+	UWeaponChildActorComponent* CharacterWeapon = ControlledCharacter->Weapon;
+	AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
+	Weapon->Attack();
 }
 
 void AInGamePlayerController::ToRun(const float DeltaTime)

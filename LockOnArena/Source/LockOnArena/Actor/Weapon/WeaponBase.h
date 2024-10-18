@@ -4,13 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "WeaponBase.generated.h"
+#include "Character/Animation/AnimInstance/InGameAnimInstance.h"
 
+#include "WeaponBase.generated.h"
 
 class AWeaponBase;
 class UInGameAnimInstance;
 class UStaticMeshComponent;
 class USkeletalMeshComponent;
+class ADefaultCharacter;
 
 USTRUCT()
 struct LOCKONARENA_API FWeaponBaseTableRow : public FTableRowBase
@@ -32,7 +34,7 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
-	TSubclassOf<UInGameAnimInstance> AimInstance = nullptr;
+	UInGameAnimInstance* AimInstance = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
 	UAnimMontage* WeaponAttackMontage = nullptr;
@@ -49,8 +51,6 @@ class LOCKONARENA_API AWeaponBase : public AActor
 public:	
 	AWeaponBase();
 
-
-
 public:
 	virtual void SetData(const FDataTableRowHandle& InRowHandle);
 
@@ -66,19 +66,23 @@ public:
 
 public:
 	UPROPERTY(VisibleAnywhere)
-	TSubclassOf<USceneComponent> SceneComponent = nullptr;
+	USceneComponent* SceneComponent = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
-	TSubclassOf<USkeletalMeshComponent> SkeletalMesh = nullptr;
+	USkeletalMeshComponent* SkeletalMeshComponent = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
-	TSubclassOf<UStaticMeshComponent> StaticMesh = nullptr;	
+	UStaticMeshComponent* StaticMeshComponent = nullptr;
 
+public:
+	UInGameAnimInstance* AimInstance = nullptr;
+	UDataTable* DataTable = nullptr;
 public:
 	const FWeaponBaseTableRow* DataTableRow = nullptr;
 
-	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA_API.WeaponBaseTableRow"))
-	FDataTableRowHandle RowHandle;
+	UPROPERTY(VisibleAnywhere)
+	ADefaultCharacter* OwnerCharacter = nullptr;
+
 
 	//Enemy (피격자)
 };

@@ -48,7 +48,6 @@ protected:
 
 	UFUNCTION()
 	virtual void OnJump(const FInputActionValue& InValue);
-
 	UFUNCTION()
 	virtual void StopJump(const FInputActionValue& InValue);
 
@@ -56,6 +55,9 @@ protected:
 	virtual void OnRun(const FInputActionValue& InValue);
 	UFUNCTION()
 	virtual void StopRun(const FInputActionValue& InValue);
+
+	UFUNCTION()
+	virtual void OnAttack(const FInputActionValue& InValue);
 
 protected:
 	UFUNCTION()

@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Actor/Weapon/WeaponBase.h"
 #include "DefaultCharacter.generated.h"
+
 
 // @TODO : SetData -> 무기가 바뀌면 호출, 애니메이션 등 교체
 // 맨손(기본) 애니메이션에서 변경
@@ -12,11 +14,15 @@
 // 무기 DataTable로 CharacterDataTable의 값을 변경
 class UStaticMeshComponent;
 class UCharacterStateComponent;
+class UWeaponChildActorComponent;
 
 USTRUCT()
 struct LOCKONARENA_API FDefaultCharacterTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.WeaponBaseTableRow"))
+	FDataTableRowHandle WeaponTableRowHandle;
 };
 
 
@@ -40,13 +46,28 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-public:
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* Weapon_Static = nullptr;
+	virtual void SetData(const FDataTableRowHandle& InRowHandle);
 
-	UPROPERTY(EditAnywhere)
-	USkeletalMeshComponent* Weapon_Skeletal = nullptr;
+	virtual const UCharacterStateComponent* GetState() { return CharacterState; }
+public:
+	//UPROPERTY(EditAnywhere)
+	//UStaticMeshComponent* Weapon_Static = nullptr;
+
+	//UPROPERTY(EditAnywhere)
+	//USkeletalMeshComponent* Weapon_Skeletal = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
 	UCharacterStateComponent* CharacterState = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+	UWeaponChildActorComponent* Weapon = nullptr;
+
+	UDataTable* DataTable = nullptr;
+
+	const FDefaultCharacterTableRow* DataTableRow = nullptr;
+	//UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.DefaultCharacterTableRow"))
+	//FDataTableRowHandle CharacterDataRowHandle;
+
+protected:
+	
 };
