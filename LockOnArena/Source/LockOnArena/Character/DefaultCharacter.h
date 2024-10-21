@@ -21,8 +21,21 @@ struct LOCKONARENA_API FDefaultCharacterTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
 public:
+	//WeaponTableRowHandle
 	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.WeaponBaseTableRow"))
-	FDataTableRowHandle WeaponTableRowHandle;
+	FDataTableRowHandle WeaponBaseTableRowHandle; // @TODO : 1
+
+	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.WeaponBaseTableRow"))
+	FDataTableRowHandle PistolTableRowHandle; // 2
+
+	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.WeaponBaseTableRow"))
+	FDataTableRowHandle KnifeTableRowHandle; // 3
+	
+	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.FRifleTableRow"))
+	FDataTableRowHandle RifleTableRowHandle; // 4
+
+	UPROPERTY(EditAnywhere)
+	UCharacterStateComponent* CharacterState = nullptr;
 };
 
 
@@ -48,7 +61,7 @@ public:
 
 	virtual void SetData(const FDataTableRowHandle& InRowHandle);
 
-	virtual const UCharacterStateComponent* GetState() { return CharacterState; }
+	virtual UCharacterStateComponent* GetState() { return CharacterState; }
 public:
 	//UPROPERTY(EditAnywhere)
 	//UStaticMeshComponent* Weapon_Static = nullptr;

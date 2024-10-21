@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "CharacterStateComponent.generated.h"
+#include "Misc/Utils.h"
 
+#include "CharacterStateComponent.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LOCKONARENA_API UCharacterStateComponent : public UActorComponent
@@ -23,10 +24,19 @@ public:
 
 	virtual  bool CanAttack() const { return bCanAttack; }
 	virtual  bool CanMove() const { return bCanMove; }
+	
+	virtual void SetAttack(const bool InbAttack) { bCanAttack = InbAttack; }
+	virtual void SetCanMove(const bool InbMove) { bCanMove = InbMove; }
+
+	virtual WeaponType GetEquipmentType() { return EquipmentType; }
+	virtual void SetEquipmentType(const WeaponType InNum) { EquipmentType = InNum; }
 
 public:
-	bool bCanMove = true;
-	bool bCanAttack = true;
 	float MaxHp = 100.f;
 	float CurrentHp = 100.f;
+protected:
+	bool bCanMove = true;
+	bool bCanAttack = true;
+
+	WeaponType EquipmentType;
 };

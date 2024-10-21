@@ -23,6 +23,7 @@ ADefaultCharacter::ADefaultCharacter()
 	Weapon->SetupAttachment(GetMesh(), TEXT("WeaponSocket"));
 
 	CharacterState = CreateDefaultSubobject<UCharacterStateComponent>(TEXT("CharacterState"));
+	CharacterState = DataTableRow->CharacterState;
 	/*static ConstructorHelpers::FObjectFinder<AActor> WeaponAsset(TEXT("/Script/Engine.Blueprint'/Game/Blueprint/Actor/Weapon/BP_Rifle.BP_Rifle'"));
 	Weapon_Static->SetStaticMesh(WeaponAsset.Object);*/
 	
@@ -33,7 +34,8 @@ void ADefaultCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Weapon->SetData(DataTableRow->WeaponTableRowHandle);
+	// @TODO : WeaponType
+	Weapon->SetData(DataTableRow->WeaponBaseTableRowHandle);
 }
 
 // Called every frame

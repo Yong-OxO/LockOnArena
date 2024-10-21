@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actor/Weapon/WeaponBase.h"
 #include "Actor/Weapon/WeaponChildActorComponent.h"
+#include "Character/CharacterStateComponent.h"
 
 AInGamePlayerController::AInGamePlayerController()
 {
@@ -41,40 +42,45 @@ void AInGamePlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	UEnhancedInputComponent* EnhanedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 
 	// Input Action Mapping
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Move"))) // Move
 	{
-		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnMove);
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnMove);
 	}
 
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Look"))) // Look
 	{
-		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnLook);
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnLook);
 	}
 
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Jump"))) // Jump
 	{
-		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnJump);
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnJump);
 	}
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Jump")))
 	{
-		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Completed, this, &ThisClass::StopJump);
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Completed, this, &ThisClass::StopJump);
 	}
 
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Run"))) // Run
 	{
-		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnRun);
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnRun);
 	}	
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Run")))
 	{
-		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Completed, this, &ThisClass::StopRun);
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Completed, this, &ThisClass::StopRun);
 	}
 
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Attack"))) // Attack
 	{
-		EnhanedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnAttack);
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::OnAttack);
+	}
+
+	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Equip01")))
+	{
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &ThisClass::OnEquip);
 	}
 }
 
@@ -84,8 +90,7 @@ void AInGamePlayerController::Tick(float DeltaTime)
 	
 	if (bIsRun) { ToRun(DeltaTime); }
 	else { ToWalk(DeltaTime); }
-	
-	UE_LOG(LogTemp, Display, TEXT("MaxWalkSpeed : %f"),CharacterMovement->MaxWalkSpeed);
+
 }
 
 void AInGamePlayerController::OnMove(const FInputActionValue& InValue)
@@ -157,11 +162,58 @@ void AInGamePlayerController::StopRun(const FInputActionValue& InValue)
 
 void AInGamePlayerController::OnAttack(const FInputActionValue& InValue)
 {
-	//WeaponClass
+	if (EquipmentType == WeaponType::NonWeapon) { return; } // @TODO : Num, 공격 불가 알림
+	
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 	UWeaponChildActorComponent* CharacterWeapon = ControlledCharacter->Weapon;
 	AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
-	Weapon->Attack();
+
+	CharacterState = ControlledCharacter->CharacterState;
+	if (CharacterState->CanAttack() && CharacterState->CanMove())
+	{
+		Weapon->Attack();
+	}
+}
+
+void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
+{
+	//WeaponType InKey = WeaponType::Knife;
+	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
+
+	WeaponType InKey = (WeaponType)InValue.Get<float>();
+	if (InKey == EquipmentType) { return; }
+
+	UWeaponChildActorComponent* CharacterWeapon = ControlledCharacter->Weapon;
+
+	switch (InKey)
+	{
+		case WeaponType::NonWeapon:
+		{
+			CharacterWeapon->SetData(ControlledCharacter->DataTableRow->WeaponBaseTableRowHandle);
+			ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::NonWeapon);
+			break;
+		}
+		case WeaponType::Punch:
+		{
+			CharacterWeapon->SetData(ControlledCharacter->DataTableRow->PistolTableRowHandle);
+			ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::Punch);
+			break;
+		}
+		case WeaponType::Knife:
+		{
+			CharacterWeapon->SetData(ControlledCharacter->DataTableRow->KnifeTableRowHandle);
+			ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::Knife);
+			break;
+		}		
+		case WeaponType::Rifle:
+		{
+			CharacterWeapon->SetData(ControlledCharacter->DataTableRow->RifleTableRowHandle);
+			ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::Rifle);
+			break;
+		}
+	}
+
+	EquipmentType = ControlledCharacter->CharacterState->GetEquipmentType();
 }
 
 void AInGamePlayerController::ToRun(const float DeltaTime)

@@ -13,6 +13,7 @@ class UInGameAnimInstance;
 class UStaticMeshComponent;
 class USkeletalMeshComponent;
 class ADefaultCharacter;
+class UCharacterStateComponent;
 
 USTRUCT()
 struct LOCKONARENA_API FWeaponBaseTableRow : public FTableRowBase
@@ -34,7 +35,7 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
-	UInGameAnimInstance* AimInstance = nullptr;
+	TSubclassOf<UInGameAnimInstance> AimInstance = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
 	UAnimMontage* WeaponAttackMontage = nullptr;
@@ -62,8 +63,15 @@ public:
 
 public:
 	// Owner
+	UFUNCTION()
 	virtual void Attack();
 
+	// @TODO : 블루프린트 호출 가능성
+	UFUNCTION()
+	virtual void SwapEquipment(const int32 InValue);
+
+	UFUNCTION()
+	virtual void OnMontageEnd(UAnimMontage* Montage, bool bInterrupted);
 public:
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* SceneComponent = nullptr;
@@ -82,6 +90,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	ADefaultCharacter* OwnerCharacter = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+	UCharacterStateComponent* CharacterState = nullptr;
 
 
 	//Enemy (피격자)

@@ -6,6 +6,4 @@
 void ARifleBase::Attack()
 {
 	Super::Attack();
-
-	UE_LOG(LogTemp, Warning, TEXT("Rifle Attack"));
 }

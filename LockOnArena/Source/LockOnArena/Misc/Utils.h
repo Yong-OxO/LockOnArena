@@ -8,6 +8,16 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedActionKeyMapping.h"
 
+UENUM()
+enum class WeaponType : int8
+{
+	NonWeapon = 1,
+	Punch,
+	Knife,
+	Rifle
+};
+
+
 namespace FPathName
 {
 	

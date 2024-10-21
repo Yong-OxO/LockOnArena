@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Misc/Utils.h"
+
 #include "InGamePlayerController.generated.h"
 
 class UInputMappingContext;
@@ -11,6 +13,8 @@ class UAction;
 struct FInputActionValue;
 class ADefaultCharacter;
 class UCharacterMovementComponent;
+class UCharacterStateComponent;
+
 
 USTRUCT()
 struct LOCKONARENA_API FCharacterControllerTableRow : public FTableRowBase
@@ -59,6 +63,9 @@ protected:
 	UFUNCTION()
 	virtual void OnAttack(const FInputActionValue& InValue);
 
+	UFUNCTION()
+	virtual void OnEquip(const FInputActionValue& InValue);
+
 protected:
 	UFUNCTION()
 	virtual void ToRun(const float DeltaTime);
@@ -77,7 +84,9 @@ protected:
 public:
 	UPROPERTY(EditAnywhere)
 	float Sensitivity = 1.0f;
-
+	
+	UPROPERTY()
+	WeaponType EquipmentType;
 
 protected:
 	//UPROPERTY(EditAnywhere, meta = (RowType = "/Script/KDT3D.WeaponTableRow"))
@@ -87,5 +96,7 @@ protected:
 	const FCharacterControllerTableRow* ControllerTableRow = nullptr;
 	ADefaultCharacter* ControlledCharacter = nullptr;
 
+
 	UCharacterMovementComponent* CharacterMovement;
+	UCharacterStateComponent* CharacterState;
 };

@@ -20,5 +20,6 @@ public:
 
 public:
 	virtual void SetData(const FDataTableRowHandle& InRowHandle);
+	//virtual void SetData( const FDataTableRowHandle& InRowHandle);
 
 };

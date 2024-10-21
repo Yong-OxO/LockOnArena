@@ -13,37 +13,46 @@
 AWeaponBase::AWeaponBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	{
+		static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/DT_WeaponBase.DT_WeaponBase'"));
+		DataTable = DataTableAsset.Object;
+		// @TODO : RowName namespace or DataTableRow에서 본인의 Handle관리
+		//DataTableRow = DataTable->FindRow<FWeaponBaseTableRow>(FName("Basic"), TEXT("WeaponBase DataTableRow"));
+	}
+	{
+		SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
+		RootComponent = SceneComponent;
+	
+		SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
+		SkeletalMeshComponent->SetupAttachment(RootComponent);
+		SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
-	RootComponent = SceneComponent;
-
-	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
-	SkeletalMeshComponent->SetupAttachment(RootComponent);
-	SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
-	StaticMeshComponent->SetupAttachment(RootComponent);
-	StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/DT_WeaponBase.DT_WeaponBase'"));
-	DataTable = DataTableAsset.Object;
-	// @TODO : RowName namespace
-	DataTableRow = DataTable->FindRow<FWeaponBaseTableRow>(FName("Basic"), TEXT("WeaponBase DataTableRow"));
+		StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+		StaticMeshComponent->SetupAttachment(RootComponent);
+		StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }
 
 void AWeaponBase::Attack()
 {
-	bool bCanAttack = OwnerCharacter->GetState()->CanAttack();
-	bool bCanMove = OwnerCharacter->GetState()->CanMove();
-	if (bCanAttack || bCanMove || !AimInstance->Montage_IsPlaying(nullptr))
+	
+	if (DataTableRow->WeaponAttackMontage)
 	{
-		ADefaultCharacter* TestOwnerCharacter = CastChecked<ADefaultCharacter>(GetOwner());
-		AimInstance->Montage_Play(DataTableRow->WeaponAttackMontage);
+		if (!AimInstance->Montage_IsPlaying(nullptr))
+		{
+			AimInstance->Montage_Play(DataTableRow->WeaponAttackMontage);
+			CharacterState->SetAttack(false);
+		}
 	}
+}
+
+void AWeaponBase::SwapEquipment(const int32 InValue)
+{
 }
 
 void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 {
+	DataTableRow = InRowHandle.GetRow<FWeaponBaseTableRow>(TEXT("DataTableRow"));
 	ensureMsgf(DataTableRow, TEXT("Not Valid DataTableRow"));
 
 	if (DataTableRow->SkeletalMesh)
@@ -54,9 +63,22 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 	{
 		StaticMeshComponent->SetStaticMesh(DataTableRow->StaticMesh);
 	}
-	AimInstance = DataTableRow->AimInstance;
+	else
+	{
+		StaticMeshComponent->SetStaticMesh(nullptr);
+		SkeletalMeshComponent->SetSkeletalMesh(nullptr);
+	}
 
-	OwnerCharacter = CastChecked<ADefaultCharacter>(GetOwner());
+		OwnerCharacter = CastChecked<ADefaultCharacter>(GetOwner());
+
+		USkeletalMeshComponent* MeshComponent = GetOwner()->GetComponentByClass<USkeletalMeshComponent>();
+		MeshComponent->SetAnimClass(DataTableRow->AimInstance);
+
+		AimInstance = Cast<UInGameAnimInstance>(MeshComponent->GetAnimInstance());
+
+		AimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
+
+		CharacterState = OwnerCharacter->GetState();
 }
 
 void AWeaponBase::BeginPlay()
@@ -70,4 +92,10 @@ void AWeaponBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+void AWeaponBase::OnMontageEnd(UAnimMontage* Montage, bool bInterrupted)
+{
+	CharacterState->SetAttack(true);
+}
+
 

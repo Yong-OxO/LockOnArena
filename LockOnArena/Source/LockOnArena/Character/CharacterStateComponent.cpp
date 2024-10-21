@@ -9,6 +9,7 @@ UCharacterStateComponent::UCharacterStateComponent()
 
 	PrimaryComponentTick.bCanEverTick = true;
 
+	EquipmentType = WeaponType::NonWeapon;
 }
 
 
