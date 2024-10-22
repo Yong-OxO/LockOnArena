@@ -54,31 +54,33 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 {
 	DataTableRow = InRowHandle.GetRow<FWeaponBaseTableRow>(TEXT("DataTableRow"));
 	ensureMsgf(DataTableRow, TEXT("Not Valid DataTableRow"));
-
-	if (DataTableRow->SkeletalMesh)
 	{
-		SkeletalMeshComponent->SetSkeletalMesh(DataTableRow->SkeletalMesh);
+		if (DataTableRow->SkeletalMesh)
+		{
+			SkeletalMeshComponent->SetSkeletalMesh(DataTableRow->SkeletalMesh);
+		}
+		else if (DataTableRow->StaticMesh)
+		{
+			StaticMeshComponent->SetStaticMesh(DataTableRow->StaticMesh);
+		}
+		else
+		{
+			StaticMeshComponent->SetStaticMesh(nullptr);
+			SkeletalMeshComponent->SetSkeletalMesh(nullptr);
+		}
 	}
-	else if (DataTableRow->StaticMesh)
-	{
-		StaticMeshComponent->SetStaticMesh(DataTableRow->StaticMesh);
-	}
-	else
-	{
-		StaticMeshComponent->SetStaticMesh(nullptr);
-		SkeletalMeshComponent->SetSkeletalMesh(nullptr);
-	}
-
 		OwnerCharacter = CastChecked<ADefaultCharacter>(GetOwner());
-
-		USkeletalMeshComponent* MeshComponent = GetOwner()->GetComponentByClass<USkeletalMeshComponent>();
-		MeshComponent->SetAnimClass(DataTableRow->AimInstance);
-
-		AimInstance = Cast<UInGameAnimInstance>(MeshComponent->GetAnimInstance());
-
-		AimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
-
 		CharacterState = OwnerCharacter->GetState();
+
+		//MuzzleEffect = DataTableRow->MuzzleEffect;
+		{
+			USkeletalMeshComponent* MeshComponent = GetOwner()->GetComponentByClass<USkeletalMeshComponent>();
+			MeshComponent->SetAnimClass(DataTableRow->AimInstance);
+
+			AimInstance = Cast<UInGameAnimInstance>(MeshComponent->GetAnimInstance());
+
+			AimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
+		}
 }
 
 void AWeaponBase::BeginPlay()

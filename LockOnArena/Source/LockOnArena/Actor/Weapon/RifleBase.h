@@ -7,12 +7,14 @@
 #include "RifleBase.generated.h"
 
 USTRUCT()
-struct LOCKONARENA_API FRifleTableRow : public FTableRowBase
+struct LOCKONARENA_API FRifleTableRow : public FWeaponBaseTableRow
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	int32 Ammo = 50;
+	int32 MaxAmmo = 50;
+	UPROPERTY(EditAnywhere)
+	float FireRange = 3000.f;
 };
 
 
@@ -21,8 +23,19 @@ class LOCKONARENA_API ARifleBase : public AWeaponBase
 {
 	GENERATED_BODY()
 public:
+	virtual void SetData(const FDataTableRowHandle& InHandle) override;
+
 	virtual void Attack() override;
+	virtual void Fire(const FVector Start, const FRotator Rotation);
+	
+	
+	FVector StartLocation;
+	FVector EndLocation;
+
+	FRifleTableRow* DataRow;
 
 	UPROPERTY()
-	int count = 0;
+	int32 MaxAmmo;
+	
+	float FireRange;
 };

@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Character/Animation/AnimInstance/InGameAnimInstance.h"
 
+
 #include "WeaponBase.generated.h"
 
 class AWeaponBase;
@@ -14,6 +15,7 @@ class UStaticMeshComponent;
 class USkeletalMeshComponent;
 class ADefaultCharacter;
 class UCharacterStateComponent;
+class AEffect;
 
 USTRUCT()
 struct LOCKONARENA_API FWeaponBaseTableRow : public FTableRowBase
@@ -42,6 +44,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
 	UAnimMontage* HitReactMontage = nullptr;
+
+public:
+	//UPROPERTY(EditAnywhere, Category = "Weapon|Effect")
+	//TObjectPtr<AEffect> MuzzleEffect = nullptr;
 };
 
 UCLASS()
@@ -94,6 +100,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UCharacterStateComponent* CharacterState = nullptr;
 
+	//UPROPERTY(VisibleAnywhere)
+	//AEffect* MuzzleEffect = nullptr;
 
 	//Enemy (피격자)
 };
