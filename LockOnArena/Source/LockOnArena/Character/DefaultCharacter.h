@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Actor/Weapon/WeaponBase.h"
+#include "Actor/Weapon/RifleBase.h"
 #include "DefaultCharacter.generated.h"
 
 
@@ -25,12 +27,12 @@ public:
 	FDataTableRowHandle WeaponBaseTableRowHandle; // 1
 
 	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.WeaponBaseTableRow"))
-	FDataTableRowHandle PistolTableRowHandle; // 2
+	FDataTableRowHandle PunchTableRowHandle; // 2
 
 	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.WeaponBaseTableRow"))
 	FDataTableRowHandle KnifeTableRowHandle; // 3
 	
-	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.WeaponBaseTableRow"))
+	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.RifleTableRow"))
 	FDataTableRowHandle RifleTableRowHandle; // 4
 
 	UPROPERTY(EditAnywhere)

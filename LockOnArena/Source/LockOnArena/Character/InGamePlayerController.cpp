@@ -9,6 +9,7 @@
 #include "Actor/Weapon/WeaponBase.h"
 #include "Actor/Weapon/WeaponChildActorComponent.h"
 #include "Character/CharacterStateComponent.h"
+#include "Skill/SkillSystem.h"
 
 AInGamePlayerController::AInGamePlayerController()
 {
@@ -81,6 +82,11 @@ void AInGamePlayerController::SetupInputComponent()
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Equip01")))
 	{
 		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &ThisClass::OnEquip);
+	}
+
+	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_LockOn")))
+	{
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &ThisClass::OnLockOn);
 	}
 }
 
@@ -178,8 +184,13 @@ void AInGamePlayerController::OnAttack(const FInputActionValue& InValue)
 void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
 {
 	//WeaponType InKey = WeaponType::Knife;
+
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 
+	if (!ControlledCharacter->CharacterState->CanAttack())
+	{
+		return;
+	}
 	WeaponType InKey = (WeaponType)InValue.Get<float>();
 	if (InKey == EquipmentType) { return; }
 
@@ -195,7 +206,7 @@ void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
 		}
 		case WeaponType::Punch:
 		{
-			CharacterWeapon->SetData(ControlledCharacter->DataTableRow->PistolTableRowHandle);
+			CharacterWeapon->SetData(ControlledCharacter->DataTableRow->PunchTableRowHandle);
 			ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::Punch);
 			break;
 		}
@@ -214,6 +225,15 @@ void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
 	}
 
 	EquipmentType = ControlledCharacter->CharacterState->GetEquipmentType();
+}
+
+void AInGamePlayerController::OnLockOn(const FInputActionValue& InValue)
+{
+	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
+	UWeaponChildActorComponent* CharacterWeapon = ControlledCharacter->Weapon;
+	AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
+
+	Weapon->SkillSystem->LockOn();
 }
 
 void AInGamePlayerController::ToRun(const float DeltaTime)

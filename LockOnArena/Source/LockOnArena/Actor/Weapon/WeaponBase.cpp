@@ -7,6 +7,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Character/DefaultCharacter.h"
 #include "Character/CharacterStateComponent.h"
+#include "Skill/SkillSystem.h"
 
 
 // Sets default values
@@ -81,6 +82,11 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 
 			AimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
 		}
+		if (SkillSystem)
+		{
+			SkillSystem->Destroy();
+		}
+		SkillSystem = GetWorld()->SpawnActor<ASkillSystem>(DataTableRow->SkillSystem);
 }
 
 void AWeaponBase::BeginPlay()

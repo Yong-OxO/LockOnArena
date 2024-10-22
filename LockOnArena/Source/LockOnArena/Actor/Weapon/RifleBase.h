@@ -22,6 +22,9 @@ UCLASS()
 class LOCKONARENA_API ARifleBase : public AWeaponBase
 {
 	GENERATED_BODY()
+	
+public:
+	ARifleBase();
 public:
 	virtual void SetData(const FDataTableRowHandle& InHandle) override;
 
@@ -35,7 +38,10 @@ public:
 	FRifleTableRow* DataRow;
 
 	UPROPERTY()
-	int32 MaxAmmo;
+	int32 MaxAmmo = 50;
+
+	UPROPERTY()
+	int32 CurrentAmmo;
 	
 	float FireRange;
 };

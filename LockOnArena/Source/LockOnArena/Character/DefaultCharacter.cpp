@@ -7,8 +7,7 @@
 #include "CharacterStateComponent.h"
 #include "Actor/Weapon/WeaponChildActorComponent.h"
 #include "Subsystem/WeaponSubsystem.h"
-#include "Actor/Weapon/WeaponBase.h"
-#include "Actor/Weapon/RifleBase.h"
+
 
 // Sets default values
 ADefaultCharacter::ADefaultCharacter()

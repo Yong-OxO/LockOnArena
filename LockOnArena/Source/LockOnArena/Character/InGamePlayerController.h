@@ -66,11 +66,16 @@ protected:
 	UFUNCTION()
 	virtual void OnEquip(const FInputActionValue& InValue);
 
+	UFUNCTION()
+	virtual void OnLockOn(const FInputActionValue& InValue);
+
 protected:
 	UFUNCTION()
 	virtual void ToRun(const float DeltaTime);
 	UFUNCTION()
-	virtual void ToWalk(const float DeltaTime);
+	virtual void ToWalk(const float DeltaTime);	
+
+
 
 
 protected:

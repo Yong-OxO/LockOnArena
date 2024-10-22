@@ -8,6 +8,7 @@
 
 #include "CharacterStateComponent.generated.h"
 
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LOCKONARENA_API UCharacterStateComponent : public UActorComponent
 {
