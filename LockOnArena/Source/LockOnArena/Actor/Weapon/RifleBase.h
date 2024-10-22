@@ -30,7 +30,7 @@ public:
 
 	virtual void Attack() override;
 	virtual void Fire(const FVector Start, const FRotator Rotation);
-	
+	virtual void BeginDestroy() override;
 	
 	FVector StartLocation;
 	FVector EndLocation;

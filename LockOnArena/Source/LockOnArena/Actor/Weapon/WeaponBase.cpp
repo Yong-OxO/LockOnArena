@@ -87,6 +87,7 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 			SkillSystem->Destroy();
 		}
 		SkillSystem = GetWorld()->SpawnActor<ASkillSystem>(DataTableRow->SkillSystem);
+		SkillSystem->SetOwner(GetOwner());
 }
 
 void AWeaponBase::BeginPlay()

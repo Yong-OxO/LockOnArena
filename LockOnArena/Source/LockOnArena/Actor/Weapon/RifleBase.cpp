@@ -51,3 +51,8 @@ void ARifleBase::Fire(const FVector Start, const FRotator Rotation)
 	--CurrentAmmo;
 }
 
+void ARifleBase::BeginDestroy()
+{
+	Super::BeginDestroy();
+}
+

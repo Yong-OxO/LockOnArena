@@ -27,6 +27,9 @@ void ASkillSystem::Tick(float DeltaTime)
 
 void ASkillSystem::LockOn()
 {
-	UE_LOG(LogTemp, Display, TEXT("LockOn"))
+	UE_LOG(LogTemp, Display, TEXT("LockOn"));
+
+	
+	AActor* TempOwner = GetOwner(); // Owner의 class는 DefaultCharacter, WeaponBase에서 설정
 }
 
