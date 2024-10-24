@@ -7,6 +7,10 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Character/InGamePlayerController.h"
+#include "Engine/SkeletalMeshSocket.h"
+#include "Camera/CameraComponent.h"
+
+#include "Kismet/KismetMathLibrary.h"
 
 
 // Sets default values
@@ -59,10 +63,14 @@ bool ASkillSystem::LockOn()
 		// @TODO : SoketName
 		const USkeletalMeshSocket* TargetSocket = TargetSkeletal->GetSocketByName(FName(TEXT("LockOnTarget")));
 
-		FVector TargetLocation = Target->GetActorLocation();
-		FRotator TargetRotation = (TargetLocation - Location).Rotation();
+		UCameraComponent* Camera = ControlledCharacter->GetComponentByClass<UCameraComponent>();
 
-		Controller->SetControlRotation(TargetRotation);
+
+		FVector CharacterLocation = ControlledCharacter->GetActorLocation() + FVector(0.0, 30.0 + 20, 90.0);
+		FVector TargetLocation = TargetSocket->GetSocketLocation(TargetSkeletal);
+
+		FRotator TargerRotation = (TargetLocation - CharacterLocation).Rotation();
+		Controller->SetControlRotation(TargerRotation);
 	}
 
 
