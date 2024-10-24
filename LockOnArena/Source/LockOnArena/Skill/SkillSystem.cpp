@@ -2,6 +2,12 @@
 
 
 #include "Skill/SkillSystem.h"
+#include "Character/DefaultCharacter.h"
+#include "Enemy/EnemyBase.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Character/InGamePlayerController.h"
+
 
 // Sets default values
 ASkillSystem::ASkillSystem()
@@ -25,11 +31,41 @@ void ASkillSystem::Tick(float DeltaTime)
 
 }
 
-void ASkillSystem::LockOn()
+bool ASkillSystem::LockOn()
 {
-	UE_LOG(LogTemp, Display, TEXT("LockOn"));
+	ControlledCharacter = GetOwner<ADefaultCharacter>(); // Owner의 class는 DefaultCharacter, WeaponBase에서 설정
+	Controller = ControlledCharacter->GetController<AInGamePlayerController>();
 
-	
-	AActor* TempOwner = GetOwner(); // Owner의 class는 DefaultCharacter, WeaponBase에서 설정
+	bool bLockOn = false;
+
+	FVector Location = ControlledCharacter->GetActorLocation();
+	FQuat Quat = ControlledCharacter->GetActorQuat();
+
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(DetectionDist / 2);
+
+	bLockOn = GetWorld()->OverlapMultiByChannel(
+		OverlapResults,
+		Location,
+		Quat,
+		ECollisionChannel::ECC_GameTraceChannel1,
+		Sphere);
+
+	if (bLockOn)
+	{
+		FOverlapResult FirstOverlap = OverlapResults[0];
+
+		AEnemyBase* Target = Cast<AEnemyBase>(FirstOverlap.GetActor());
+		USkeletalMeshComponent* TargetSkeletal = Target->GetComponentByClass<USkeletalMeshComponent>();
+		// @TODO : SoketName
+		const USkeletalMeshSocket* TargetSocket = TargetSkeletal->GetSocketByName(FName(TEXT("LockOnTarget")));
+
+		FVector TargetLocation = Target->GetActorLocation();
+		FRotator TargetRotation = (TargetLocation - Location).Rotation();
+
+		Controller->SetControlRotation(TargetRotation);
+	}
+
+
+
+	return bLockOn;
 }
-

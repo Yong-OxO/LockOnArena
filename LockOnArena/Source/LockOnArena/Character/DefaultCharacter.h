@@ -16,6 +16,9 @@
 class UStaticMeshComponent;
 class UCharacterStateComponent;
 class UWeaponChildActorComponent;
+class UCameraComponent;
+class USpringArmComponent;
+
 
 USTRUCT()
 struct LOCKONARENA_API FDefaultCharacterTableRow : public FTableRowBase
@@ -81,6 +84,13 @@ public:
 	const FDefaultCharacterTableRow* DataTableRow = nullptr;
 	//UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.DefaultCharacterTableRow"))
 	//FDataTableRowHandle CharacterDataRowHandle;
+
+public:
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	USpringArmComponent* SpringArmComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	UCameraComponent* CameraComponent;
 
 protected:
 	

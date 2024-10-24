@@ -6,6 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "SkillSystem.generated.h"
 
+
+class ADefaultCharacter;
+class AInGamePlayerController;
+
 UCLASS()
 class LOCKONARENA_API ASkillSystem : public AActor
 {
@@ -25,5 +29,17 @@ public:
 
 
 public:
-	virtual void LockOn();
+	virtual bool LockOn();
+
+protected:
+	ADefaultCharacter* ControlledCharacter = nullptr;
+	AInGamePlayerController* Controller = nullptr;
+
+	UPROPERTY()
+	float DetectionDist = 3000.f;
+
+	UPROPERTY()
+	TArray<FOverlapResult> OverlapResults;
+
+
 };

@@ -18,10 +18,7 @@ enum class WeaponType : int8
 };
 
 
-namespace FPathName
-{
-	
-}
+
 
 class FUtils
 {
@@ -43,7 +40,7 @@ public:
 				return It.Action;
 			}				
 		}
-		return nullptr;
+		return nullptr; 
 	}
 
 

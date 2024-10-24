@@ -7,6 +7,8 @@
 #include "CharacterStateComponent.h"
 #include "Actor/Weapon/WeaponChildActorComponent.h"
 #include "Subsystem/WeaponSubsystem.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 
 // Sets default values
@@ -27,7 +29,22 @@ ADefaultCharacter::ADefaultCharacter()
 	CharacterState = DataTableRow->CharacterState;
 	/*static ConstructorHelpers::FObjectFinder<AActor> WeaponAsset(TEXT("/Script/Engine.Blueprint'/Game/Blueprint/Actor/Weapon/BP_Rifle.BP_Rifle'"));
 	Weapon_Static->SetStaticMesh(WeaponAsset.Object);*/
-	
+	{
+		//(X=4.000000,Y=30.000000,Z=90.000000)
+		SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
+		SpringArmComponent->SetupAttachment(RootComponent);
+		CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+		CameraComponent->SetupAttachment(SpringArmComponent);
+
+		FTransform Transform;
+		Transform.SetLocation(FVector(4.0, 30.0, 90.0));
+		SpringArmComponent->SetRelativeTransform(Transform);
+
+		SpringArmComponent->TargetArmLength = 200.f;
+		SpringArmComponent->SocketOffset = FVector(0.0, 10.0, 0.0);
+
+		SpringArmComponent->bUsePawnControlRotation = true;
+	}
 }
 
 // Called when the game starts or when spawned
