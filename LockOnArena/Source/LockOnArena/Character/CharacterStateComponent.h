@@ -34,15 +34,26 @@ public:
 
 	virtual bool GetLockOn() { return bLockOn; }
 	virtual void SetLockOn(const bool InValue);
-	virtual void SetLockOnFalse() { bLockOn = false; }
+	virtual void SetLockOnFalse();
+
+	virtual bool GetLockOnPlaying() { return bLockOnPlay; }
+	virtual void SetLockOnPlaying(const bool InValue) { bLockOnPlay = InValue; }
+
+
 public:
 	float MaxHp = 100.f;
 	float CurrentHp = 100.f;
+
+	bool CanLockOn = true; // 자세한 쿨타임은 skillsystem에서 관리
+
 protected:
 	bool bCanMove = true;
 	bool bCanAttack = true;
 
-	bool bLockOn = false;
 
 	WeaponType EquipmentType;
+
+	// LockOn
+	bool bLockOn = false;
+	bool bLockOnPlay = false;
 };

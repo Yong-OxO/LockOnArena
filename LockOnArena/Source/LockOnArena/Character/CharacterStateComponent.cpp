@@ -37,6 +37,7 @@ void UCharacterStateComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 void UCharacterStateComponent::SetLockOn(const bool InValue)
 {
 	bLockOn = InValue;
+	bCanMove = !bLockOn;
 
 	FTimerHandle TimerHandle;
 
@@ -47,5 +48,11 @@ void UCharacterStateComponent::SetLockOn(const bool InValue)
 		1.0f,          // 대기 시간(초 단위)
 		false          // 반복 여부 (false면 한 번만 실행)
 	);
+}
+
+void UCharacterStateComponent::SetLockOnFalse()
+{
+	bLockOn = false;
+	bCanMove = !bLockOn;
 }
 

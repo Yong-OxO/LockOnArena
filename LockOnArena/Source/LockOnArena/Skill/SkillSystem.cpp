@@ -10,6 +10,7 @@
 #include "Character/CharacterStateComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Camera/CameraComponent.h"
+#include "Character/CharacterStateComponent.h"
 
 #include "Kismet/KismetMathLibrary.h"
 
@@ -19,14 +20,13 @@ ASkillSystem::ASkillSystem()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 }
 
 // Called when the game starts or when spawned
 void ASkillSystem::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 }
 
 // Called every frame
@@ -34,16 +34,63 @@ void ASkillSystem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bLockOnPlay)
+	if (bIsPlaying)
 	{	
 		LockOn(DeltaTime);
 	}
+	if (CD_RemainLockOn > 0.f)
+	{
+		LockOnCoolDown(DeltaTime);
+	}
 }
+
+
+
+void ASkillSystem::StartLockOnPlay() // Controller에서 이 함수를 호출
+{
+	ControlledCharacter = GetOwner<ADefaultCharacter>();
+	CharacterState = ControlledCharacter->GetState();
+	CharacterState->SetLockOnPlaying(true);
+	bIsPlaying = true;
+
+	CD_RemainLockOn = CD_LockOn;
+	CharacterState->CanLockOn = false;
+
+	GetWorldTimerManager().SetTimer(
+		TimerHandle,   // FTimerHandle 변수
+		this,          // 타이머를 설정할 객체
+		&ThisClass::StopLockOnPlay, // 실행할 함수
+		1.0f,          // 대기 시간(초 단위)
+		false          // 반복 여부 (false면 한 번만 실행)
+	);
+}
+
+void ASkillSystem::StopLockOnPlay()
+{
+	ControlledCharacter = GetOwner<ADefaultCharacter>();
+	ControlledCharacter->GetState()->SetLockOnPlaying(false);
+	bIsPlaying = false;
+
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+
+	GetWorldTimerManager().SetTimer(
+		TimerHandle,   // FTimerHandle 변수
+		this,          // 타이머를 설정할 객체
+		&ThisClass::CheckLockOn, // 실행할 함수
+		0.2f,          // 대기 시간(초 단위)
+		false          // 반복 여부 (false면 한 번만 실행)
+	);
+}
+
 
 void ASkillSystem::LockOn(const float DeltaTime)
 {
 	ControlledCharacter = GetOwner<ADefaultCharacter>(); // Owner의 class는 DefaultCharacter, WeaponBase에서 설정
+	{
+		CharacterState = ControlledCharacter->GetState();
+	}
 	Controller = ControlledCharacter->GetController<AInGamePlayerController>();
+	
 
 	bool Overlap = false;
 
@@ -125,34 +172,6 @@ void ASkillSystem::LockOn(const float DeltaTime)
 	}
 }
 
-void ASkillSystem::StartLockOnPlay()
-{
-	bLockOnPlay = true;
-
-
-	GetWorldTimerManager().SetTimer(
-		TimerHandle,   // FTimerHandle 변수
-		this,          // 타이머를 설정할 객체
-		&ThisClass::StopLockOnPlay, // 실행할 함수
-		1.0f,          // 대기 시간(초 단위)
-		false          // 반복 여부 (false면 한 번만 실행)
-	);
-}
-
-void ASkillSystem::StopLockOnPlay()
-{
-	bLockOnPlay = false;
-
-	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-
-	GetWorldTimerManager().SetTimer(
-		TimerHandle,   // FTimerHandle 변수
-		this,          // 타이머를 설정할 객체
-		&ThisClass::CheckLockOn, // 실행할 함수
-		0.2f,          // 대기 시간(초 단위)
-		false          // 반복 여부 (false면 한 번만 실행)
-	);	
-}
 
 void ASkillSystem::CheckLockOn()
 {
@@ -183,4 +202,13 @@ void ASkillSystem::CheckLockOn()
 	}
 
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+}
+
+void ASkillSystem::LockOnCoolDown(float DeltaTime)
+{
+	CD_RemainLockOn -= DeltaTime;
+	if (CD_RemainLockOn < 0)
+	{
+		CharacterState->CanLockOn = true;
+	}
 }

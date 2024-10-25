@@ -86,6 +86,7 @@ protected:
 	double WalkSpeed = 400.f;
 	double RunSpeed = WalkSpeed * 1.5;
 
+
 public:
 	UPROPERTY(EditAnywhere)
 	float Sensitivity = 1.0f;

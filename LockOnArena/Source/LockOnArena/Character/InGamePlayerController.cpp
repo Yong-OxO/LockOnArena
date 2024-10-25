@@ -101,8 +101,7 @@ void AInGamePlayerController::Tick(float DeltaTime)
 
 void AInGamePlayerController::OnMove(const FInputActionValue& InValue)
 {
-	// @TODO : 움직일 수 있는 상황인지 조건 체크
-	// @TODO : 좌 우 뒤 움직임 전환 부드럽게
+	if (!CharacterState->CanMove()) { return; }
 	
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 
@@ -130,6 +129,10 @@ void AInGamePlayerController::OnMove(const FInputActionValue& InValue)
 
 void AInGamePlayerController::OnLook(const FInputActionValue& InValue)
 {
+	if (CharacterState->GetLockOn()) // LockOn중이면 마우스 움직임 x
+	{
+		return;
+	}
 	FVector2D InputVector = InValue.Get<FVector2D>();	
 
 	AddYawInput(InputVector.X * Sensitivity);
@@ -138,7 +141,10 @@ void AInGamePlayerController::OnLook(const FInputActionValue& InValue)
 
 void AInGamePlayerController::OnJump(const FInputActionValue& InValue)
 {
-	// @TODO : 움직일 수 있는 상황인지 조건 체크
+	if (!CharacterState->CanMove())
+	{
+		return;
+	}
 
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 	int32 JumpCurrentCount = ControlledCharacter->JumpCurrentCount;
@@ -175,7 +181,7 @@ void AInGamePlayerController::OnAttack(const FInputActionValue& InValue)
 	AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
 
 	CharacterState = ControlledCharacter->CharacterState;
-	if (CharacterState->CanAttack() && CharacterState->CanMove())
+	if (CharacterState->CanAttack())
 	{
 		Weapon->Attack();
 	}
@@ -186,8 +192,8 @@ void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
 	//WeaponType InKey = WeaponType::Knife;
 
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
-
-	if (!ControlledCharacter->CharacterState->CanAttack())
+	CharacterState = ControlledCharacter->GetState();
+	if (!CharacterState->CanAttack() || CharacterState->GetLockOn())
 	{
 		return;
 	}
@@ -230,6 +236,13 @@ void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
 void AInGamePlayerController::OnLockOn(const FInputActionValue& InValue)
 {
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
+	if (!ControlledCharacter->GetState()->CanLockOn) // 쿨다운중일때
+	{
+		UE_LOG(LogTemp, Display, TEXT("LockOn is CoolDown"));
+		return;
+	}
+
+		
 	UWeaponChildActorComponent* CharacterWeapon = ControlledCharacter->Weapon;
 	AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
 
