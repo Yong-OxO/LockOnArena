@@ -2,6 +2,7 @@
 
 
 #include "Character/CharacterStateComponent.h"
+#include "GameFramework/Actor.h"
 
 // Sets default values for this component's properties
 UCharacterStateComponent::UCharacterStateComponent()
@@ -27,6 +28,24 @@ void UCharacterStateComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (bLockOn)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Is Lockon"));
+	}
+}
+
+void UCharacterStateComponent::SetLockOn(const bool InValue)
+{
+	bLockOn = InValue;
+
+	FTimerHandle TimerHandle;
+
+	GetWorld()->GetTimerManager().SetTimer(
+		TimerHandle,   // FTimerHandle 변수
+		this,          // 타이머를 설정할 객체
+		&ThisClass::SetLockOnFalse, // 실행할 함수
+		1.0f,          // 대기 시간(초 단위)
+		false          // 반복 여부 (false면 한 번만 실행)
+	);
 }
 

@@ -32,12 +32,17 @@ public:
 	virtual WeaponType GetEquipmentType() { return EquipmentType; }
 	virtual void SetEquipmentType(const WeaponType InNum) { EquipmentType = InNum; }
 
+	virtual bool GetLockOn() { return bLockOn; }
+	virtual void SetLockOn(const bool InValue);
+	virtual void SetLockOnFalse() { bLockOn = false; }
 public:
 	float MaxHp = 100.f;
 	float CurrentHp = 100.f;
 protected:
 	bool bCanMove = true;
 	bool bCanAttack = true;
+
+	bool bLockOn = false;
 
 	WeaponType EquipmentType;
 };

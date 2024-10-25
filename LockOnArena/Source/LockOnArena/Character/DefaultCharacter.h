@@ -86,11 +86,13 @@ public:
 	//FDataTableRowHandle CharacterDataRowHandle;
 
 public:
-	UPROPERTY(VisibleAnywhere, Category = Camera)
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	USpringArmComponent* SpringArmComponent;
 
-	UPROPERTY(VisibleAnywhere, Category = Camera)
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	UCameraComponent* CameraComponent;
+
+
 
 protected:
 	

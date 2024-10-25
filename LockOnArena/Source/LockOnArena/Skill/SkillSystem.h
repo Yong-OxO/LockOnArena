@@ -27,12 +27,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
+	UPROPERTY(EditAnywhere, Category = "Rotation")
+	FRotator ToTargetRotation;
 public:
-	virtual bool LockOn();
+	virtual void LockOn(const float DeltaTime);
+
+	UFUNCTION()
+	virtual void StartLockOnPlay();
+	virtual void StopLockOnPlay();
 
 protected:
+	UPROPERTY()
 	ADefaultCharacter* ControlledCharacter = nullptr;
+	UPROPERTY()
 	AInGamePlayerController* Controller = nullptr;
 
 	UPROPERTY()
@@ -41,5 +48,14 @@ protected:
 	UPROPERTY()
 	TArray<FOverlapResult> OverlapResults;
 
+	bool bLockOnPlay = false;
 
+protected:
+	UFUNCTION()
+	virtual void CheckLockOn();
+	bool bLockOnSucceed;
+
+	FTimerHandle TimerHandle;
 };
+
+

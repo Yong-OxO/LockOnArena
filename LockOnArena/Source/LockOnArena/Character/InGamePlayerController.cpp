@@ -233,7 +233,8 @@ void AInGamePlayerController::OnLockOn(const FInputActionValue& InValue)
 	UWeaponChildActorComponent* CharacterWeapon = ControlledCharacter->Weapon;
 	AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
 
-	Weapon->SkillSystem->LockOn();
+	//Weapon->SkillSystem->LockOn();
+	Weapon->SkillSystem->StartLockOnPlay();
 }
 
 void AInGamePlayerController::ToRun(const float DeltaTime)

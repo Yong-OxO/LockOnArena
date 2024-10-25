@@ -37,7 +37,7 @@ ADefaultCharacter::ADefaultCharacter()
 		CameraComponent->SetupAttachment(SpringArmComponent);
 
 		FTransform Transform;
-		Transform.SetLocation(FVector(4.0, 30.0, 90.0));
+		Transform.SetLocation(FVector(0.0, 30.0, 90.0));
 		SpringArmComponent->SetRelativeTransform(Transform);
 
 		SpringArmComponent->TargetArmLength = 200.f;
