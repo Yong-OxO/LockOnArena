@@ -34,7 +34,7 @@ void ASkillSystem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsPlaying)
+	if (bIsPlaying) // && bOverlap
 	{	
 		LockOn(DeltaTime);
 	}
@@ -48,9 +48,12 @@ void ASkillSystem::Tick(float DeltaTime)
 
 void ASkillSystem::StartLockOnPlay() // Controller에서 이 함수를 호출
 {
-	ControlledCharacter = GetOwner<ADefaultCharacter>();
+	ControlledCharacter = GetOwner<ADefaultCharacter>(); // Owner의 class는 DefaultCharacter, WeaponBase에서 설정
+	Controller = ControlledCharacter->GetController<AInGamePlayerController>();
+
 	CharacterState = ControlledCharacter->GetState();
 	CharacterState->SetLockOnPlaying(true);
+
 	bIsPlaying = true;
 
 	CD_RemainLockOn = CD_LockOn;
@@ -67,8 +70,7 @@ void ASkillSystem::StartLockOnPlay() // Controller에서 이 함수를 호출
 
 void ASkillSystem::StopLockOnPlay()
 {
-	ControlledCharacter = GetOwner<ADefaultCharacter>();
-	ControlledCharacter->GetState()->SetLockOnPlaying(false);
+	CharacterState->SetLockOnPlaying(false);
 	bIsPlaying = false;
 
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
@@ -85,19 +87,11 @@ void ASkillSystem::StopLockOnPlay()
 
 void ASkillSystem::LockOn(const float DeltaTime)
 {
-	ControlledCharacter = GetOwner<ADefaultCharacter>(); // Owner의 class는 DefaultCharacter, WeaponBase에서 설정
-	{
-		CharacterState = ControlledCharacter->GetState();
-	}
-	Controller = ControlledCharacter->GetController<AInGamePlayerController>();
-	
-
-	bool Overlap = false;
-
+	// 탐지(Overlap) 설정
+	// @TODO : Overlap을 따로 설정해두어서 Tick LockOn 실행조건 추가
 	FVector Location = ControlledCharacter->GetActorLocation();
 	FQuat Quat = ControlledCharacter->GetActorQuat();
-
-	FCollisionShape Sphere = FCollisionShape::MakeSphere(DetectionDist / 2);
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(DetectionDist);
 
 	Overlap = GetWorld()->OverlapMultiByChannel(
 		OverlapResults,
@@ -106,7 +100,7 @@ void ASkillSystem::LockOn(const float DeltaTime)
 		ECollisionChannel::ECC_GameTraceChannel1,
 		Sphere);
 
-	if (Overlap)
+	if (Overlap) // 탐지 됐다면 회전
 	{
 		FOverlapResult FirstOverlap = OverlapResults[0];
 
@@ -114,13 +108,6 @@ void ASkillSystem::LockOn(const float DeltaTime)
 		USkeletalMeshComponent* TargetSkeletal = Target->GetComponentByClass<USkeletalMeshComponent>();
 		// @TODO : SoketName
 		const USkeletalMeshSocket* TargetSocket = TargetSkeletal->GetSocketByName(FName(TEXT("LockOnTarget")));
-
-		//UCameraComponent* Camera = ControlledCharacter->GetComponentByClass<UCameraComponent>();
-		//USpringArmComponent* Arm = ControlledCharacter->GetComponentByClass<USpringArmComponent>();
-
-		//FVector ArmRelativceLocation = Arm->GetRelativeLocation();
-		//FVector ArmLocation = CharacterLocation + ArmRelativceLocation;
-		////FVector TargetLocation = TargetSocket->GetSocketLocation(TargetSkeletal) - CameraLocation;
 		FVector TargetLocation = TargetSkeletal->GetSocketLocation(FName(TEXT("LockOnTarget")));
 
 		//ControlledCharacter;
@@ -130,14 +117,6 @@ void ASkillSystem::LockOn(const float DeltaTime)
 		// 그 위치에서 다시 적을 바라보는 방향을 계산
 		// 그 방향을 다시 케릭터에 적용
 		USpringArmComponent* Arm = ControlledCharacter->GetComponentByClass<USpringArmComponent>();
-		//FVector ArmLocation = Arm->GetComponentLocation();
-		//FVector Dir = TargetLocation - ArmLocation; Dir.Normalize();
-		//double Dot = FVector::DotProduct(Arm->GetForwardVector(), Dir);
-		//float Mul = 1.f;
-		//if (Dot < 0.f)
-		//{
-		//	Mul = -1.f;;
-		//}
 
 		FVector ArmLocation = Arm->GetComponentLocation(); //V1.Y = 0.f/* * Mul*/;
 		FRotator TargerRotation = UKismetMathLibrary::FindLookAtRotation(ArmLocation, TargetLocation);
@@ -186,7 +165,7 @@ void ASkillSystem::CheckLockOn()
 	FVector NormalVector = StartRotation.Vector();
 
 	StartLocation = StartLocation + NormalVector * 40.f;
-	FVector EndLocation = StartLocation + NormalVector * 1000;
+	FVector EndLocation = StartLocation + NormalVector * 2000.f; // @TODO : Camera의 Location만큼 보정
 
 	FHitResult HitResult;
 	bLockOnSucceed = GetWorld()->LineTraceSingleByChannel(

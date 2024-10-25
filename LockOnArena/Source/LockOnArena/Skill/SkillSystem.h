@@ -54,6 +54,7 @@ protected:
 	UPROPERTY()
 	bool bIsPlaying = false; // LockOn이 실행중
 
+	bool Overlap = false;
 
 
 	UPROPERTY()

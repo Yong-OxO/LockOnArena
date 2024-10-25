@@ -44,6 +44,8 @@ public:
 	float MaxHp = 100.f;
 	float CurrentHp = 100.f;
 
+
+public:
 	bool CanLockOn = true; // 자세한 쿨타임은 skillsystem에서 관리
 
 protected:
