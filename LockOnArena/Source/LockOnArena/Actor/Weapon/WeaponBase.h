@@ -37,10 +37,13 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
-	TSubclassOf<UInGameAnimInstance> AimInstance = nullptr;
+	TSubclassOf<UInGameAnimInstance> AnimInstance = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
 	UAnimMontage* WeaponAttackMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
+	UAnimMontage* WeaponChangeMontage = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
 	UAnimMontage* HitReactMontage = nullptr;
@@ -78,7 +81,7 @@ public:
 
 	// @TODO : 블루프린트 호출 가능성
 	UFUNCTION()
-	virtual void SwapEquipment(const int32 InValue);
+	virtual void SwapEquipment();
 
 	UFUNCTION()
 	virtual void OnMontageEnd(UAnimMontage* Montage, bool bInterrupted);
@@ -93,7 +96,7 @@ public:
 	UStaticMeshComponent* StaticMeshComponent = nullptr;
 
 public:
-	UInGameAnimInstance* AimInstance = nullptr;
+	UInGameAnimInstance* AnimInstance = nullptr;
 	UDataTable* DataTable = nullptr;
 public:
 	const FWeaponBaseTableRow* DataTableRow = nullptr;

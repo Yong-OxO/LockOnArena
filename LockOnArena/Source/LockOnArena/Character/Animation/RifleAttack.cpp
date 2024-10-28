@@ -23,7 +23,7 @@ void URifleAttack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* A
 
 	DataRow = RowHandle.GetRow<FEffectTableRow>(TEXT("DataRow"));
 
-	APawn* Owner = Cast<APawn>(MeshComp->GetOwner());
+	AActor* Owner = Cast<AActor>(MeshComp->GetOwner());
 
 #if WITH_EDITOR
 	if (GIsEditor && Owner && Owner->GetWorld() != GWorld) { return; } // 에디터 프리뷰
@@ -57,13 +57,13 @@ void URifleAttack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* A
 		Effect->Play(RowHandle, SpawnLocation, SpawnRotation);
 	}
 
-	// LineTrace
-	{
-		UCameraComponent* Camera = Owner->GetComponentByClass<UCameraComponent>();
-		FVector StartLocation = Camera->GetComponentLocation();
-		FRotator StartRotation = Camera->GetComponentRotation();
-		Child->Fire(StartLocation, StartRotation);
-	}
+	//// LineTrace
+	//{
+	//	UCameraComponent* Camera = Owner->GetComponentByClass<UCameraComponent>();
+	//	FVector StartLocation = Camera->GetComponentLocation();
+	//	FRotator StartRotation = Camera->GetComponentRotation();
+	//	Child->Fire(StartLocation, StartRotation);
+	//}
 
 }
 

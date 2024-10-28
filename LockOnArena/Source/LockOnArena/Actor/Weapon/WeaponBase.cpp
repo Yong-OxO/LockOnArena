@@ -36,19 +36,26 @@ AWeaponBase::AWeaponBase()
 
 void AWeaponBase::Attack()
 {
-	
 	if (DataTableRow->WeaponAttackMontage)
 	{
-		if (!AimInstance->Montage_IsPlaying(nullptr))
+		if (!AnimInstance->Montage_IsPlaying(nullptr))
 		{
-			AimInstance->Montage_Play(DataTableRow->WeaponAttackMontage);
+			AnimInstance->Montage_Play(DataTableRow->WeaponAttackMontage);
 			CharacterState->SetAttack(false);
 		}
 	}
 }
 
-void AWeaponBase::SwapEquipment(const int32 InValue)
+void AWeaponBase::SwapEquipment()
 {
+	if (DataTableRow->WeaponChangeMontage)
+	{
+		if (!AnimInstance->Montage_IsPlaying(nullptr))
+		{
+			AnimInstance->Montage_Play(DataTableRow->WeaponChangeMontage);
+			CharacterState->SetAttack(false);
+		}
+	}
 }
 
 void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
@@ -76,11 +83,11 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 		//MuzzleEffect = DataTableRow->MuzzleEffect;
 		{
 			USkeletalMeshComponent* MeshComponent = GetOwner()->GetComponentByClass<USkeletalMeshComponent>();
-			MeshComponent->SetAnimClass(DataTableRow->AimInstance);
+			MeshComponent->SetAnimClass(DataTableRow->AnimInstance);
 
-			AimInstance = Cast<UInGameAnimInstance>(MeshComponent->GetAnimInstance());
+			AnimInstance = Cast<UInGameAnimInstance>(MeshComponent->GetAnimInstance());
 
-			AimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
+			AnimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
 		}
 		if (SkillSystem)
 		{

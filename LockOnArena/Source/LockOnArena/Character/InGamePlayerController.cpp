@@ -29,6 +29,7 @@ void AInGamePlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
+	CharacterState = ControlledCharacter->GetState();
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	Subsystem->AddMappingContext(IMC_Default, 0);
@@ -129,6 +130,7 @@ void AInGamePlayerController::OnMove(const FInputActionValue& InValue)
 
 void AInGamePlayerController::OnLook(const FInputActionValue& InValue)
 {
+	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 	if (CharacterState->GetLockOn()) // LockOn중이면 마우스 움직임 x
 	{
 		return;
@@ -141,6 +143,7 @@ void AInGamePlayerController::OnLook(const FInputActionValue& InValue)
 
 void AInGamePlayerController::OnJump(const FInputActionValue& InValue)
 {
+	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 	if (!CharacterState->CanMove())
 	{
 		return;
@@ -231,6 +234,8 @@ void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
 	}
 
 	EquipmentType = ControlledCharacter->CharacterState->GetEquipmentType();
+	AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
+	Weapon->SwapEquipment();
 }
 
 void AInGamePlayerController::OnLockOn(const FInputActionValue& InValue)
