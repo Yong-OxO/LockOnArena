@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actor/Weapon/WeaponBase.h"
 #include "Actor/Weapon/WeaponChildActorComponent.h"
+#include "Skill/SkillChildActorComponent.h"
 #include "Skill/SkillSystem.h"
 
 AInGamePlayerController::AInGamePlayerController()
@@ -102,8 +103,8 @@ void AInGamePlayerController::Tick(float DeltaTime)
 
 void AInGamePlayerController::OnMove(const FInputActionValue& InValue)
 {
-	if (!CharacterState->CanMove()) { return; }
-	
+	if (!CharacterState->CanMove() || CharacterState->GetLockOn()) { return; }
+
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 
 	const FVector2D InputVector = InValue.Get<FVector2D>();
@@ -144,7 +145,7 @@ void AInGamePlayerController::OnLook(const FInputActionValue& InValue)
 void AInGamePlayerController::OnJump(const FInputActionValue& InValue)
 {
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
-	if (!CharacterState->CanMove())
+	if (!CharacterState->CanMove() || CharacterState->GetLockOn())
 	{
 		return;
 	}
@@ -179,6 +180,11 @@ void AInGamePlayerController::OnAttack(const FInputActionValue& InValue)
 {
 	if (EquipmentType == WeaponType::NonWeapon) { return; } // @TODO : Num, 공격 불가 알림
 	
+	if (CharacterState->GetLockOn())
+	{
+		// @TODO : CharacterState의 공격력 2배 버프 1초
+		CharacterState->SetLockOn(false); 
+	}
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 	UWeaponChildActorComponent* CharacterWeapon = ControlledCharacter->Weapon;
 	AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
@@ -241,18 +247,14 @@ void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
 void AInGamePlayerController::OnLockOn(const FInputActionValue& InValue)
 {
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
-	if (!ControlledCharacter->GetState()->CanLockOn) // 쿨다운중일때
+	ASkillSystem* SkillSystem = Cast<ASkillSystem>(CharacterState->GetSkillSystem()->GetChildActor());
+	if (!SkillSystem->CanPlaySkill()) // 스킬사용이 불가능일때
 	{
 		UE_LOG(LogTemp, Display, TEXT("LockOn is CoolDown"));
 		return;
 	}
 
-		
-	UWeaponChildActorComponent* CharacterWeapon = ControlledCharacter->Weapon;
-	AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
-
-	//Weapon->SkillSystem->LockOn();
-	Weapon->SkillSystem->StartLockOnPlay();
+	SkillSystem->PlaySkill(0);
 }
 
 void AInGamePlayerController::ToRun(const float DeltaTime)

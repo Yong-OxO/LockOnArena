@@ -8,6 +8,22 @@
 
 #include "CharacterStateComponent.generated.h"
 
+class USkillChildActorComponent;
+
+USTRUCT()
+struct LOCKONARENA_API FCharacterStateTableRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, Category = "CharacterState|Skill", meta = (RowType = "/Script/LOCKONARENA.SkillSystemTableRow"))
+	FDataTableRowHandle SkillSystemTableRowHandle;
+	UPROPERTY(EditAnywhere, Category = "CharacterState|Status")
+	float MaxHp;
+};
+
+
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LOCKONARENA_API UCharacterStateComponent : public UActorComponent
@@ -39,6 +55,11 @@ public:
 	virtual bool GetLockOnPlaying() { return bLockOnPlay; }
 	virtual void SetLockOnPlaying(const bool InValue) { bLockOnPlay = InValue; }
 
+public:
+	virtual USkillChildActorComponent* GetSkillSystem() { return SkillSystem; }
+
+public:
+	virtual void SetData(const FDataTableRowHandle& RowHandle);
 
 public:
 	float MaxHp = 100.f;
@@ -49,13 +70,36 @@ public:
 	bool CanLockOn = true; // 자세한 쿨타임은 skillsystem에서 관리
 
 protected:
+	UPROPERTY(EditAnywhere)
+	USkillChildActorComponent* SkillSystem;
+
+	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.SkillSystemTableRow"))
+	FDataTableRowHandle SkillSystemTableRowHandle;
+
 	bool bCanMove = true;
 	bool bCanAttack = true;
 
 
 	WeaponType EquipmentType;
 
-	// LockOn
+
+
+public:	// LockOn
+	virtual void SetCD_LockOn(const float InCoolDown) { CD_LockOn = InCoolDown; }
+	virtual float GetCD_LockOn() { return CD_LockOn; }
+
+	virtual void SetCD_RemainLockOn(const float InRemainCoolDown) { CD_RemainLockOn = InRemainCoolDown; }
+	virtual float GetCD_RemainLockOn() { return CD_RemainLockOn; }
+	
+
+protected:	
 	bool bLockOnSuccessed = false;
 	bool bLockOnPlay = false;
+	float CD_LockOn;
+	float CD_RemainLockOn;
+
+
+
+protected:
+
 };

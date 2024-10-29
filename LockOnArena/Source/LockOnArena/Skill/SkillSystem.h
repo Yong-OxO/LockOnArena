@@ -11,6 +11,21 @@ class ADefaultCharacter;
 class AInGamePlayerController;
 class UCharacterStateComponent;
 
+
+class ASkillSystem;
+USTRUCT()
+struct LOCKONARENA_API FSkillSystemTableRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, Category = "Skill")
+	TSubclassOf<ASkillSystem> SkillSystemClass;
+
+	UPROPERTY(EditAnywhere, Category = "Skill")
+	float CoolDown;
+};
+
 UCLASS()
 class LOCKONARENA_API ASkillSystem : public AActor
 {
@@ -21,63 +36,48 @@ public:
 	ASkillSystem();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, Category = "Rotation")
-	FRotator ToTargetRotation;
 public:
+	virtual void SetData(const FDataTableRowHandle& InRowHandle);
+
+public:
+	// Input값만큼 RemainCooldown에서 빼기
 	UFUNCTION()
-	virtual void StartLockOnPlay();
+	virtual void ReduceCooldown(float DeltaTime);
 
 	UFUNCTION()
-	virtual void StopLockOnPlay();
+	virtual float GetRemainCooldown() { return RemainCoolDown; };
 
-	virtual void LockOn(const float DeltaTime);
+	UFUNCTION()
+	virtual bool CanPlaySkill() { return bCanPlay; };	
 
+	UFUNCTION()
+	virtual void PlaySkill(const int SkillNum);
+
+	 
+protected:
+	UPROPERTY()
+	float CoolDown = 5.f; // CoolDown
+
+	UPROPERTY()
+	float RemainCoolDown = 0.f;
+
+	UPROPERTY()
+	bool bCanPlay = true;
 
 protected:
 	UPROPERTY()
 	ADefaultCharacter* ControlledCharacter = nullptr;
+
 	UPROPERTY()
 	AInGamePlayerController* Controller = nullptr;
+
 	UPROPERTY()
 	UCharacterStateComponent* CharacterState = nullptr;
-
-	UPROPERTY()
-	float DetectionDist = 3000.f; // 탐지거리
-
-	UPROPERTY()
-	bool bIsPlaying = false; // LockOn이 실행중
-
-	bool Overlap = false;
-
-
-	UPROPERTY()
-	TArray<FOverlapResult> OverlapResults;
-
-
-protected:
-	UFUNCTION()
-	virtual void CheckLockOn();
-	bool bLockOnSucceed; // LockOn이 끝났을때 에임이 조준 되어있는지
-
-	FTimerHandle TimerHandle;
-
-
-protected: // 쿨타임 관리
-	UFUNCTION()
-	virtual void LockOnCoolDown(float DeltaTime);
-
-	UPROPERTY()
-	float CD_LockOn = 5.f; // CoolDown
-
-	UPROPERTY()
-	float CD_RemainLockOn = 0.f;
 };
 
 

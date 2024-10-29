@@ -73,7 +73,7 @@ public:
 	//UPROPERTY(EditAnywhere)
 	//USkeletalMeshComponent* Weapon_Skeletal = nullptr;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	UCharacterStateComponent* CharacterState = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
@@ -91,9 +91,5 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	UCameraComponent* CameraComponent;
-
-
-
-protected:
 	
 };

@@ -3,14 +3,25 @@
 
 #include "Character/CharacterStateComponent.h"
 #include "GameFramework/Actor.h"
+#include "Skill/SkillSystem.h"
+#include "Skill/SkillChildActorComponent.h"
 
 // Sets default values for this component's properties
 UCharacterStateComponent::UCharacterStateComponent()
 {
-
 	PrimaryComponentTick.bCanEverTick = true;
 
+	SkillSystem = CreateDefaultSubobject<USkillChildActorComponent>(TEXT("SkillSystem"));
+
 	EquipmentType = WeaponType::NonWeapon;
+	
+	// @TODO : RowName namespace
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Character/DT_CharacterState.DT_CharacterState'"));
+	UDataTable* DataTable = DataTableAsset.Object;
+	FCharacterStateTableRow* DataTableRow = DataTable->FindRow<FCharacterStateTableRow>(FName("Default"), TEXT("CharacterState DataTableRow"));
+
+	SkillSystemTableRowHandle = DataTableRow->SkillSystemTableRowHandle;
+	MaxHp = DataTableRow->MaxHp;
 }
 
 
@@ -18,6 +29,8 @@ UCharacterStateComponent::UCharacterStateComponent()
 void UCharacterStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SkillSystem->SetData(SkillSystemTableRowHandle);
 }
 
 
@@ -26,15 +39,12 @@ void UCharacterStateComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (bLockOnSuccessed)
-	{
-		UE_LOG(LogTemp, Display, TEXT("Is Lockon"));
-	}
+
 }
 
 void UCharacterStateComponent::SetLockOn(const bool InValue)
 {
-	bLockOnSuccessed = true;
+	bLockOnSuccessed = InValue;
 
 	FTimerHandle TimerHandle;
 
@@ -53,5 +63,11 @@ void UCharacterStateComponent::SetLockOnFalse()
 {
 	bLockOnSuccessed = false;
 	bCanMove = !bLockOnSuccessed;
+}
+
+void UCharacterStateComponent::SetData(const FDataTableRowHandle& RowHandle)
+{
+	int a = 0;
+	//RowHandle.GetRow<>();
 }
 

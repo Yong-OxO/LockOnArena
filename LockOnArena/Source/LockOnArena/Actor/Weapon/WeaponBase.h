@@ -15,7 +15,6 @@ class USkeletalMeshComponent;
 class ADefaultCharacter;
 class UCharacterStateComponent;
 class AEffect;
-class ASkillSystem;
 
 USTRUCT()
 struct LOCKONARENA_API FWeaponBaseTableRow : public FTableRowBase
@@ -47,11 +46,6 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
 	UAnimMontage* HitReactMontage = nullptr;
-
-public:
-	UPROPERTY(EditAnywhere, Category = "SkillSystem|Skill")
-	TSubclassOf<ASkillSystem> SkillSystem;
-
 public:
 	//UPROPERTY(EditAnywhere, Category = "Weapon|Effect")
 	//TObjectPtr<AEffect> MuzzleEffect = nullptr;
@@ -109,9 +103,4 @@ public:
 
 	//UPROPERTY(VisibleAnywhere)
 	//AEffect* MuzzleEffect = nullptr;
-
-public:
-	UPROPERTY()
-	ASkillSystem* SkillSystem = nullptr;
-	//Enemy (피격자)
 };
