@@ -77,7 +77,7 @@ public:
 	UCharacterStateComponent* CharacterState = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
-	UWeaponChildActorComponent* Weapon = nullptr;
+	UWeaponChildActorComponent* RifleWeapon = nullptr;
 
 	UDataTable* DataTable = nullptr;
 

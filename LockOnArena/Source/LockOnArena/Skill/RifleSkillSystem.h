@@ -7,7 +7,7 @@
 #include "RifleSkillSystem.generated.h"
 
 
-class ASkillSystem;
+class ASkillBase;
 USTRUCT()
 struct LOCKONARENA_API FRifleSkillSystemTableRow : public FTableRowBase
 {
@@ -15,10 +15,13 @@ struct LOCKONARENA_API FRifleSkillSystemTableRow : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Skill")
-	ASkillSystem* LockOn;
+	TSubclassOf<ASkillBase> LockOn;
 
 	UPROPERTY(EditAnywhere, Category = "Skill")
-	ASkillSystem* Skill01;
+	TSubclassOf<ASkillBase> Skill01;
+	
+	UPROPERTY(EditAnywhere, Category = "Skill")
+	TSubclassOf<ASkillBase> Skill02;
 };
 
 UCLASS()
@@ -29,8 +32,9 @@ class LOCKONARENA_API ARifleSkillSystem : public ASkillSystem
 public:
 	ARifleSkillSystem();
 
+
 public:
-	virtual void PlaySkill(const int SkillNum) override;
+	//virtual void PlaySkill(const int SkillNum) override;
 
-
+	ASkillBase* LockOn;
 };

@@ -2,9 +2,12 @@
 
 
 #include "Skill/RifleSkillSystem.h"
+#include "Skill/SkillBase.h"
 
 ARifleSkillSystem::ARifleSkillSystem()
 {
+	FRifleSkillSystemTableRow* Row;
+	LockOn = CreateDefaultSubobject<>(TEXT("LockOn"));
 }
 
 void ARifleSkillSystem::PlaySkill(const int SkillNum)
