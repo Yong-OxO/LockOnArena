@@ -10,7 +10,7 @@
 class ADefaultCharacter;
 class UCharacterStateComponent;
 class AInGamePlayerController;
-
+class UMainWidget;
 
 UCLASS()
 class LOCKONARENA_API ADefaultHUD : public AHUD
@@ -25,6 +25,8 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
+
+	UMainWidget* MainWidget = nullptr;
 
 	AInGamePlayerController* Controller = nullptr;
 	ADefaultCharacter* ControlledCharacter = nullptr;

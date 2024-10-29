@@ -18,8 +18,6 @@ UCharacterStateComponent::UCharacterStateComponent()
 void UCharacterStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	
 }
 
 
@@ -28,7 +26,7 @@ void UCharacterStateComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (bLockOn)
+	if (bLockOnSuccessed)
 	{
 		UE_LOG(LogTemp, Display, TEXT("Is Lockon"));
 	}
@@ -36,8 +34,7 @@ void UCharacterStateComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 void UCharacterStateComponent::SetLockOn(const bool InValue)
 {
-	bLockOn = InValue;
-	bCanMove = !bLockOn;
+	bLockOnSuccessed = true;
 
 	FTimerHandle TimerHandle;
 
@@ -48,11 +45,13 @@ void UCharacterStateComponent::SetLockOn(const bool InValue)
 		1.0f,          // 대기 시간(초 단위)
 		false          // 반복 여부 (false면 한 번만 실행)
 	);
+
+	
 }
 
 void UCharacterStateComponent::SetLockOnFalse()
 {
-	bLockOn = false;
-	bCanMove = !bLockOn;
+	bLockOnSuccessed = false;
+	bCanMove = !bLockOnSuccessed;
 }
 

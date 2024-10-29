@@ -17,6 +17,7 @@ public:
 	void VisibleNormalCrosshair();
 	void VisibleLockOnCrosshair();
 
+	virtual  UCrosshairWidget* GetCrosshairWidget() { return UI_InGameCrosshair; }
 protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCrosshairWidget* UI_InGameCrosshair;
