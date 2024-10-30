@@ -7,7 +7,7 @@ UWeaponSubsystem::UWeaponSubsystem()
 {
 	{
 		static ConstructorHelpers::FObjectFinder<UDataTable> Asset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/DT_WeaponBase.DT_WeaponBase'"));
-		check(Asset.Object);
+		//check(Asset.Object);
 		WeaponBaseDataTable = Asset.Object;
 	}
 	{

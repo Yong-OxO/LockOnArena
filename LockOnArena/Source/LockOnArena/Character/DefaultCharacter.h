@@ -76,8 +76,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UCharacterStateComponent* CharacterState = nullptr;
 
+	// WeaponManage
 	UPROPERTY(VisibleAnywhere)
-	UWeaponChildActorComponent* RifleWeapon = nullptr;
+	UWeaponChildActorComponent* Weapon = nullptr;
 
 	UDataTable* DataTable = nullptr;
 

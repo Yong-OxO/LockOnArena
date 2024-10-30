@@ -38,6 +38,8 @@ public:
 
 public:
 	virtual void SetData(const FDataTableRowHandle& InRowHandle); 
+
+	virtual void PlaySkill(const int SkillNum);
 };
 
 

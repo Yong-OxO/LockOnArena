@@ -39,12 +39,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	virtual void SetData(const FDataTableRowHandle& InRowHandle);
+	//virtual void SetData(const FDataTableRowHandle& InRowHandle);
 
 public:
 	// Input값만큼 RemainCooldown에서 빼기
-	UFUNCTION()
-	virtual void ReduceCooldown(float DeltaTime);
+	//UFUNCTION()
+	//virtual void ReduceCooldown(float DeltaTime);
 
 	UFUNCTION()
 	virtual float GetRemainCooldown() { return RemainCoolDown; };
@@ -52,8 +52,8 @@ public:
 	UFUNCTION()
 	virtual bool CanPlaySkill() { return bCanPlay; };
 
-	UFUNCTION()
-	virtual void PlaySkill(const int SkillNum);
+	//UFUNCTION()
+	//virtual void PlaySkill(const int SkillNum);
 
 protected:
 	UPROPERTY()

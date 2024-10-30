@@ -23,10 +23,10 @@ void ASkillBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (RemainCoolDown > 0.f)
-	{
-		ReduceCooldown(DeltaTime);
-	}
+	//if (RemainCoolDown > 0.f)
+	//{
+	//	ReduceCooldown(DeltaTime);
+	//}
 
 }
 

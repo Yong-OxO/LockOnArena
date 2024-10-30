@@ -22,8 +22,8 @@ ADefaultCharacter::ADefaultCharacter()
 	DataTableRow = DataTable->FindRow<FDefaultCharacterTableRow>(FName("Basic"), TEXT("Character DataTableRow"));
 
 
-	RifleWeapon = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("RifleWeapon"));
-	RifleWeapon->SetupAttachment(GetMesh(), TEXT("WeaponSocket"));
+	Weapon = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("Weapon"));
+	Weapon->SetupAttachment(GetMesh(), TEXT("WeaponSocket"));
 
 	CharacterState = CreateDefaultSubobject<UCharacterStateComponent>(TEXT("CharacterState"));
 	CharacterState = DataTableRow->CharacterState;
@@ -53,7 +53,7 @@ void ADefaultCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	// @TODO : WeaponType
-	RifleWeapon->SetData(DataTableRow->WeaponBaseTableRowHandle);
+	Weapon->SetData(DataTableRow->WeaponBaseTableRowHandle);
 }
 
 // Called every frame
@@ -69,6 +69,7 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
 
 void ADefaultCharacter::SetData(const FDataTableRowHandle& InRowHandle)
 {

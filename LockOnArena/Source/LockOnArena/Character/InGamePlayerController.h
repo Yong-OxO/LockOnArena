@@ -15,6 +15,8 @@ class ADefaultCharacter;
 class UCharacterMovementComponent;
 class UCharacterStateComponent;
 
+class UWeaponChildActorComponent;
+class AWeaponBase;
 
 USTRUCT()
 struct LOCKONARENA_API FCharacterControllerTableRow : public FTableRowBase
@@ -95,8 +97,6 @@ public:
 	WeaponType EquipmentType;
 
 protected:
-	//UPROPERTY(EditAnywhere, meta = (RowType = "/Script/KDT3D.WeaponTableRow"))
-
 	UDataTable* DataTable = nullptr;
 	// Controller 상태 변경시 TableRow도 변경 필요
 	const FCharacterControllerTableRow* ControllerTableRow = nullptr;
@@ -105,4 +105,7 @@ protected:
 
 	UCharacterMovementComponent* CharacterMovement;
 	UCharacterStateComponent* CharacterState;
+
+	// Weapon
+	UWeaponChildActorComponent* WeaponChildActor;
 };

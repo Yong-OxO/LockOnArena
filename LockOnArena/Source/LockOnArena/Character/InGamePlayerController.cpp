@@ -28,17 +28,19 @@ AInGamePlayerController::AInGamePlayerController()
 void AInGamePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
-	CharacterState = ControlledCharacter->GetState();
-
+	{
+		ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
+		CharacterState = ControlledCharacter->GetState();
+		WeaponChildActor = ControlledCharacter->Weapon;
+	}
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	Subsystem->AddMappingContext(IMC_Default, 0);
-
-	CharacterMovement = ControlledCharacter->GetCharacterMovement();
-	CharacterMovement->JumpZVelocity = 530.f;
-	CharacterMovement->AirControl = 0.2f;
-	CharacterMovement->MaxWalkSpeed = WalkSpeed;
+	{
+		CharacterMovement = ControlledCharacter->GetCharacterMovement();
+		CharacterMovement->JumpZVelocity = 530.f;
+		CharacterMovement->AirControl = 0.2f;
+		CharacterMovement->MaxWalkSpeed = WalkSpeed;
+	}
 }
 
 void AInGamePlayerController::SetupInputComponent()
@@ -178,21 +180,19 @@ void AInGamePlayerController::StopRun(const FInputActionValue& InValue)
 
 void AInGamePlayerController::OnAttack(const FInputActionValue& InValue)
 {
-	if (EquipmentType == WeaponType::NonWeapon) { return; } // @TODO : Num, 공격 불가 알림
-	
+	 // @TODO : Num, 공격 불가 알림	
 	if (CharacterState->GetLockOn())
 	{
 		// @TODO : CharacterState의 공격력 2배 버프 1초
 		CharacterState->SetLockOn(false); 
 	}
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
-	UWeaponChildActorComponent* CharacterWeapon = ControlledCharacter->Weapon;
-	AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
-
+	WeaponChildActor = ControlledCharacter->Weapon;
 	CharacterState = ControlledCharacter->CharacterState;
+
 	if (CharacterState->CanAttack())
 	{
-		Weapon->Attack();
+		WeaponChildActor->CurrentWeapon->Attack();
 	}
 }
 
@@ -247,14 +247,14 @@ void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
 void AInGamePlayerController::OnLockOn(const FInputActionValue& InValue)
 {
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
-	ASkillSystem* SkillSystem = Cast<ASkillSystem>(CharacterState->GetSkillSystem()->GetChildActor());
-	if (!SkillSystem->CanPlaySkill()) // 스킬사용이 불가능일때
-	{
-		UE_LOG(LogTemp, Display, TEXT("LockOn is CoolDown"));
-		return;
-	}
+	//ASkillSystem* SkillSystem = Cast<ASkillSystem>(CharacterState->GetSkillSystem()->GetChildActor());
+	//if (!SkillSystem->CanPlaySkill()) // 스킬사용이 불가능일때
+	//{
+	//	UE_LOG(LogTemp, Display, TEXT("LockOn is CoolDown"));
+	//	return;
+	//}
 
-	SkillSystem->PlaySkill(0);
+	//SkillSystem->PlaySkill(0);
 }
 
 void AInGamePlayerController::ToRun(const float DeltaTime)

@@ -21,7 +21,7 @@ struct LOCKONARENA_API FWeaponBaseTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
-public:
+public: // 
 	UPROPERTY(EditAnywhere, Category = "Weapon|WeaponBase")
 	USkeletalMesh* SkeletalMesh = nullptr;
 
@@ -46,9 +46,13 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
 	UAnimMontage* HitReactMontage = nullptr;
-public:
+public: // Skiil
+
+
 	//UPROPERTY(EditAnywhere, Category = "Weapon|Effect")
 	//TObjectPtr<AEffect> MuzzleEffect = nullptr;
+
+
 };
 
 UCLASS()
