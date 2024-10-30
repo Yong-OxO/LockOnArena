@@ -6,14 +6,16 @@
 #include "Components/ChildActorComponent.h"
 #include "WeaponChildActorComponent.generated.h"
 
-/**
- * 
- */
+
+class AWeaponBase;
+
 UCLASS()
 class LOCKONARENA_API UWeaponChildActorComponent : public UChildActorComponent
 {
 	GENERATED_BODY()
 
+public:
+	TSubclassOf<AWeaponBase> WeaponClass;
 
 public:
 	UWeaponChildActorComponent();
