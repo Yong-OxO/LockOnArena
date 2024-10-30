@@ -9,6 +9,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Actor/Weapon/RifleBase.h"
+#include "Character/DefaultCharacter.h"
 
 URifleAttack::URifleAttack()
 {
@@ -23,17 +24,16 @@ void URifleAttack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* A
 
 	DataRow = RowHandle.GetRow<FEffectTableRow>(TEXT("DataRow"));
 
-	AActor* Owner = Cast<AActor>(MeshComp->GetOwner());
+	ADefaultCharacter* Owner = Cast<ADefaultCharacter>(MeshComp->GetOwner());
 
 #if WITH_EDITOR
 	if (GIsEditor && Owner && Owner->GetWorld() != GWorld) { return; } // 에디터 프리뷰
 #endif
 
-	UWeaponChildActorComponent* Weapon = Owner->GetComponentByClass<UWeaponChildActorComponent>();
-	ARifleBase* Child = Cast<ARifleBase>(Weapon->GetChildActor());
+	ARifleBase* Weapon = Cast<ARifleBase>(Owner->ActiveWeapon);
 
-	USkeletalMeshComponent* SkeletalMeshComponent = Child->GetComponentByClass<USkeletalMeshComponent>();
-	UStaticMeshComponent* StaticMeshComponent = Child->GetComponentByClass<UStaticMeshComponent>();
+	USkeletalMeshComponent* SkeletalMeshComponent = Weapon->GetComponentByClass<USkeletalMeshComponent>();
+	UStaticMeshComponent* StaticMeshComponent = Weapon->GetComponentByClass<UStaticMeshComponent>();
 	{ // Effect
 		FVector SpawnLocation;
 		FRotator SpawnRotation;

@@ -41,7 +41,16 @@ void AWeaponBase::Attack()
 
 void AWeaponBase::SwapEquipment()
 {
-	int a = 0;
+	UpdateCharacter();
+
+	if (DataTableRow->WeaponChangeMontage)
+	{
+		if (!AnimInstance->Montage_IsPlaying(nullptr))
+		{
+			AnimInstance->Montage_Play(DataTableRow->WeaponChangeMontage);
+			CharacterState->SetAttack(false);
+		}
+	}
 }
 
 void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
@@ -98,14 +107,13 @@ void AWeaponBase::OnMontageEnd(UAnimMontage* Montage, bool bInterrupted)
 
 void AWeaponBase::UpdateCharacter()
 {
-	if (DataTableRow->WeaponChangeMontage)
-	{
-		if (!AnimInstance->Montage_IsPlaying(nullptr))
-		{
-			AnimInstance->Montage_Play(DataTableRow->WeaponChangeMontage);
-			CharacterState->SetAttack(false);
-		}
-	}
+	AActor* Temp = GetOwner();
+	USkeletalMeshComponent* MeshComponent = GetOwner()->GetComponentByClass<USkeletalMeshComponent>();
+	MeshComponent->SetAnimClass(DataTableRow->AnimInstance);
+
+	AnimInstance = Cast<UInGameAnimInstance>(MeshComponent->GetAnimInstance());
+
+	AnimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
 
 	if (SkeletalMesh)
 	{
@@ -119,11 +127,6 @@ void AWeaponBase::UpdateCharacter()
 	{
 		StaticMeshComponent->SetStaticMesh(nullptr);
 		SkeletalMeshComponent->SetSkeletalMesh(nullptr);
-	}
-
-	{
-		USkeletalMeshComponent* MeshComponent = GetOwner()->GetComponentByClass<USkeletalMeshComponent>();
-		MeshComponent->SetAnimClass(DataTableRow->AnimInstance);
 	}
 }
 

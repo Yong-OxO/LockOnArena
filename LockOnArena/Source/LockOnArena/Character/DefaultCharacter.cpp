@@ -127,7 +127,7 @@ void ADefaultCharacter::SwitchWeapon(int InValue)
 		WeaponInstances[InValue]->GetChildActor()->SetActorTickEnabled(true);
 	}
 	
-	ActiveWeapon->UpdateCharacter();
+	ActiveWeapon->SwapEquipment();
 }
 
 
