@@ -22,17 +22,7 @@ ADefaultCharacter::ADefaultCharacter()
 	DataTableRow = DataTable->FindRow<FDefaultCharacterTableRow>(FName("Basic"), TEXT("Character DataTableRow"));
 
 	{
-		WeaponInstances.SetNum(4);
-
-		WeaponInstances[0] = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("WeaponInstances1"));
-		WeaponInstances[1] = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("WeaponInstances2"));
-		WeaponInstances[2] = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("WeaponInstances3"));
-		WeaponInstances[3] = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("WeaponInstances4"));
-		WeaponInstances[0]->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
-		WeaponInstances[1]->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
-		WeaponInstances[2]->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
-		WeaponInstances[3]->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
-		
+		AActor* TempActor = this->GetOwner();		
 
 		ActiveWeapon = CreateDefaultSubobject<AWeaponBase>(TEXT("Weapon"));
 		ActiveWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
@@ -92,6 +82,9 @@ void ADefaultCharacter::WeaponInit()
 
 	for (int i = 0; i < WeaponDataHandles.Num(); ++i)
 	{
+		WeaponInstances.Add(NewObject<UWeaponChildActorComponent>(this, UWeaponChildActorComponent::StaticClass()));
+		WeaponInstances[i]->RegisterComponent();
+		WeaponInstances[i]->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 		WeaponInstances[i]->SetData(WeaponDataHandles[i]);
 		WeaponInstances[i]->GetChildActor()->SetActorHiddenInGame(true);
 		WeaponInstances[i]->GetChildActor()->SetActorEnableCollision(false);

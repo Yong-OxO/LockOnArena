@@ -14,7 +14,6 @@ UWeaponChildActorComponent::UWeaponChildActorComponent()
 void UWeaponChildActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 
