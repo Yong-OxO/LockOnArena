@@ -190,10 +190,10 @@ void AInGamePlayerController::OnAttack(const FInputActionValue& InValue)
 	WeaponChildActor = ControlledCharacter->Weapon;
 	CharacterState = ControlledCharacter->CharacterState;
 
-	if (CharacterState->CanAttack())
-	{
+	//if (CharacterState->CanAttack())
+	//{
 		WeaponChildActor->CurrentWeapon->Attack();
-	}
+	//}
 }
 
 void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
@@ -202,46 +202,50 @@ void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
 
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 	CharacterState = ControlledCharacter->GetState();
-	if (!CharacterState->CanAttack() || CharacterState->GetLockOn())
-	{
-		return;
-	}
-	WeaponType InKey = (WeaponType)InValue.Get<float>();
-	if (InKey == EquipmentType) { return; }
+	int Value = (int)InValue.Get<float>();
+	--Value; // Index값으로 이용하기때문
+	if (Value > 3 || Value < 0) { return; }
+	ControlledCharacter->Weapon->SwitchWeapon(Value);
+	//if (!CharacterState->CanAttack() || CharacterState->GetLockOn())
+	//{
+	//	return;
+	//}
+	//WeaponType InKey = (WeaponType)InValue.Get<float>();
+	//if (InKey == EquipmentType) { return; }
 
-	UWeaponChildActorComponent* CharacterWeapon = ControlledCharacter->Weapon;
+	//UWeaponChildActorComponent* CharacterWeapon = ControlledCharacter->Weapon;
 
-	switch (InKey)
-	{
-		case WeaponType::NonWeapon:
-		{
-			CharacterWeapon->SetData(ControlledCharacter->DataTableRow->WeaponBaseTableRowHandle);
-			ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::NonWeapon);
-			break;
-		}
-		case WeaponType::Punch:
-		{
-			CharacterWeapon->SetData(ControlledCharacter->DataTableRow->PunchTableRowHandle);
-			ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::Punch);
-			break;
-		}
-		case WeaponType::Knife:
-		{
-			CharacterWeapon->SetData(ControlledCharacter->DataTableRow->KnifeTableRowHandle);
-			ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::Knife);
-			break;
-		}		
-		case WeaponType::Rifle:
-		{
-			CharacterWeapon->SetData(ControlledCharacter->DataTableRow->RifleTableRowHandle);
-			ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::Rifle);
-			break;
-		}
-	}
+	//switch (InKey)
+	//{
+	//	case WeaponType::NonWeapon:
+	//	{
+	//		CharacterWeapon->SetData(ControlledCharacter->DataTableRow->WeaponBaseTableRowHandle);
+	//		ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::NonWeapon);
+	//		break;
+	//	}
+	//	case WeaponType::Punch:
+	//	{
+	//		CharacterWeapon->SetData(ControlledCharacter->DataTableRow->PunchTableRowHandle);
+	//		ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::Punch);
+	//		break;
+	//	}
+	//	case WeaponType::Knife:
+	//	{
+	//		CharacterWeapon->SetData(ControlledCharacter->DataTableRow->KnifeTableRowHandle);
+	//		ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::Knife);
+	//		break;
+	//	}		
+	//	case WeaponType::Rifle:
+	//	{
+	//		CharacterWeapon->SetData(ControlledCharacter->DataTableRow->RifleTableRowHandle);
+	//		ControlledCharacter->CharacterState->SetEquipmentType(WeaponType::Rifle);
+	//		break;
+	//	}
+	//}
 
-	EquipmentType = ControlledCharacter->CharacterState->GetEquipmentType();
-	AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
-	Weapon->SwapEquipment();
+	//EquipmentType = ControlledCharacter->CharacterState->GetEquipmentType();
+	//AWeaponBase* Weapon = CastChecked<AWeaponBase>(CharacterWeapon->GetChildActor());
+	//Weapon->SwapEquipment();
 }
 
 void AInGamePlayerController::OnLockOn(const FInputActionValue& InValue)

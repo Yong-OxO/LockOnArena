@@ -94,6 +94,10 @@ public:
 	UStaticMeshComponent* StaticMeshComponent = nullptr;
 
 public:
+	USkeletalMesh* SkeletalMesh = nullptr;
+
+	UStaticMesh* StaticMesh = nullptr;
+
 	UInGameAnimInstance* AnimInstance = nullptr;
 	UDataTable* DataTable = nullptr;
 public:

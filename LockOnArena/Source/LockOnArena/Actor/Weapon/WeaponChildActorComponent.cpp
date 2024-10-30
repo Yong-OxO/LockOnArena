@@ -47,6 +47,7 @@ void UWeaponChildActorComponent::InitializeWeapons()
 			{
 				NewWeapon->SetActorHiddenInGame(true);
 				NewWeapon->SetOwner(GetOwner());
+				NewWeapon->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 				WeaponInstances.Add(NewWeapon);
 			}
 		}
@@ -59,12 +60,17 @@ void UWeaponChildActorComponent::InitializeWeapons()
 
 void UWeaponChildActorComponent::SwitchWeapon(const int WeaponIndex)
 {
-	CurrentWeapon->SetActorHiddenInGame(true);
+	if (!WeaponClasses[WeaponIndex]) { return; }
 
-	if (WeaponInstances[WeaponIndex])
+	if (WeaponClasses[WeaponIndex] != GetChildActorClass())
 	{
+		CurrentWeapon->SetActorHiddenInGame(true);
+		SetChildActorClass(WeaponClasses[WeaponIndex]);
+
 		CurrentWeapon = WeaponInstances[WeaponIndex];
 		CurrentWeapon->SetActorHiddenInGame(false);
+
+		CurrentWeapon->SwapEquipment();
 	}
 }
 

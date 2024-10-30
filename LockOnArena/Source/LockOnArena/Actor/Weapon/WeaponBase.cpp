@@ -14,12 +14,6 @@ AWeaponBase::AWeaponBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	{
-		static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/DT_WeaponBase.DT_WeaponBase'"));
-		DataTable = DataTableAsset.Object;
-		// @TODO : RowName namespace or DataTableRow에서 본인의 Handle관리
-		//DataTableRow = DataTable->FindRow<FWeaponBaseTableRow>(FName("Basic"), TEXT("WeaponBase DataTableRow"));
-	}
-	{
 		SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 		RootComponent = SceneComponent;
 	
@@ -55,20 +49,43 @@ void AWeaponBase::SwapEquipment()
 			CharacterState->SetAttack(false);
 		}
 	}
+
+	if (SkeletalMesh)
+	{
+		SkeletalMeshComponent->SetSkeletalMesh(SkeletalMesh);
+	}
+	else if (DataTableRow->StaticMesh)
+	{
+		StaticMeshComponent->SetStaticMesh(StaticMesh);
+	}
+	else
+	{
+		StaticMeshComponent->SetStaticMesh(nullptr);
+		SkeletalMeshComponent->SetSkeletalMesh(nullptr);
+	}
+
+	{
+		USkeletalMeshComponent* MeshComponent = GetOwner()->GetComponentByClass<USkeletalMeshComponent>();
+		MeshComponent->SetAnimClass(DataTableRow->AnimInstance);
+	}
+
+	//MuzzleEffect = DataTableRow->MuzzleEffect;
 }
 
 void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 {
 	DataTableRow = InRowHandle.GetRow<FWeaponBaseTableRow>(TEXT("DataTableRow"));
 	ensureMsgf(DataTableRow, TEXT("Not Valid DataTableRow"));
+	SkeletalMesh = DataTableRow->SkeletalMesh;
+	StaticMesh = DataTableRow->StaticMesh;
 	{
 		if (DataTableRow->SkeletalMesh)
 		{
-			SkeletalMeshComponent->SetSkeletalMesh(DataTableRow->SkeletalMesh);
+			SkeletalMeshComponent->SetSkeletalMesh(SkeletalMesh);
 		}
 		else if (DataTableRow->StaticMesh)
 		{
-			StaticMeshComponent->SetStaticMesh(DataTableRow->StaticMesh);
+			StaticMeshComponent->SetStaticMesh(StaticMesh);
 		}
 		else
 		{
