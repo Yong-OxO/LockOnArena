@@ -40,8 +40,7 @@ public:
 public:
 	FWeaponChildBaseTableRow* DataTableRow = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Weapons")
-	TArray<FDataTableRowHandle> WeaponDataHandles;
+
 
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	TArray<TSubclassOf<AWeaponBase>> WeaponClasses; // WeaponBase에 WeaponClass를 넣어준다.

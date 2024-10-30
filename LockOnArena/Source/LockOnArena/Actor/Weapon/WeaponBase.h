@@ -83,6 +83,8 @@ public:
 
 	UFUNCTION()
 	virtual void OnMontageEnd(UAnimMontage* Montage, bool bInterrupted);
+
+	virtual void UpdateCharacter();
 public:
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* SceneComponent = nullptr;

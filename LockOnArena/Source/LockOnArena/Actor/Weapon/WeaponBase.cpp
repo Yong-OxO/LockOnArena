@@ -41,35 +41,7 @@ void AWeaponBase::Attack()
 
 void AWeaponBase::SwapEquipment()
 {
-	if (DataTableRow->WeaponChangeMontage)
-	{
-		if (!AnimInstance->Montage_IsPlaying(nullptr))
-		{
-			AnimInstance->Montage_Play(DataTableRow->WeaponChangeMontage);
-			CharacterState->SetAttack(false);
-		}
-	}
-
-	if (SkeletalMesh)
-	{
-		SkeletalMeshComponent->SetSkeletalMesh(SkeletalMesh);
-	}
-	else if (DataTableRow->StaticMesh)
-	{
-		StaticMeshComponent->SetStaticMesh(StaticMesh);
-	}
-	else
-	{
-		StaticMeshComponent->SetStaticMesh(nullptr);
-		SkeletalMeshComponent->SetSkeletalMesh(nullptr);
-	}
-
-	{
-		USkeletalMeshComponent* MeshComponent = GetOwner()->GetComponentByClass<USkeletalMeshComponent>();
-		MeshComponent->SetAnimClass(DataTableRow->AnimInstance);
-	}
-
-	//MuzzleEffect = DataTableRow->MuzzleEffect;
+	int a = 0;
 }
 
 void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
@@ -122,6 +94,37 @@ void AWeaponBase::Tick(float DeltaTime)
 void AWeaponBase::OnMontageEnd(UAnimMontage* Montage, bool bInterrupted)
 {
 	CharacterState->SetAttack(true);
+}
+
+void AWeaponBase::UpdateCharacter()
+{
+	if (DataTableRow->WeaponChangeMontage)
+	{
+		if (!AnimInstance->Montage_IsPlaying(nullptr))
+		{
+			AnimInstance->Montage_Play(DataTableRow->WeaponChangeMontage);
+			CharacterState->SetAttack(false);
+		}
+	}
+
+	if (SkeletalMesh)
+	{
+		SkeletalMeshComponent->SetSkeletalMesh(SkeletalMesh);
+	}
+	else if (DataTableRow->StaticMesh)
+	{
+		StaticMeshComponent->SetStaticMesh(StaticMesh);
+	}
+	else
+	{
+		StaticMeshComponent->SetStaticMesh(nullptr);
+		SkeletalMeshComponent->SetSkeletalMesh(nullptr);
+	}
+
+	{
+		USkeletalMeshComponent* MeshComponent = GetOwner()->GetComponentByClass<USkeletalMeshComponent>();
+		MeshComponent->SetAnimClass(DataTableRow->AnimInstance);
+	}
 }
 
 

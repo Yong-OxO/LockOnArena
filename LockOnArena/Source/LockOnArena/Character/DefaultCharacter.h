@@ -76,9 +76,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	UCharacterStateComponent* CharacterState = nullptr;
 
-	// WeaponManage
-	UPROPERTY(VisibleAnywhere)
-	UWeaponChildActorComponent* Weapon = nullptr;
+
 
 	UDataTable* DataTable = nullptr;
 
@@ -93,4 +91,19 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	UCameraComponent* CameraComponent;
 	
+	
+	// WeaponManage
+public:
+	virtual void WeaponInit();
+	virtual void SwitchWeapon(int InValue);
+
+public:
+	AWeaponBase* ActiveWeapon;
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	TArray<FDataTableRowHandle> WeaponDataHandles;
+
+	TArray<UWeaponChildActorComponent*> WeaponInstances;
+	UWeaponChildActorComponent* WeaponInstance;
 };

@@ -31,7 +31,7 @@ void AInGamePlayerController::BeginPlay()
 	{
 		ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 		CharacterState = ControlledCharacter->GetState();
-		WeaponChildActor = ControlledCharacter->Weapon;
+		//WeaponChildActor = ControlledCharacter->Weapon;
 	}
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	Subsystem->AddMappingContext(IMC_Default, 0);
@@ -187,12 +187,11 @@ void AInGamePlayerController::OnAttack(const FInputActionValue& InValue)
 		CharacterState->SetLockOn(false); 
 	}
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
-	WeaponChildActor = ControlledCharacter->Weapon;
 	CharacterState = ControlledCharacter->CharacterState;
 
 	//if (CharacterState->CanAttack())
 	//{
-		WeaponChildActor->CurrentWeapon->Attack();
+	ControlledCharacter->ActiveWeapon->Attack();
 	//}
 }
 
@@ -203,9 +202,7 @@ void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 	CharacterState = ControlledCharacter->GetState();
 	int Value = (int)InValue.Get<float>();
-	--Value; // Index값으로 이용하기때문
-	if (Value > 3 || Value < 0) { return; }
-	ControlledCharacter->Weapon->SwitchWeapon(Value);
+	ControlledCharacter->SwitchWeapon(Value);
 	//if (!CharacterState->CanAttack() || CharacterState->GetLockOn())
 	//{
 	//	return;

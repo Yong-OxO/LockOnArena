@@ -20,42 +20,11 @@ void UWeaponChildActorComponent::BeginPlay()
 	Super::BeginPlay();
 
 	InitializeWeapons();
-
-	CurrentWeapon = WeaponInstances[0];
 }
 
 void UWeaponChildActorComponent::InitializeWeapons()
 {
-	// WeaponHandle값 지정
-	WeaponDataHandles.Add(DataTableRow->NoneWeapon);
-	WeaponDataHandles.Add(DataTableRow->PunchWeapon);
-	WeaponDataHandles.Add(DataTableRow->KnifeWeapon);
-	WeaponDataHandles.Add(DataTableRow->RifleWeapon);
 
-	//WeaponClasses 지정
-	WeaponClasses.Add(AWeaponBase::StaticClass()); // 1
-	WeaponClasses.Add(AWeaponBase::StaticClass()); // 2
-	WeaponClasses.Add(AWeaponBase::StaticClass()); // 3
-	WeaponClasses.Add(ARifleBase::StaticClass());  // 4
-
-	for (TSubclassOf<AWeaponBase> WeaponClass : WeaponClasses)
-	{
-		if (WeaponClass)
-		{
-			AWeaponBase* NewWeapon = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass);
-			if (NewWeapon)
-			{
-				NewWeapon->SetActorHiddenInGame(true);
-				NewWeapon->SetOwner(GetOwner());
-				NewWeapon->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
-				WeaponInstances.Add(NewWeapon);
-			}
-		}
-	}
-	for (int i = 0; i < WeaponDataHandles.Num(); ++i)
-	{
-		WeaponInstances[i]->SetData(WeaponDataHandles[i]);
-	}
 }
 
 void UWeaponChildActorComponent::SwitchWeapon(const int WeaponIndex)

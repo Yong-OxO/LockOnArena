@@ -21,10 +21,22 @@ ADefaultCharacter::ADefaultCharacter()
 	DataTable = DataTableAsset.Object;
 	DataTableRow = DataTable->FindRow<FDefaultCharacterTableRow>(FName("Basic"), TEXT("Character DataTableRow"));
 
+	{
+		WeaponInstances.SetNum(4);
 
-	Weapon = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("Weapon"));
-	Weapon->SetupAttachment(GetMesh(), TEXT("WeaponSocket"));
+		WeaponInstances[0] = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("WeaponInstances1"));
+		WeaponInstances[1] = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("WeaponInstances2"));
+		WeaponInstances[2] = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("WeaponInstances3"));
+		WeaponInstances[3] = CreateDefaultSubobject<UWeaponChildActorComponent>(TEXT("WeaponInstances4"));
+		WeaponInstances[0]->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+		WeaponInstances[1]->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+		WeaponInstances[2]->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+		WeaponInstances[3]->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+		
 
+		ActiveWeapon = CreateDefaultSubobject<AWeaponBase>(TEXT("Weapon"));
+		ActiveWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+	}
 	CharacterState = CreateDefaultSubobject<UCharacterStateComponent>(TEXT("CharacterState"));
 	CharacterState = DataTableRow->CharacterState;
 	/*static ConstructorHelpers::FObjectFinder<AActor> WeaponAsset(TEXT("/Script/Engine.Blueprint'/Game/Blueprint/Actor/Weapon/BP_Rifle.BP_Rifle'"));
@@ -52,8 +64,7 @@ void ADefaultCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// @TODO : WeaponType
-	Weapon->SetData(DataTableRow->WeaponBaseTableRowHandle);
+	WeaponInit();
 }
 
 // Called every frame
@@ -69,6 +80,57 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+
+void ADefaultCharacter::WeaponInit()
+{
+	// WeaponHandle값 지정
+	WeaponDataHandles.Add(DataTableRow->WeaponBaseTableRowHandle);
+	WeaponDataHandles.Add(DataTableRow->PunchTableRowHandle);
+	WeaponDataHandles.Add(DataTableRow->KnifeTableRowHandle);
+	WeaponDataHandles.Add(DataTableRow->RifleTableRowHandle);
+
+	for (int i = 0; i < WeaponDataHandles.Num(); ++i)
+	{
+		WeaponInstances[i]->SetData(WeaponDataHandles[i]);
+		WeaponInstances[i]->GetChildActor()->SetActorHiddenInGame(true);
+		WeaponInstances[i]->GetChildActor()->SetActorEnableCollision(false);
+		WeaponInstances[i]->GetChildActor()->SetActorTickEnabled(false);
+	}
+
+	ActiveWeapon = Cast<AWeaponBase>(WeaponInstances[0]->GetChildActor());
+	WeaponInstances[0]->GetChildActor()->SetActorHiddenInGame(false);
+	WeaponInstances[0]->GetChildActor()->SetActorEnableCollision(true);
+	WeaponInstances[0]->GetChildActor()->SetActorTickEnabled(true);
+
+	ActiveWeapon->UpdateCharacter();
+}
+
+void ADefaultCharacter::SwitchWeapon(int InValue)
+{
+	--InValue;
+	if (ActiveWeapon == Cast<AWeaponBase>(WeaponInstances[InValue]->GetChildActor()))
+	{
+		return;
+	}
+	else
+	{
+		ActiveWeapon = Cast<AWeaponBase>(WeaponInstances[InValue]->GetChildActor());
+		for (int i = 0; i < WeaponInstances.Num(); ++i)
+		{
+			WeaponInstances[i]->GetChildActor()->SetActorHiddenInGame(true);
+			WeaponInstances[i]->GetChildActor()->SetActorEnableCollision(false);
+			WeaponInstances[i]->GetChildActor()->SetActorTickEnabled(false);
+		}
+		WeaponInstances[InValue]->GetChildActor()->SetActorHiddenInGame(false);
+		WeaponInstances[InValue]->GetChildActor()->SetActorEnableCollision(true);
+		WeaponInstances[InValue]->GetChildActor()->SetActorTickEnabled(true);
+	}
+	
+	ActiveWeapon->UpdateCharacter();
+}
+
+
 
 
 void ADefaultCharacter::SetData(const FDataTableRowHandle& InRowHandle)
