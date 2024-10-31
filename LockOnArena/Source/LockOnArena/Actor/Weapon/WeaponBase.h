@@ -49,6 +49,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
 	UAnimMontage* HitReactMontage = nullptr;
 
+public: // WeaponStatus
+	UPROPERTY(EditAnywhere)
+	float WeaponATK = 1.f;
 public: // Skiil
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Skiil", meta = (RowType = "/Script/LOCKONARENA.SkillBaseTableRow"))
@@ -119,6 +122,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UCharacterStateComponent* CharacterState = nullptr;
 
+public: // WeaponStatus
+	float WeaponATK = 1.f;
 
 public: // Skill
 	USkillBaseComponent* LockOn = nullptr;

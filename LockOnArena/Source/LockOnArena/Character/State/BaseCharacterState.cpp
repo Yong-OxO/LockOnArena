@@ -19,8 +19,6 @@ void UBaseCharacterState::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
 }
 
 

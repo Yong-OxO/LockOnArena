@@ -89,6 +89,9 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 
 			AnimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
 		}
+		{
+			WeaponATK = DataTableRow->WeaponATK;
+		}
 
 		{
 			LockOn = NewObject<USkillBaseComponent>(this, DataTableRow->LockOnClass, TEXT("LockOn"));
