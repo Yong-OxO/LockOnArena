@@ -6,14 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "SkillBase.generated.h"
 
-USTRUCT()
-struct LOCKONARENA_API FSkillBaseTableRow : public FTableRowBase
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(EditAnywhere, Category = "Skill")
-	float CoolDown;
-};
+
 
 
 class ADefaultCharacter;

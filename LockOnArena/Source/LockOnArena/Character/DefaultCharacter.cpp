@@ -19,14 +19,9 @@ ADefaultCharacter::ADefaultCharacter()
 	// @TODO : RowName namespace
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/DT_BaseCharacter.DT_BaseCharacter'"));
 	DataTable = DataTableAsset.Object;
-	DataTableRow = DataTable->FindRow<FDefaultCharacterTableRow>(FName("Basic"), TEXT("Character DataTableRow"));
+	DataTableRow = DataTable->FindRow<FDefaultCharacterTableRow>(FName("Basic"), TEXT("CharacterDataTableRow"));
 
-	{
-		AActor* TempActor = this->GetOwner();		
 
-		ActiveWeapon = CreateDefaultSubobject<AWeaponBase>(TEXT("Weapon"));
-		ActiveWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
-	}
 	CharacterState = CreateDefaultSubobject<UCharacterStateComponent>(TEXT("CharacterState"));
 	CharacterState = DataTableRow->CharacterState;
 	/*static ConstructorHelpers::FObjectFinder<AActor> WeaponAsset(TEXT("/Script/Engine.Blueprint'/Game/Blueprint/Actor/Weapon/BP_Rifle.BP_Rifle'"));
@@ -46,6 +41,9 @@ ADefaultCharacter::ADefaultCharacter()
 		SpringArmComponent->SocketOffset = FVector(0.0, 10.0, 0.0);
 
 		SpringArmComponent->bUsePawnControlRotation = true;
+	}
+	{
+		
 	}
 }
 
@@ -74,6 +72,8 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void ADefaultCharacter::WeaponInit()
 {
+	ActiveWeapon = NewObject<AWeaponBase>(this, AWeaponBase::StaticClass());
+	ActiveWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 	// WeaponHandle값 지정
 	WeaponDataHandles.Add(DataTableRow->WeaponBaseTableRowHandle);
 	WeaponDataHandles.Add(DataTableRow->PunchTableRowHandle);

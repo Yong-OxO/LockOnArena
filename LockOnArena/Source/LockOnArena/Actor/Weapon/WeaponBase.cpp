@@ -7,7 +7,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Character/DefaultCharacter.h"
 #include "Character/CharacterStateComponent.h"
-
+#include "Skill/SkillBaseComponent.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase()
@@ -24,6 +24,9 @@ AWeaponBase::AWeaponBase()
 		StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 		StaticMeshComponent->SetupAttachment(RootComponent);
 		StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		LockOn = CreateDefaultSubobject<USkillBaseComponent>(TEXT("LockOn"));
+		Skill01 = CreateDefaultSubobject<USkillBaseComponent>(TEXT("Skill01"));
 	}
 }
 
@@ -85,6 +88,11 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 			AnimInstance = Cast<UInGameAnimInstance>(MeshComponent->GetAnimInstance());
 
 			AnimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
+		}
+
+		{
+			LockOn->SetData(DataTableRow->LockOnHandle);
+			Skill01->SetData(DataTableRow->Skill01);
 		}
 }
 

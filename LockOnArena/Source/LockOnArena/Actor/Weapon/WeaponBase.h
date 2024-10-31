@@ -15,6 +15,8 @@ class USkeletalMeshComponent;
 class ADefaultCharacter;
 class UCharacterStateComponent;
 class AEffect;
+class USkillBaseComponent;
+
 
 USTRUCT()
 struct LOCKONARENA_API FWeaponBaseTableRow : public FTableRowBase
@@ -46,13 +48,13 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
 	UAnimMontage* HitReactMontage = nullptr;
+
 public: // Skiil
-
-
-	//UPROPERTY(EditAnywhere, Category = "Weapon|Effect")
-	//TObjectPtr<AEffect> MuzzleEffect = nullptr;
-
-
+	UPROPERTY(EditAnywhere, Category = "Weapon|Skiil", meta = (RowType = "/Script/LOCKONARENA.SkillBaseTableRow"))
+	FDataTableRowHandle LockOnHandle;	
+	
+	UPROPERTY(EditAnywhere, Category = "Weapon|Skiil", meta = (RowType = "/Script/LOCKONARENA.SkillBaseTableRow"))
+	FDataTableRowHandle Skill01;
 };
 
 UCLASS()
@@ -111,6 +113,10 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UCharacterStateComponent* CharacterState = nullptr;
 
+
+public: // Skill
+	USkillBaseComponent* LockOn = nullptr;
+	USkillBaseComponent* Skill01 = nullptr;
 	//UPROPERTY(VisibleAnywhere)
 	//AEffect* MuzzleEffect = nullptr;
 };

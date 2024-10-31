@@ -21,34 +21,34 @@ FDataTableRowHandle UWeaponSubsystem::FindWeapon(const FName& InKey)
 {
 	FDataTableRowHandle DataTableRowHandle;
 
-#if WITH_EDITOR
-	bool bFind = false;
-	if (WeaponBaseDataTable->GetRowMap().Find(InKey))
-	{
-		check(!bFind);
-		bFind = true;
-		DataTableRowHandle.DataTable = WeaponBaseDataTable;
-		DataTableRowHandle.RowName = InKey;
-	}
-	//if (WeaponBaseDataTable->GetRowMap().Find(InKey))
-	//{
-	//	check(!bFind);
-	//	bFind = true;
-	//	DataTableRowHandle.DataTable = WeaponBaseDataTable;
-	//	DataTableRowHandle.RowName = InKey;
-	//}
-#else
-	if (WeaponDataTable->GetRowMap().Find(InKey))
-	{
-		DataTableRowHandle.DataTable = WeaponBaseDataTable;
-		DataTableRowHandle.RowName = InKey;
-	}
-	else if (GunDataTable->GetRowMap().Find(InKey))
-	{
-		DataTableRowHandle.DataTable = GunDataTable;
-		DataTableRowHandle.RowName = InKey;
-	}
-#endif
+//#if WITH_EDITOR
+//	bool bFind = false;
+//	if (WeaponBaseDataTable->GetRowMap().Find(InKey))
+//	{
+//		check(!bFind);
+//		bFind = true;
+//		DataTableRowHandle.DataTable = WeaponBaseDataTable;
+//		DataTableRowHandle.RowName = InKey;
+//	}
+//	//if (WeaponBaseDataTable->GetRowMap().Find(InKey))
+//	//{
+//	//	check(!bFind);
+//	//	bFind = true;
+//	//	DataTableRowHandle.DataTable = WeaponBaseDataTable;
+//	//	DataTableRowHandle.RowName = InKey;
+//	//}
+//#else
+//	if (WeaponDataTable->GetRowMap().Find(InKey))
+//	{
+//		DataTableRowHandle.DataTable = WeaponBaseDataTable;
+//		DataTableRowHandle.RowName = InKey;
+//	}
+//	else if (GunDataTable->GetRowMap().Find(InKey))
+//	{
+//		DataTableRowHandle.DataTable = GunDataTable;
+//		DataTableRowHandle.RowName = InKey;
+//	}
+//#endif
 
 	return DataTableRowHandle;
 }
