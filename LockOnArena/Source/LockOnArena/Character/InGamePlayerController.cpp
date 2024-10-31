@@ -9,8 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actor/Weapon/WeaponBase.h"
 #include "Actor/Weapon/WeaponChildActorComponent.h"
-#include "Skill/SkillChildActorComponent.h"
-#include "Skill/SkillSystem.h"
+#include "Skill/SkillBaseComponent.h"
 
 AInGamePlayerController::AInGamePlayerController()
 {
@@ -248,14 +247,14 @@ void AInGamePlayerController::OnEquip(const FInputActionValue& InValue)
 void AInGamePlayerController::OnLockOn(const FInputActionValue& InValue)
 {
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
-	//ASkillSystem* SkillSystem = Cast<ASkillSystem>(CharacterState->GetSkillSystem()->GetChildActor());
-	//if (!SkillSystem->CanPlaySkill()) // 스킬사용이 불가능일때
-	//{
-	//	UE_LOG(LogTemp, Display, TEXT("LockOn is CoolDown"));
-	//	return;
-	//}
+	USkillBaseComponent* Skill = ControlledCharacter->ActiveWeapon->LockOn;
+	if (!Skill->CanPlaySkill()) // 스킬사용이 불가능일때
+	{
+		UE_LOG(LogTemp, Display, TEXT("LockOn is CoolDown"));
+		return;
+	}
 
-	//SkillSystem->PlaySkill(0);
+	Skill->PlaySkill();
 }
 
 void AInGamePlayerController::ToRun(const float DeltaTime)

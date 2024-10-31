@@ -22,7 +22,6 @@ protected:
 	FRotator ToTargetRotation;
 
 public:
-	virtual void PlaySkill(const int SkillNum) override;
 
 	UFUNCTION()
 	virtual void StartLockOnPlay();

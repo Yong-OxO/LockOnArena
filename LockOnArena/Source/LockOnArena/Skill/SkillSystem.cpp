@@ -23,50 +23,15 @@ void ASkillSystem::BeginPlay()
 void ASkillSystem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//if (RemainCoolDown > 0.f)
-	//{
-	//	ReduceCooldown(DeltaTime);
-	//}
 }
 
 void ASkillSystem::SetData(const FDataTableRowHandle& InRowHandle)
 {
 	int a = 0;
-	//FSkillSystemTableRow* TableRow = InRowHandle.GetRow<FSkillSystemTableRow>(TEXT("TableRow"));
 
-	//CoolDown = TableRow->CoolDown;
-
-	//ControlledCharacter = GetOwner<ADefaultCharacter>();
-	//Controller = CastChecked<AInGamePlayerController>(ControlledCharacter->GetController());
-	//CharacterState = ControlledCharacter->GetState();
-}
-
-
-void ASkillSystem::PlaySkill(const int SkillNum)
-{
-	int a = 0;
-	/*if (RemainCoolDown > 0)
-	{
-		UE_LOG(LogTemp, Display, TEXT("Cooldown"));
-		bCanPlay = false;
-		return;
-	}
-
-	RemainCoolDown = CoolDown;*/
 }
 
 
 
-//
-//void ASkillSystem::ReduceCooldown(float DeltaTime)
-//{
-//	RemainCoolDown -= DeltaTime;
-//
-//	if (RemainCoolDown <= 0)
-//	{
-//		bCanPlay = true;
-//	}
-//	CharacterState->SetCD_RemainLockOn(RemainCoolDown);
-//}
+
 

@@ -24,20 +24,20 @@ void ASkillLockOn::Tick(float DeltaTime)
 }
 
 
-void ASkillLockOn::PlaySkill(const int SkillNum)
-{
-	Super::PlaySkill(SkillNum);
-	//if (!bCanPlay) { return; } // Super에서 PlaySkill이 실행되면 bCanPlay를 False로 만든다.
-
-	//switch (SkillNum)
-	//{
-	//	case 0:
-	//	{
-	//		StartLockOnPlay();
-	//		break;
-	//	}
-	//}
-}
+//void ASkillLockOn::PlaySkill(const int SkillNum)
+//{
+//	Super::PlaySkill(SkillNum);
+//	//if (!bCanPlay) { return; } // Super에서 PlaySkill이 실행되면 bCanPlay를 False로 만든다.
+//
+//	//switch (SkillNum)
+//	//{
+//	//	case 0:
+//	//	{
+//	//		StartLockOnPlay();
+//	//		break;
+//	//	}
+//	//}
+//}
 
 void ASkillLockOn::StartLockOnPlay()
 {

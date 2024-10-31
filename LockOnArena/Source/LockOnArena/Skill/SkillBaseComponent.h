@@ -22,10 +22,10 @@ public:
 	float MaxCoolDown = 0.f;
 
 	UPROPERTY(EditAnywhere)
-	bool IsSupperAmmo = false;
+	bool IsSuperAmmo = false;
 
 	UPROPERTY(EditAnywhere)
-	float SupperAmmoTime = 0.f;
+	float SuperAmmoTime = 0.f;
 };
 
 
@@ -48,9 +48,15 @@ public:
 public:
 	virtual bool CanPlaySkill() { return bCanPlay; }
 
-	virtual void PlaySkill(const int SkillNum);
+	virtual void PlaySkill();
 
+	virtual void ReduceCooldown(float DeltaTime);
+
+protected:
+	FSkillBaseTableRow* DataRow = nullptr;
+public:
 	virtual void SetData(const FDataTableRowHandle& InHandle);
+
 
 protected:
 	UPROPERTY()
@@ -58,10 +64,12 @@ protected:
 
 
 	UPROPERTY()
-	float CurrnetCooldown = 0.f;
+	float RemainCoolDown = 0.f;
 	
 	bool bCanPlay = true;
 	
-	float DamagePercent = 100.f;
 
+	float DamagePercent = 100.f;
+	bool bSuperAmmo = false;
+	float SuperAmmoTime = 0.f;
 };

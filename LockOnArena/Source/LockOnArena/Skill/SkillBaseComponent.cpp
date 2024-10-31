@@ -7,11 +7,7 @@
 // Sets default values for this component's properties
 USkillBaseComponent::USkillBaseComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-
 }
 
 
@@ -24,19 +20,51 @@ void USkillBaseComponent::BeginPlay()
 }
 
 
+
+
 // Called every frame
 void USkillBaseComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (RemainCoolDown > 0.f)
+	{
+		ReduceCooldown(DeltaTime);
+	}
 }
 
-void USkillBaseComponent::PlaySkill(const int SkillNum)
+void USkillBaseComponent::PlaySkill()
 {
+	UE_LOG(LogTemp, Display, TEXT("Play Skill"));
+
+	if (RemainCoolDown > 0)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Cooldown"));
+		bCanPlay = false;
+		return;
+	}
+
+	RemainCoolDown = MaxCooldown;
+}
+
+void USkillBaseComponent::ReduceCooldown(float DeltaTime)
+{
+	RemainCoolDown -= DeltaTime;
+
+	if (RemainCoolDown <= 0)
+	{
+		RemainCoolDown = 0;
+		bCanPlay = true;
+	}
+	//CharacterState->SetCD_RemainLockOn(RemainCoolDown);
 }
 
 void USkillBaseComponent::SetData(const FDataTableRowHandle& InHandle)
 {
+	DataRow = InHandle.GetRow<FSkillBaseTableRow>(TEXT("DataRow"));
+
+	MaxCooldown = DataRow->MaxCoolDown;
+	bSuperAmmo = DataRow->IsSuperAmmo;
+	SuperAmmoTime = DataRow->SuperAmmoTime;
 }
 
