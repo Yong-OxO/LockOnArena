@@ -21,6 +21,8 @@ void ARifleBase::SetData(const FDataTableRowHandle& InHandle)
 void ARifleBase::Attack()
 {
 	Super::Attack();
+
+	UE_LOG(LogTemp, Display, TEXT("Rifle Attack"));
 }
 
 void ARifleBase::Fire(const FVector Start, const FRotator Rotation)

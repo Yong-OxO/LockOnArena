@@ -25,8 +25,8 @@ AWeaponBase::AWeaponBase()
 		StaticMeshComponent->SetupAttachment(RootComponent);
 		StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		LockOn = CreateDefaultSubobject<USkillBaseComponent>(TEXT("LockOn"));
-		Skill01 = CreateDefaultSubobject<USkillBaseComponent>(TEXT("Skill01"));
+		//LockOn = CreateDefaultSubobject<USkillBaseComponent>(TEXT("LockOn"));
+		//Skill01 = CreateDefaultSubobject<USkillBaseComponent>(TEXT("Skill01"));
 	}
 }
 
@@ -91,8 +91,12 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 		}
 
 		{
+			LockOn = NewObject<USkillBaseComponent>(this, DataTableRow->LockOnClass, TEXT("LockOn"));
 			LockOn->SetData(DataTableRow->LockOnHandle);
+			LockOn->RegisterComponent();
+			Skill01 = NewObject<USkillBaseComponent>(this, DataTableRow->Skill01Class, TEXT("Skill01"));
 			Skill01->SetData(DataTableRow->Skill01);
+			Skill01->RegisterComponent();
 		}
 }
 

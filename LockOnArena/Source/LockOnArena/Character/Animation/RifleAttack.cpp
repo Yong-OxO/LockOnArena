@@ -57,13 +57,13 @@ void URifleAttack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* A
 		Effect->Play(RowHandle, SpawnLocation, SpawnRotation);
 	}
 
-	//// LineTrace
-	//{
-	//	UCameraComponent* Camera = Owner->GetComponentByClass<UCameraComponent>();
-	//	FVector StartLocation = Camera->GetComponentLocation();
-	//	FRotator StartRotation = Camera->GetComponentRotation();
-	//	Child->Fire(StartLocation, StartRotation);
-	//}
+	// LineTrace
+	{
+		UCameraComponent* Camera = Owner->GetComponentByClass<UCameraComponent>();
+		FVector StartLocation = Camera->GetComponentLocation();
+		FRotator StartRotation = Camera->GetComponentRotation();
+		Cast<ARifleBase>(Owner->ActiveWeapon)->Fire(StartLocation, StartRotation);
+	}
 
 }
 

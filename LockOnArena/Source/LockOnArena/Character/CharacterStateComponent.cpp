@@ -3,16 +3,11 @@
 
 #include "Character/CharacterStateComponent.h"
 #include "GameFramework/Actor.h"
-#include "Skill/SkillSystem.h"
-#include "Skill/SkillChildActorComponent.h"
 
 // Sets default values for this component's properties
 UCharacterStateComponent::UCharacterStateComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
-	SkillSystem = CreateDefaultSubobject<USkillChildActorComponent>(TEXT("SkillSystem"));
-
 	EquipmentType = WeaponType::NonWeapon;
 	
 	// @TODO : RowName namespace
@@ -20,7 +15,6 @@ UCharacterStateComponent::UCharacterStateComponent()
 	UDataTable* DataTable = DataTableAsset.Object;
 	FCharacterStateTableRow* DataTableRow = DataTable->FindRow<FCharacterStateTableRow>(FName("Default"), TEXT("CharacterState DataTableRow"));
 
-	SkillSystemTableRowHandle = DataTableRow->SkillSystemTableRowHandle;
 	MaxHp = DataTableRow->MaxHp;
 }
 
@@ -30,7 +24,6 @@ void UCharacterStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SkillSystem->SetData(SkillSystemTableRowHandle);
 }
 
 

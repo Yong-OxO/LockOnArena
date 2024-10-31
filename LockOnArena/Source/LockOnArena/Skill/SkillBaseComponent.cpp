@@ -3,6 +3,9 @@
 
 #include "Skill/SkillBaseComponent.h"
 #include "Animation/AnimMontage.h"
+#include "Character/DefaultCharacter.h"
+#include "Character/InGamePlayerController.h"
+#include "Character/CharacterStateComponent.h"
 
 // Sets default values for this component's properties
 USkillBaseComponent::USkillBaseComponent()
@@ -15,8 +18,6 @@ USkillBaseComponent::USkillBaseComponent()
 void USkillBaseComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	AActor* Temp = GetOwner();
 }
 
 
@@ -35,7 +36,15 @@ void USkillBaseComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 void USkillBaseComponent::PlaySkill()
 {
-	UE_LOG(LogTemp, Display, TEXT("Play Skill"));
+	Weapon = GetOwner<AWeaponBase>();
+	ControlledCharacter = Weapon->GetOwner<ADefaultCharacter>(); // Owner는 Weapon, Weapon의 Owner는 Character
+	Controller = ControlledCharacter->GetController<AInGamePlayerController>();
+	CharacterState = ControlledCharacter->GetState();
+
+	if (bCanPlay == false)
+	{
+		return;
+	}
 
 	if (RemainCoolDown > 0)
 	{
@@ -43,7 +52,7 @@ void USkillBaseComponent::PlaySkill()
 		bCanPlay = false;
 		return;
 	}
-
+	UE_LOG(LogTemp, Display, TEXT("Play Skill"));
 	RemainCoolDown = MaxCooldown;
 }
 
@@ -61,7 +70,7 @@ void USkillBaseComponent::ReduceCooldown(float DeltaTime)
 
 void USkillBaseComponent::SetData(const FDataTableRowHandle& InHandle)
 {
-	DataRow = InHandle.GetRow<FSkillBaseTableRow>(TEXT("DataRow"));
+	FSkillBaseTableRow* DataRow = InHandle.GetRow<FSkillBaseTableRow>(TEXT("DataRow"));
 
 	MaxCooldown = DataRow->MaxCoolDown;
 	bSuperAmmo = DataRow->IsSuperAmmo;

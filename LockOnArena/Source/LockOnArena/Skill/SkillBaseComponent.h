@@ -8,6 +8,12 @@
 
 
 class UAnimMontage;
+class USkillBaseComponent;
+class ADefaultCharacter;
+class AInGamePlayerController;
+class UCharacterStateComponent;
+class AWeaponBase;
+
 
 USTRUCT()
 struct LOCKONARENA_API FSkillBaseTableRow : public FTableRowBase
@@ -15,16 +21,17 @@ struct LOCKONARENA_API FSkillBaseTableRow : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	UAnimMontage* Montage;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<USkillBaseComponent> SkillClass = nullptr;
 
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Skill|Base")
 	float MaxCoolDown = 0.f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Skill|Base")
 	bool IsSuperAmmo = false;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Skill|Base")
 	float SuperAmmoTime = 0.f;
 };
 
@@ -46,17 +53,26 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	virtual bool CanPlaySkill() { return bCanPlay; }
-
-	virtual void PlaySkill();
-
-	virtual void ReduceCooldown(float DeltaTime);
-
-protected:
-	FSkillBaseTableRow* DataRow = nullptr;
-public:
+	UFUNCTION()
 	virtual void SetData(const FDataTableRowHandle& InHandle);
 
+public:
+	UFUNCTION()
+	virtual bool CanPlaySkill() { return bCanPlay; }
+
+	UFUNCTION()
+	virtual void PlaySkill();
+
+	UFUNCTION()
+	virtual void ReduceCooldown(float DeltaTime);
+	
+
+
+protected:
+	ADefaultCharacter* ControlledCharacter;
+	AInGamePlayerController* Controller;
+	UCharacterStateComponent* CharacterState;
+	AWeaponBase* Weapon;
 
 protected:
 	UPROPERTY()

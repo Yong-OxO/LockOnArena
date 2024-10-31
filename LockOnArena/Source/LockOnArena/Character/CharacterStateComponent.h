@@ -8,16 +8,12 @@
 
 #include "CharacterStateComponent.generated.h"
 
-class USkillChildActorComponent;
-
 USTRUCT()
 struct LOCKONARENA_API FCharacterStateTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, Category = "CharacterState|Skill", meta = (RowType = "/Script/LOCKONARENA.SkillSystemTableRow"))
-	FDataTableRowHandle SkillSystemTableRowHandle;
 	UPROPERTY(EditAnywhere, Category = "CharacterState|Status")
 	float MaxHp;
 };
@@ -55,8 +51,6 @@ public:
 	virtual bool GetLockOnPlaying() { return bLockOnPlay; }
 	virtual void SetLockOnPlaying(const bool InValue) { bLockOnPlay = InValue; }
 
-public:
-	virtual USkillChildActorComponent* GetSkillSystem() { return SkillSystem; }
 
 public:
 	virtual void SetData(const FDataTableRowHandle& RowHandle);
@@ -70,12 +64,6 @@ public:
 	bool CanLockOn = true; // 자세한 쿨타임은 skillsystem에서 관리
 
 protected:
-	UPROPERTY(EditAnywhere)
-	USkillChildActorComponent* SkillSystem;
-
-	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.SkillSystemTableRow"))
-	FDataTableRowHandle SkillSystemTableRowHandle;
-
 	bool bCanMove = true;
 	bool bCanAttack = true;
 

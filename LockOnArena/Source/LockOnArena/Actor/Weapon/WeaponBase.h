@@ -50,11 +50,17 @@ public:
 	UAnimMontage* HitReactMontage = nullptr;
 
 public: // Skiil
+
 	UPROPERTY(EditAnywhere, Category = "Weapon|Skiil", meta = (RowType = "/Script/LOCKONARENA.SkillBaseTableRow"))
-	FDataTableRowHandle LockOnHandle;	
-	
+	FDataTableRowHandle LockOnHandle;
+	UPROPERTY(EditAnywhere, Category = "Weapon|Skiil")
+	TSubclassOf<USkillBaseComponent> LockOnClass;
+
+
 	UPROPERTY(EditAnywhere, Category = "Weapon|Skiil", meta = (RowType = "/Script/LOCKONARENA.SkillBaseTableRow"))
 	FDataTableRowHandle Skill01;
+	UPROPERTY(EditAnywhere, Category = "Weapon|Skiil")
+	TSubclassOf<USkillBaseComponent> Skill01Class;
 };
 
 UCLASS()
