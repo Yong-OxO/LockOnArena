@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "Character/BaseCharacter.h"
 #include "EnemyBase.generated.h"
 
 class UWeaponChildActorComponent;
@@ -32,7 +32,7 @@ public:
 
 
 UCLASS()
-class LOCKONARENA_API AEnemyBase : public ACharacter
+class LOCKONARENA_API AEnemyBase : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -53,7 +53,7 @@ public:
 
 
 public:
-	virtual void SetData(const FDataTableRowHandle& InRowHandle);
+	virtual void SetData(const FDataTableRowHandle& InRowHandle) override;
 
 public:
 	UPROPERTY(VisibleAnywhere)

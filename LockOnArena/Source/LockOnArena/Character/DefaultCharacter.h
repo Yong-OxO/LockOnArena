@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "Character/BaseCharacter.h"
 #include "Actor/Weapon/WeaponBase.h"
 #include "Actor/Weapon/RifleBase.h"
 #include "DefaultCharacter.generated.h"
@@ -44,7 +44,7 @@ public:
 
 
 UCLASS()
-class LOCKONARENA_API ADefaultCharacter : public ACharacter
+class LOCKONARENA_API ADefaultCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -63,7 +63,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void SetData(const FDataTableRowHandle& InRowHandle);
+	virtual void SetData(const FDataTableRowHandle& InRowHandle) override;
 
 	virtual UCharacterStateComponent* GetState() { return CharacterState; }
 public:
@@ -75,8 +75,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UCharacterStateComponent* CharacterState = nullptr;
-
-
 
 	UDataTable* DataTable = nullptr;
 
@@ -94,13 +92,13 @@ public:
 	
 	// WeaponManage
 public:
-	virtual void WeaponInit();
+	virtual void WeaponInit() override;
 	virtual void SwitchWeapon(int InValue);
 
-public:
-	AWeaponBase* ActiveWeapon;
+	AWeaponBase* ActiveWeapon = nullptr;
 
 protected:
+
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	TArray<FDataTableRowHandle> WeaponDataHandles;
 

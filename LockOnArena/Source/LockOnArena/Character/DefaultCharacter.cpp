@@ -72,8 +72,6 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void ADefaultCharacter::WeaponInit()
 {
-	ActiveWeapon = NewObject<AWeaponBase>(this, AWeaponBase::StaticClass());
-	ActiveWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 	// WeaponHandle값 지정
 	WeaponDataHandles.Add(DataTableRow->WeaponBaseTableRowHandle);
 	WeaponDataHandles.Add(DataTableRow->PunchTableRowHandle);
