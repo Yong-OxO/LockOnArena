@@ -79,6 +79,8 @@ public:	// LockOn
 	virtual void SetCD_RemainLockOn(const float InRemainCoolDown) { CD_RemainLockOn = InRemainCoolDown; }
 	virtual float GetCD_RemainLockOn() { return CD_RemainLockOn; }
 	
+	virtual void SetTargetLocation(FVector InLocation) { TargetLocation = InLocation; }
+	virtual FVector GetTargetLocation() { return TargetLocation; }
 
 protected:	
 	bool bLockOnSuccessed = false;
@@ -86,7 +88,7 @@ protected:
 	float CD_LockOn;
 	float CD_RemainLockOn;
 
-
+	FVector TargetLocation;
 
 protected:
 

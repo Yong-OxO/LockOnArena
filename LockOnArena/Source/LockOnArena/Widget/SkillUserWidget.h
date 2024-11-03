@@ -10,14 +10,16 @@ class UProgressBar;
 class ADefaultCharacter;
 class UCharacterStateComponent;
 class UEditableTextBox;
+class AWeaponBase;
 
 UCLASS()
 class LOCKONARENA_API USkillUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-	virtual void NativeOnInitialized();
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
+	virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 protected:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
@@ -29,5 +31,5 @@ protected:
 protected:
 	ADefaultCharacter* ControlledCharacter;
 	UCharacterStateComponent* CharacterState;
-
+	AWeaponBase* Weapon;
 };

@@ -18,7 +18,7 @@ void USkillLockOn::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (bIsLocking) // && bOverlap
+	if (bIsLocking || CharacterState->GetLockOn()) // && bOverlap
 	{
 		LockOn(DeltaTime);
 	}
@@ -36,6 +36,13 @@ void USkillLockOn::PlaySkill()
 {
 	Super::PlaySkill();
 
+	if (RemainCoolDown > 0)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Cooldown"));
+		bCanPlay = false;
+		return;
+	}
+	RemainCoolDown = MaxCooldown;
 	StartLockOnPlay();
 }
 
@@ -94,7 +101,7 @@ void USkillLockOn::LockOn(const float DeltaTime)
 		USkeletalMeshComponent* TargetSkeletal = Target->GetComponentByClass<USkeletalMeshComponent>();
 		// @TODO : SoketName
 		const USkeletalMeshSocket* TargetSocket = TargetSkeletal->GetSocketByName(FName(TEXT("LockOnTarget")));
-		FVector TargetLocation = TargetSkeletal->GetSocketLocation(FName(TEXT("LockOnTarget")));
+		TargetLocation = TargetSkeletal->GetSocketLocation(FName(TEXT("LockOnTarget")));
 
 		//ControlledCharacter;
 
@@ -163,6 +170,7 @@ void USkillLockOn::CheckLockOn()
 	if (bLockOnSucceed)
 	{
 		ControlledCharacter->GetState()->SetLockOn(bLockOnSucceed);
+		ControlledCharacter->GetState()->SetTargetLocation(TargetLocation);
 	}
 
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);

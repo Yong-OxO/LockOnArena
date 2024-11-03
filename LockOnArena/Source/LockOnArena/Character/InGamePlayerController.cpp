@@ -87,9 +87,15 @@ void AInGamePlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &ThisClass::OnEquip);
 	}
 
+	// Skill
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_LockOn")))
 	{
 		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &ThisClass::OnLockOn);
+	}	
+
+	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Skill01")))
+	{
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &ThisClass::OnSkill01);
 	}
 }
 
@@ -208,6 +214,19 @@ void AInGamePlayerController::OnLockOn(const FInputActionValue& InValue)
 {
 	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 	USkillBaseComponent* Skill = ControlledCharacter->ActiveWeapon->LockOn;
+	if (!Skill->CanPlaySkill()) // 스킬사용이 불가능일때
+	{
+		UE_LOG(LogTemp, Display, TEXT("LockOn is CoolDown"));
+		return;
+	}
+
+	Skill->PlaySkill();
+}
+
+void AInGamePlayerController::OnSkill01(const FInputActionValue& InValue)
+{
+	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
+	USkillBaseComponent* Skill = ControlledCharacter->ActiveWeapon->Skill01;
 	if (!Skill->CanPlaySkill()) // 스킬사용이 불가능일때
 	{
 		UE_LOG(LogTemp, Display, TEXT("LockOn is CoolDown"));

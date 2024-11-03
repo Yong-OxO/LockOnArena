@@ -68,8 +68,12 @@ protected:
 	UFUNCTION()
 	virtual void OnEquip(const FInputActionValue& InValue);
 
+	//Skill
 	UFUNCTION()
 	virtual void OnLockOn(const FInputActionValue& InValue);
+
+	UFUNCTION()
+	virtual void OnSkill01(const FInputActionValue& InValue);
 
 protected:
 	UFUNCTION()

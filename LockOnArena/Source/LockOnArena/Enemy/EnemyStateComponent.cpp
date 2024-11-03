@@ -19,8 +19,7 @@ void UEnemyStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	CurrentHp = MaxHp;	
 }
 
 
@@ -30,5 +29,21 @@ void UEnemyStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UEnemyStateComponent::ReduceHp(const float Damage)
+{
+	if (CurrentHp <= 0)
+	{
+		return;
+	}
+
+	CurrentHp -= Damage;
+	UE_LOG(LogTemp, Display, TEXT("CurrnetHp : %.1f"), CurrentHp);
+
+	if (CurrentHp <= 0)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Die"));
+	}
 }
 

@@ -7,6 +7,20 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedActionKeyMapping.h"
+#include "GameFramework/DamageType.h"
+
+#include "Utils.generated.h"
+
+
+
+UCLASS()
+class UCustomDamageType : public UDamageType
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = DamageType)
+	uint32 bRifleBase : 1;
+};
 
 UENUM()
 enum class WeaponType : int8
@@ -16,8 +30,6 @@ enum class WeaponType : int8
 	Knife,
 	Rifle
 };
-
-
 
 
 class FUtils
@@ -42,6 +54,4 @@ public:
 		}
 		return nullptr; 
 	}
-
-
 };

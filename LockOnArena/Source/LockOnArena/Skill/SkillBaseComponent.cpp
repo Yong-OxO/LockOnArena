@@ -18,6 +18,11 @@ USkillBaseComponent::USkillBaseComponent()
 void USkillBaseComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Weapon = GetOwner<AWeaponBase>();
+	ControlledCharacter = Weapon->GetOwner<ADefaultCharacter>(); // Owner는 Weapon, Weapon의 Owner는 Character
+	Controller = ControlledCharacter->GetController<AInGamePlayerController>();
+	CharacterState = ControlledCharacter->GetState();
 }
 
 
@@ -41,19 +46,20 @@ void USkillBaseComponent::PlaySkill()
 	Controller = ControlledCharacter->GetController<AInGamePlayerController>();
 	CharacterState = ControlledCharacter->GetState();
 
-	if (bCanPlay == false)
+	if (bCanPlay == false || RemainCoolDown > 0.f)
 	{
 		return;
 	}
+}
 
-	if (RemainCoolDown > 0)
-	{
-		UE_LOG(LogTemp, Display, TEXT("Cooldown"));
-		bCanPlay = false;
-		return;
-	}
-	UE_LOG(LogTemp, Display, TEXT("Play Skill"));
-	RemainCoolDown = MaxCooldown;
+float USkillBaseComponent::GetMaxCooldown()
+{
+	return MaxCooldown;
+}
+
+float USkillBaseComponent::GetCooldown()
+{
+	return RemainCoolDown;
 }
 
 void USkillBaseComponent::ReduceCooldown(float DeltaTime)

@@ -5,18 +5,28 @@
 #include "Components/ProgressBar.h"
 #include "Components/EditableTextBox.h"
 #include "Character/DefaultCharacter.h"
-#include "Character/CharacterStateComponent.h"
+#include "Actor/Weapon/WeaponBase.h"
 
 void USkillUserWidget::NativeOnInitialized()
 {
-	ControlledCharacter = GetOwningPlayerPawn<ADefaultCharacter>();
-	CharacterState = ControlledCharacter->GetState();
+
+}
+
+void USkillUserWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	ControlledCharacter = GetOwningPlayerPawn<ADefaultCharacter>();	
 }
 
 void USkillUserWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
-	float MaxCD_LockOn = CharacterState->GetCD_LockOn();
-	float CD_RemainLockOn = CharacterState->GetCD_RemainLockOn();
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	Weapon = ControlledCharacter->ActiveWeapon;
+
+	float MaxCD_LockOn = Weapon->GetLockOn_MaxCD();
+	float CD_RemainLockOn = Weapon->GetLockOn_CD();
 	const float Percent = CD_RemainLockOn / MaxCD_LockOn;
 	CD_LockOn->SetPercent(Percent);
 

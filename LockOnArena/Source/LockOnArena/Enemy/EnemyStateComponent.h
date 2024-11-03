@@ -35,9 +35,12 @@ public:
 	virtual WeaponType GetEquipmentType() { return EquipmentType; }
 	virtual void SetEquipmentType(const WeaponType InNum) { EquipmentType = InNum; }
 
+	virtual void ReduceHp(const float Damage);
+
 public:
-	float MaxHp = 100.f;
-	float CurrentHp = 100.f;
+	float MaxHp = 1000.f;
+	float CurrentHp = 1000.f;
+	
 protected:
 	bool bCanMove = true;
 	bool bCanAttack = true;

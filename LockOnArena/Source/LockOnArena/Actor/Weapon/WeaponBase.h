@@ -16,7 +16,7 @@ class ADefaultCharacter;
 class UCharacterStateComponent;
 class AEffect;
 class USkillBaseComponent;
-
+class AInGamePlayerController;
 
 USTRUCT()
 struct LOCKONARENA_API FWeaponBaseTableRow : public FTableRowBase
@@ -93,6 +93,12 @@ public:
 	virtual void SwapEquipment();
 
 	UFUNCTION()
+	virtual float GetLockOn_CD();
+
+	UFUNCTION()
+	virtual float GetLockOn_MaxCD();
+
+	UFUNCTION()
 	virtual void OnMontageEnd(UAnimMontage* Montage, bool bInterrupted);
 
 	virtual void UpdateCharacter();
@@ -118,6 +124,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	ADefaultCharacter* OwnerCharacter = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+	AInGamePlayerController* CharacterController = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
 	UCharacterStateComponent* CharacterState = nullptr;

@@ -64,6 +64,11 @@ public:
 	virtual void PlaySkill();
 
 	UFUNCTION()
+	virtual float GetMaxCooldown();	
+	UFUNCTION()
+	virtual float GetCooldown();
+
+	UFUNCTION()
 	virtual void ReduceCooldown(float DeltaTime);
 	
 

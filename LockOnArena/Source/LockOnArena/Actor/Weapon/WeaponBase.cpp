@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Character/DefaultCharacter.h"
+#include "Character/InGamePlayerController.h"
 #include "Character/CharacterStateComponent.h"
 #include "Skill/SkillBaseComponent.h"
 
@@ -56,6 +57,16 @@ void AWeaponBase::SwapEquipment()
 	}
 }
 
+float AWeaponBase::GetLockOn_CD()
+{
+	return LockOn->GetCooldown();
+}
+
+float AWeaponBase::GetLockOn_MaxCD()
+{
+	return LockOn->GetMaxCooldown();
+}
+
 void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 {
 	DataTableRow = InRowHandle.GetRow<FWeaponBaseTableRow>(TEXT("DataTableRow"));
@@ -78,6 +89,7 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 		}
 	}
 		OwnerCharacter = CastChecked<ADefaultCharacter>(GetOwner());
+		CharacterController = Cast<AInGamePlayerController>(OwnerCharacter->GetController());
 		CharacterState = OwnerCharacter->GetState();
 
 		//MuzzleEffect = DataTableRow->MuzzleEffect;

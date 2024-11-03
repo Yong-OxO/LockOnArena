@@ -44,6 +44,7 @@ protected:
 
 protected:
 	float DetectionDist = 0;
+	FVector TargetLocation;
 
 	UPROPERTY()
 	bool bIsLocking = false; // LockOn이 실행중
