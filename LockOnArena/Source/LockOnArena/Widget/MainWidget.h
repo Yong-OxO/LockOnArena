@@ -7,7 +7,7 @@
 #include "MainWidget.generated.h"
 
 class UCrosshairWidget;
-
+class USkillUserWidget;
 UCLASS()
 class LOCKONARENA_API UMainWidget : public UUserWidget
 {
@@ -18,9 +18,12 @@ public:
 	void VisibleLockOnCrosshair();
 
 	virtual  UCrosshairWidget* GetCrosshairWidget() { return UI_InGameCrosshair; }
-protected:
+public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UCrosshairWidget* UI_InGameCrosshair;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	USkillUserWidget* UI_Skill;
 
 
 };

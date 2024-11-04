@@ -13,7 +13,7 @@ class ADefaultCharacter;
 class AInGamePlayerController;
 class UCharacterStateComponent;
 class AWeaponBase;
-
+class UTexture2D;
 
 USTRUCT()
 struct LOCKONARENA_API FSkillBaseTableRow : public FTableRowBase
@@ -33,6 +33,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Skill|Base")
 	float SuperAmmoTime = 0.f;
+
+public:
+	UPROPERTY(EditAnywhere, Category = "Skill|Image")
+	UTexture2D* SkillImage = nullptr;
 };
 
 
@@ -73,11 +77,17 @@ public:
 	
 
 
+public:
+	AWeaponBase* Weapon;
+
 protected:
 	ADefaultCharacter* ControlledCharacter;
 	AInGamePlayerController* Controller;
 	UCharacterStateComponent* CharacterState;
-	AWeaponBase* Weapon;
+	
+
+public:
+	UTexture2D* SkillImage = nullptr;
 
 protected:
 	UPROPERTY()

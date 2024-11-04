@@ -9,6 +9,8 @@
 #include "Subsystem/WeaponSubsystem.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Character/InGamePlayerController.h"
+#include "Widget/DefaultHUD.h"
 
 
 // Sets default values
@@ -96,6 +98,8 @@ void ADefaultCharacter::WeaponInit()
 
 	ActiveWeapon->UpdateCharacter();
 }
+
+
 
 void ADefaultCharacter::SwitchWeapon(int InValue)
 {

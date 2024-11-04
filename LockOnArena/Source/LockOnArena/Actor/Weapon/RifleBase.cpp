@@ -23,6 +23,7 @@ void ARifleBase::SetData(const FDataTableRowHandle& InHandle)
 
 void ARifleBase::Attack()
 {
+	if (CurrentAmmo <= 0) { return; }
 	Super::Attack();
 
 	UE_LOG(LogTemp, Display, TEXT("Rifle Attack"));
@@ -30,6 +31,8 @@ void ARifleBase::Attack()
 
 void ARifleBase::Fire(const FVector Start, const FRotator Rotation)
 {
+	if (CurrentAmmo <= 0) { return; }
+
 	FCollisionQueryParams CollisionQueryParams;
 	CollisionQueryParams.AddIgnoredActor(this);
 
@@ -37,9 +40,9 @@ void ARifleBase::Fire(const FVector Start, const FRotator Rotation)
 		StartLocation = Start;
 		FVector NormalVector = Rotation.Vector();
 		StartLocation = StartLocation + NormalVector * 40.f;
-		EndLocation = StartLocation + NormalVector * FireRange;
-		
+		EndLocation = StartLocation + NormalVector * FireRange;		
 	}
+
 	FHitResult HitResult;
 	bool Succeed = GetWorld()->LineTraceSingleByChannel(
 		HitResult, 

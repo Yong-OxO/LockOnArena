@@ -3,6 +3,7 @@
 
 #include "Skill/HomingProjectile.h"
 #include "Skill/HomingProjectileComponent.h"
+#include "Actor/Weapon/WeaponBase.h"
 
 // Sets default values
 AHomingProjectile::AHomingProjectile()
@@ -42,9 +43,13 @@ void AHomingProjectile::SpawnProjectile(FVector StartLocation, FRotator StartRot
 {
 	SetActorLocation(StartLocation);
 	SetActorRotation(StartRotation);
+	
+	Weapon = GetOwner<AWeaponBase>();
+	EnemyTargetLocation = Weapon->TargetLocation;
+
 	if (HomingComponent)
 	{
-		HomingComponent->SetHomingTarget(TargetLocation);
+		HomingComponent->SetHomingTarget(EnemyTargetLocation);
 	}
 }
 

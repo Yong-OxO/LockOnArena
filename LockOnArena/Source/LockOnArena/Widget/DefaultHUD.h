@@ -24,9 +24,11 @@ protected:
 
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	UMainWidget* MainWidget = nullptr;
+
 protected:
 
-	UMainWidget* MainWidget = nullptr;
 
 	AInGamePlayerController* Controller = nullptr;
 	ADefaultCharacter* ControlledCharacter = nullptr;

@@ -9,6 +9,10 @@
 #include "Character/InGamePlayerController.h"
 #include "Character/CharacterStateComponent.h"
 #include "Skill/SkillBaseComponent.h"
+#include "Widget/DefaultHUD.h"
+#include "Widget/MainWidget.h"
+#include "Widget/SkillUserWidget.h"
+
 
 // Sets default values
 AWeaponBase::AWeaponBase()
@@ -53,8 +57,11 @@ void AWeaponBase::SwapEquipment()
 		{
 			AnimInstance->Montage_Play(DataTableRow->WeaponChangeMontage);
 			CharacterState->SetAttack(false);
-		}
+		}		
 	}
+	ADefaultHUD* HUD = Cast<ADefaultHUD>(CharacterController->GetHUD());
+	USkillUserWidget* UI_Skill = HUD->MainWidget->UI_Skill;
+	UI_Skill->SetData(DataHandle);
 }
 
 float AWeaponBase::GetLockOn_CD()
@@ -79,6 +86,7 @@ float AWeaponBase::GetSkill01_MaxCD()
 
 void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 {
+	DataHandle = InRowHandle;
 	DataTableRow = InRowHandle.GetRow<FWeaponBaseTableRow>(TEXT("DataTableRow"));
 	ensureMsgf(DataTableRow, TEXT("Not Valid DataTableRow"));
 	SkeletalMesh = DataTableRow->SkeletalMesh;
@@ -114,7 +122,6 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 		{
 			WeaponATK = DataTableRow->WeaponATK;
 		}
-
 		{
 			LockOn = NewObject<USkillBaseComponent>(this, DataTableRow->LockOnClass, TEXT("LockOn"));
 			LockOn->SetData(DataTableRow->LockOnHandle);
@@ -122,6 +129,9 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 			Skill01 = NewObject<USkillBaseComponent>(this, DataTableRow->Skill01Class, TEXT("Skill01"));
 			Skill01->SetData(DataTableRow->Skill01);
 			Skill01->RegisterComponent();
+		}
+		{
+
 		}
 }
 
@@ -164,6 +174,11 @@ void AWeaponBase::UpdateCharacter()
 	{
 		StaticMeshComponent->SetStaticMesh(nullptr);
 		SkeletalMeshComponent->SetSkeletalMesh(nullptr);
+	}
+	{
+		ADefaultHUD* HUD = Cast<ADefaultHUD>(CharacterController->GetHUD());
+		USkillUserWidget* UI_Skill = HUD->MainWidget->UI_Skill;
+		UI_Skill->SetData(DataHandle);
 	}
 }
 

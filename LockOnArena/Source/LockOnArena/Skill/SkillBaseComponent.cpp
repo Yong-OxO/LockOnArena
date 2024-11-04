@@ -81,5 +81,6 @@ void USkillBaseComponent::SetData(const FDataTableRowHandle& InHandle)
 	MaxCooldown = DataRow->MaxCoolDown;
 	bSuperAmmo = DataRow->IsSuperAmmo;
 	SuperAmmoTime = DataRow->SuperAmmoTime;
+	SkillImage = DataRow->SkillImage;
 }
 

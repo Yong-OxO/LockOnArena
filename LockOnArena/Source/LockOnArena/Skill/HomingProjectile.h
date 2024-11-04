@@ -7,6 +7,9 @@
 #include "HomingProjectile.generated.h"
 
 class UHomingProjectileComponent;
+class AWeaponBase;
+
+
 UCLASS()
 class LOCKONARENA_API AHomingProjectile : public AActor
 {
@@ -16,6 +19,8 @@ public:
 	AHomingProjectile();
 
 	void SpawnProjectile(FVector StartLocation, FRotator StartRotation, FVector TargetLocation);
+
+	FVector EnemyTargetLocation;
 protected:
 	virtual void BeginPlay() override;
 
@@ -27,5 +32,6 @@ private:
 	UFUNCTION()
 	void StartMovement();
 
-	FTimerHandle TimerHandle;
+	FTimerHandle TimerHandle;	
+	AWeaponBase* Weapon;
 };

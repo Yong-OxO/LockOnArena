@@ -4,9 +4,11 @@
 #include "Widget/SkillUserWidget.h"
 #include "Components/ProgressBar.h"
 #include "Components/EditableTextBox.h"
+#include "Components/Image.h"
 #include "Character/DefaultCharacter.h"
 #include "Actor/Weapon/WeaponBase.h"
 #include "Skill/SkillBaseComponent.h"
+
 
 void USkillUserWidget::NativeOnInitialized()
 {
@@ -26,6 +28,19 @@ void USkillUserWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 	Super::NativeTick(MyGeometry, InDeltaTime);
 	LockOnIcon();
 	Skill01Icon();
+}
+
+void USkillUserWidget::SetData(const FDataTableRowHandle& InHandle)
+{
+	FWeaponBaseTableRow* DataTableRow = InHandle.GetRow<FWeaponBaseTableRow>(TEXT("DataTableRow"));
+	ensureMsgf(DataTableRow, TEXT("Not Valid DataTableRow"));
+
+	Weapon = ControlledCharacter->ActiveWeapon;
+	if (Weapon)
+	{		
+		LockOnImage->SetBrushResourceObject(Weapon->LockOn->SkillImage);
+		Skill01Image->SetBrushResourceObject(Weapon->Skill01->SkillImage);
+	}
 }
 
 void USkillUserWidget::LockOnIcon()

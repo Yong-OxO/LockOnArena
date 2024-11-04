@@ -66,7 +66,9 @@ bool UHomingSkill::PlayHoming(const FVector TargetLocation)
 		for (int i = 0; i < 5; ++i)
 		{
 			Projectile.Add(GetWorld()->SpawnActor<AHomingProjectile>(DataTableRow->ProjectileClass, SpawnLocation, SpawnRotation));
+			Projectile[i]->SetOwner(Weapon);
 		}
+
 		Projectile[0]->SpawnProjectile(SpawnLocation, SpawnRotation, TargetLocation);
 		Projectile[1]->SpawnProjectile(SpawnLocation + RightVector * 50, SpawnRotation, TargetLocation);
 		Projectile[2]->SpawnProjectile(SpawnLocation + (- 1 * RightVector * 50), SpawnRotation, TargetLocation);

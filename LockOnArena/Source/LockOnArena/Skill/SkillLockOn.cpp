@@ -102,7 +102,7 @@ void USkillLockOn::LockOn(const float DeltaTime)
 		// @TODO : SoketName
 		const USkeletalMeshSocket* TargetSocket = TargetSkeletal->GetSocketByName(FName(TEXT("LockOnTarget")));
 		TargetLocation = TargetSkeletal->GetSocketLocation(FName(TEXT("LockOnTarget")));
-
+		Weapon->TargetLocation = TargetLocation;
 		//ControlledCharacter;
 
 		// 캐릭터 기준으로 돌려.

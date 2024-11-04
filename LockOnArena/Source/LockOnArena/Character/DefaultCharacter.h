@@ -18,7 +18,7 @@ class UCharacterStateComponent;
 class UWeaponChildActorComponent;
 class UCameraComponent;
 class USpringArmComponent;
-
+class ADefaultHUD;
 
 USTRUCT()
 struct LOCKONARENA_API FDefaultCharacterTableRow : public FTableRowBase
@@ -82,18 +82,22 @@ public:
 	//UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.DefaultCharacterTableRow"))
 	//FDataTableRowHandle CharacterDataRowHandle;
 
-public:
+public: // Camera
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	USpringArmComponent* SpringArmComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	UCameraComponent* CameraComponent;
 	
+public: // HUD, Widget
+	UPROPERTY(EditAnywhere, Category = "Widget")
+	ADefaultHUD* DefaultHUD;
 	
 	// WeaponManage
 public:
 	virtual void WeaponInit() override;
 	virtual void SwitchWeapon(int InValue);
+
 
 	AWeaponBase* ActiveWeapon = nullptr;
 

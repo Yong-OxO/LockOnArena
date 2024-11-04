@@ -47,7 +47,11 @@ public:
 	UAnimMontage* WeaponChangeMontage = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
-	UAnimMontage* HitReactMontage = nullptr;
+	UAnimMontage* UnEquipWeapon = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
+	UAnimMontage* HitReactMontage = nullptr;	
+
 
 public: // WeaponStatus
 	UPROPERTY(EditAnywhere)
@@ -90,7 +94,7 @@ public:
 
 	// @TODO : 블루프린트 호출 가능성
 	UFUNCTION()
-	virtual void SwapEquipment();
+	virtual void SwapEquipment();	
 
 	UFUNCTION()
 	virtual float GetLockOn_CD();
@@ -117,6 +121,7 @@ public:
 	UStaticMeshComponent* StaticMeshComponent = nullptr;
 
 public:
+	FDataTableRowHandle DataHandle;
 	USkeletalMesh* SkeletalMesh = nullptr;
 
 	UStaticMesh* StaticMesh = nullptr;
@@ -140,6 +145,7 @@ public: // WeaponStatus
 
 public: // Skill
 	USkillBaseComponent* LockOn = nullptr;
+	FVector TargetLocation;
 	USkillBaseComponent* Skill01 = nullptr;
 	//UPROPERTY(VisibleAnywhere)
 	//AEffect* MuzzleEffect = nullptr;

@@ -12,7 +12,7 @@ struct LOCKONARENA_API FRifleTableRow : public FWeaponBaseTableRow
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	int32 MaxAmmo = 50;
+	int32 MaxAmmo = 30;
 	UPROPERTY(EditAnywhere)
 	float FireRange = 3000.f;
 };
@@ -38,7 +38,7 @@ public:
 	FRifleTableRow* DataRow;
 
 	UPROPERTY()
-	int32 MaxAmmo = 50;
+	int32 MaxAmmo = 30;
 
 	UPROPERTY()
 	int32 CurrentAmmo;

@@ -2,6 +2,10 @@
 
 
 #include "Skill/HomingProjectileComponent.h"
+#include "Skill/HomingProjectile.h"
+#include "Skill/HomingSkill.h"
+#include "Actor/Weapon/WeaponBase.h"
+
 
 UHomingProjectileComponent::UHomingProjectileComponent()
 {
@@ -11,9 +15,12 @@ UHomingProjectileComponent::UHomingProjectileComponent()
 
 void UHomingProjectileComponent::SetHomingTarget(FVector TargetLocation)
 {
+	Weapon = Cast<AWeaponBase>(GetOwner()->GetOwner());
+
 	HomingAccelerationMagnitude = 10000.0f;
 	
 	HomingTargetLocation = TargetLocation;
+
 }
 
 void UHomingProjectileComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -22,7 +29,7 @@ void UHomingProjectileComponent::TickComponent(float DeltaTime, ELevelTick TickT
 
 	if (bCanMove)
 	{
-		FVector Direction = (HomingTargetLocation - GetOwner()->GetActorLocation()).GetSafeNormal();
+		FVector Direction = (Weapon->TargetLocation - GetOwner()->GetActorLocation()).GetSafeNormal();
 		FVector NewVelocity = Direction * 4000.f; //HomingAccelerationMagnitude
 		Velocity = NewVelocity;
 	}

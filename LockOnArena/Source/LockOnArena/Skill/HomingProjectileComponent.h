@@ -9,6 +9,9 @@
 /**
  * 
  */
+
+class AWeaponBase;
+
 UCLASS()
 class LOCKONARENA_API UHomingProjectileComponent : public UProjectileMovementComponent
 {
@@ -25,7 +28,7 @@ protected:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
 	FVector HomingTargetLocation;
-
+	AWeaponBase* Weapon;
 
 	
 };
