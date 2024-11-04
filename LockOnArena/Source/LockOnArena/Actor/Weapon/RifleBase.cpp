@@ -54,7 +54,7 @@ void ARifleBase::Fire(const FVector Start, const FRotator Rotation)
 	{
 		UE_LOG(LogTemp, Display, TEXT("asdf"));
 	}
-	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 3.f);
+	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 3.f);
 
 	TSubclassOf<UCustomDamageType> CustomDamageType;
 

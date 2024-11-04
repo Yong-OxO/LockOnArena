@@ -24,7 +24,11 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* StaticMeshComponent;
 
+	UFUNCTION()
+	void OnTrigger (UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 private:	
 	UPROPERTY(VisibleAnywhere, Category = "Movement") 
 	UHomingProjectileComponent* HomingComponent;
@@ -33,5 +37,5 @@ private:
 	void StartMovement();
 
 	FTimerHandle TimerHandle;	
-	AWeaponBase* Weapon;
+	AWeaponBase* Weapon = nullptr;
 };

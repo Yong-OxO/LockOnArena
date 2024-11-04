@@ -4,21 +4,21 @@
 #include "Skill/HomingProjectile.h"
 #include "Skill/HomingProjectileComponent.h"
 #include "Actor/Weapon/WeaponBase.h"
+#include "Kismet/GameplayStatics.h"
+//#include "Character/InGamePlayerController.h"
 
 // Sets default values
 AHomingProjectile::AHomingProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	InitialLifeSpan = 5.f;
+
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileStaticMeshComponent"));;
+	RootComponent = StaticMeshComponent;
+	StaticMeshComponent->SetCollisionProfileName(TEXT("Projectile"));
+	StaticMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnTrigger);
+
 	HomingComponent = CreateDefaultSubobject<UHomingProjectileComponent>(TEXT("HomingComponent"));
-
-
-	UPrimitiveComponent* MyComponent = FindComponentByClass<UPrimitiveComponent>(); 
-
-	if (MyComponent)
-	{ // 충돌 프로필 이름을 "BlockAllDynamic"으로 설정 
-		MyComponent->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
-	}
-
 	HomingComponent->ProjectileGravityScale = 0.f;
 	HomingComponent->InitialSpeed = 500.f;
 	HomingComponent->bCanMove = false;
@@ -30,6 +30,15 @@ void AHomingProjectile::BeginPlay()
 	SetActorTickEnabled(true);
 
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AHomingProjectile::StartMovement, 0.3f, false);
+}
+
+void AHomingProjectile::OnTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Display, TEXT("TestProjectile"));
+
+	UGameplayStatics::ApplyDamage(OtherActor, 30.f, GetWorld()->GetFirstPlayerController(), this, nullptr);
+
+	Destroy();
 }
 
 void AHomingProjectile::StartMovement()

@@ -6,6 +6,7 @@
 #include "Components/EditableTextBox.h"
 #include "Components/Image.h"
 #include "Character/DefaultCharacter.h"
+#include "Character/CharacterStateComponent.h"
 #include "Actor/Weapon/WeaponBase.h"
 #include "Skill/SkillBaseComponent.h"
 
@@ -48,6 +49,7 @@ void USkillUserWidget::LockOnIcon()
 	Weapon = ControlledCharacter->ActiveWeapon;
 	USkillBaseComponent* LockOn = Weapon->LockOn;
 
+
 	float MaxCD_LockOn = LockOn->GetMaxCooldown();
 	float CD_RemainLockOn = LockOn->GetCooldown();
 	const float Percent = CD_RemainLockOn / MaxCD_LockOn;
@@ -72,11 +74,21 @@ void USkillUserWidget::Skill01Icon()
 {
 	Weapon = ControlledCharacter->ActiveWeapon;
 
+	
 	USkillBaseComponent* Skill01 = Weapon->Skill01;
 	float MaxCD_Skill01 = Skill01->GetMaxCooldown();
 	float CD_RemainSkill01 = Weapon->GetSkill01_CD();
-	const float Percent = CD_RemainSkill01 / MaxCD_Skill01;
-	CD_Skill01->SetPercent(Percent);
+
+	if (!CharacterState->GetLockOn())
+	{
+		CD_Skill01->SetPercent(1);
+	}
+	else
+	{
+		const float Percent = CD_RemainSkill01 / MaxCD_Skill01;
+		CD_Skill01->SetPercent(Percent);
+	}
+	
 
 	if (CD_RemainSkill01 <= 0)
 	{
