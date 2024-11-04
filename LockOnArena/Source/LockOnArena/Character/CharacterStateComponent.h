@@ -79,6 +79,14 @@ public:	// LockOn
 	virtual void SetCD_RemainLockOn(const float InRemainCoolDown) { CD_RemainLockOn = InRemainCoolDown; }
 	virtual float GetCD_RemainLockOn() { return CD_RemainLockOn; }
 	
+	// SKill01
+	virtual void SetCD_Skill01(const float InCoolMaxDown) { CD_Skill01 = InCoolMaxDown; }
+	virtual float GetCD_Skill01() { return CD_Skill01; }
+
+	virtual void SetCD_RemainSkill01(const float InRemainCoolDown) { CD_RemainSkill01 = InRemainCoolDown; }
+	virtual float GetCD_RemainSkill01() { return CD_RemainSkill01; }
+	
+
 	virtual void SetTargetLocation(FVector InLocation) { TargetLocation = InLocation; }
 	virtual FVector GetTargetLocation() { return TargetLocation; }
 
@@ -86,7 +94,10 @@ protected:
 	bool bLockOnSuccessed = false;
 	bool bLockOnPlay = false;
 	float CD_LockOn;
-	float CD_RemainLockOn;
+	float CD_RemainLockOn;	
+	
+	float CD_Skill01;
+	float CD_RemainSkill01;
 
 	FVector TargetLocation;
 

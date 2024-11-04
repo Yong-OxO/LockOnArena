@@ -7,6 +7,7 @@
 #include "Character/CharacterStateComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Character/DefaultCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 void UHomingSkill::SetData(const FDataTableRowHandle& InHandle)
 {
@@ -14,6 +15,7 @@ void UHomingSkill::SetData(const FDataTableRowHandle& InHandle)
 
 	DataTableRow = InHandle.GetRow<FHomingTableRow>(TEXT("DataRow"));
 	SkillATKPersent = DataTableRow->SkillATKPersent;
+	MaxCooldown = DataTableRow->MaxCoolDown;
 }
 
 void UHomingSkill::PlaySkill()
@@ -51,7 +53,14 @@ bool UHomingSkill::PlayHoming(const FVector TargetLocation)
 			SpawnRotation = (TargetLocation - SpawnLocation).Rotation();
 		}
 
-	
+		// 시간 감속
+		FTimerHandle TimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UHomingSkill::ResetTimeDilation, 0.3f, false);
+		UGameplayStatics::SetGlobalTimeDilation(GetOwner()->GetWorld(), 0.3f);
+		
+		// 쿨타임은 그대로 가도록
+		ControlledCharacter->ActiveWeapon->CustomTimeDilation = 1.f / 0.3f;
+
 
 		TArray<AHomingProjectile*> Projectile;
 		for (int i = 0; i < 5; ++i)
@@ -68,4 +77,17 @@ bool UHomingSkill::PlayHoming(const FVector TargetLocation)
 	}
 
 	return false;
+}
+
+void UHomingSkill::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	CharacterState->SetCD_Skill01(RemainCoolDown);
+}
+
+void UHomingSkill::ResetTimeDilation()
+{
+	UGameplayStatics::SetGlobalTimeDilation(GetOwner()->GetWorld(), 1.0f);
+	ControlledCharacter->ActiveWeapon->CustomTimeDilation = 1.f;
 }

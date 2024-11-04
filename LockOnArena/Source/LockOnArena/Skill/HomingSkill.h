@@ -42,7 +42,9 @@ public:
 
 	bool PlayHoming(const FVector TargetLocation);
 protected:
-
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION()
+	virtual void ResetTimeDilation();
 
 	UPROPERTY()
 	bool bIsLocking = false; // LockOn이 실행중

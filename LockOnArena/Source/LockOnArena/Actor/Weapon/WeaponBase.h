@@ -94,9 +94,13 @@ public:
 
 	UFUNCTION()
 	virtual float GetLockOn_CD();
-
 	UFUNCTION()
 	virtual float GetLockOn_MaxCD();
+
+	UFUNCTION()
+	virtual float GetSkill01_CD();
+	UFUNCTION()
+	virtual float GetSkill01_MaxCD();
 
 	UFUNCTION()
 	virtual void OnMontageEnd(UAnimMontage* Montage, bool bInterrupted);

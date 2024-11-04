@@ -22,12 +22,22 @@ class LOCKONARENA_API USkillUserWidget : public UUserWidget
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 protected:
+	virtual void LockOnIcon();
+	virtual void Skill01Icon();
+protected:
+	// LockOn
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	UProgressBar* CD_LockOn = nullptr; 
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	UEditableTextBox* RemainTime = nullptr;
 
+	// Skill 01
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UProgressBar* CD_Skill01 = nullptr;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UEditableTextBox* Skill01Remain = nullptr;
 protected:
 	ADefaultCharacter* ControlledCharacter;
 	UCharacterStateComponent* CharacterState;

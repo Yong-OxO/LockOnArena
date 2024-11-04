@@ -67,6 +67,16 @@ float AWeaponBase::GetLockOn_MaxCD()
 	return LockOn->GetMaxCooldown();
 }
 
+float AWeaponBase::GetSkill01_CD()
+{
+	return Skill01->GetCooldown();
+}
+
+float AWeaponBase::GetSkill01_MaxCD()
+{
+	return Skill01->GetMaxCooldown();
+}
+
 void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 {
 	DataTableRow = InRowHandle.GetRow<FWeaponBaseTableRow>(TEXT("DataTableRow"));
