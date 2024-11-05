@@ -60,10 +60,15 @@ public:
 	virtual void SetData(const FDataTableRowHandle& RowHandle);
 
 
-public:
+public: // Status
 	virtual float GetCharacterATK() { return CharacterATK; }
 	virtual void AddCharacterATK(const float InATK) { CharacterATK += InATK; }
-public: // Status
+
+	virtual float GetCurrentHp() { return CurrentHp; }
+	virtual void ReduceHp(float InDamage);
+
+	virtual float GetMaxHp() { return MaxHp; }
+public: 
 	float CharacterATK = 10.f;
 	float MaxHp = 100.f;
 	float CurrentHp = 100.f;

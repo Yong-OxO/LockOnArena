@@ -19,73 +19,105 @@ void UPlayerStateWidget::NativeConstruct()
 
 	PlayerState->OnCharacterStateChanged.AddDynamic(this, &UPlayerStateWidget::UpDateCharacterState);
 
-	float PlayerMaxExp = PlayerState->GetMaxExp();
-	float PlayerCurrentExp = PlayerState->GetCurrentExp();
+	bEndExp = true;
+	bEndHp = true;
 
-	bCanTick = false;
+	ExpCurrentPercent = PlayerState->GetCurrentExp() / PlayerState->GetMaxExp();
+	ExpProgress->SetPercent(ExpCurrentPercent);
 
-	CurrentPercent = PlayerCurrentExp / PlayerMaxExp;
+	HpCurrentPercent = PlayerState->GetCurrentHp() / PlayerState->GetMaxHp();	
+	HPProgress->SetPercent(HpCurrentPercent);
 }
 
 void UPlayerStateWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
-	if (!bCanTick) { return; }
+	if (bEndExp && bEndHp) { return; }
 
-	Super::NativeTick(MyGeometry, InDeltaTime);
+	UpDateExpProgress(InDeltaTime);
+	UpDateHpProgress(InDeltaTime);
+}
 
+
+void UPlayerStateWidget::UpDateCharacterState()
+{
+	// Hp
+	float CurrentHp = PlayerState->GetCurrentHp();
+	float MaxHp = PlayerState->GetMaxHp();
+
+#define LOCTEXT_NAMESPACE "PlayerHp"
+	FString FormattedString = FString::Printf(TEXT("%.0f / %.0f"), CurrentHp, MaxHp);
+	FText Text = FText::Format(LOCTEXT("ExampleFText", "{0}"), FText::FromString(FormattedString));
+	HpCount->SetText(Text);
+#undef LOCTEXT_NAMESPACE
+
+	// EXP
+	float PlayerMaxExp = PlayerState->GetMaxExp();
+	float PlayerCurrentExp = PlayerState->GetCurrentExp();
+
+	ExpTargetPercent = PlayerCurrentExp / PlayerMaxExp;
+
+	float TextPercent = ExpTargetPercent * 100.f;
+
+#define LOCTEXT_NAMESPACE "PlayerExp"
+	FormattedString = FString::Printf(TEXT("%.2f%%"), TextPercent);
+	Text = FText::Format(LOCTEXT("ExampleFText", "{0}"), FText::FromString(FormattedString));
+	CurrentExpText->SetText(Text);
+#undef LOCTEXT_NAMESPACE
+}
+
+void UPlayerStateWidget::UpDateExpProgress(float InDeltaTime)
+{
 	float Alpha = 10 * InDeltaTime;
 	if (PlayerState->StackLevel) // Level 스택이 있을 때
 	{
-		if (FMath::IsNearlyEqual(CurrentPercent, 1, 0.01f))
+		if (FMath::IsNearlyEqual(ExpCurrentPercent, 1, 0.01f))
 		{
-			CurrentPercent = 0.0f;
+			ExpCurrentPercent = 0.0f;
 			--(PlayerState->StackLevel);
 			Alpha = 10 * InDeltaTime;
 		}
 		else
 		{
-			CurrentPercent = FMath::Lerp(CurrentPercent, 1, Alpha);
+			ExpCurrentPercent = FMath::Lerp(ExpCurrentPercent, 1, Alpha);
 			Alpha += InDeltaTime * 5;
-			ExpProgress->SetPercent(CurrentPercent);
+			ExpProgress->SetPercent(ExpCurrentPercent);
 		}
 	}
 	else // Level 스택이 없을 때
 	{
-		if (FMath::IsNearlyEqual(CurrentPercent, TargetPercent, 0.01f))
+		if (FMath::IsNearlyEqual(ExpCurrentPercent, ExpTargetPercent, 0.01f))
 		{
-			CurrentPercent = TargetPercent;
-			ExpProgress->SetPercent(CurrentPercent);
+			ExpCurrentPercent = ExpTargetPercent;
+			ExpProgress->SetPercent(ExpCurrentPercent);
 			Alpha = 10 * InDeltaTime;
-			bCanTick = false;
+			bEndExp = true;
 		}
 		else
 		{
-			CurrentPercent = FMath::Lerp(CurrentPercent, TargetPercent, 0.1);
+			ExpCurrentPercent = FMath::Lerp(ExpCurrentPercent, ExpTargetPercent, 0.1);
 			Alpha += InDeltaTime;
-			ExpProgress->SetPercent(CurrentPercent);
+			ExpProgress->SetPercent(ExpCurrentPercent);
 		}
 	}
 }
 
+void UPlayerStateWidget::UpDateHpProgress(float InDeltaTime)
+{
+	if (FMath::IsNearlyEqual(HpCurrentPercent, HpTargetPercent, 0.001))
+	{
+		HpCurrentPercent = HpTargetPercent;
+		bEndHp = true;
+	}
+	else
+	{
+		float Alpha = InDeltaTime * 5;
 
-void UPlayerStateWidget::UpDateCharacterState()
-{// @TODO : Hp도 보이게
-	
-	float PlayerMaxExp = PlayerState->GetMaxExp();
-	float PlayerCurrentExp = PlayerState->GetCurrentExp();
+		if (Alpha > 1) { Alpha = 1; }
 
-	TargetPercent = PlayerCurrentExp / PlayerMaxExp;
-	//ExpProgress->SetPercent(TargetPercent);
+		HpCurrentPercent = FMath::Lerp(HpCurrentPercent, HpTargetPercent, Alpha);
+		HPProgress->SetPercent(HpCurrentPercent);
+	}
 
-	float TextPercent = TargetPercent * 100.f;
-
-#define LOCTEXT_NAMESPACE "PlayerState"
-	FString FormattedString = FString::Printf(TEXT("%.2f%%"), TextPercent);
-	FText Text = FText::Format(LOCTEXT("ExampleFText", "{0}"), FText::FromString(FormattedString));
-	CurrentExpText->SetText(Text);
-#undef LOCTEXT_NAMESPACE
-
-	bCanTick = true;
 }
 
 

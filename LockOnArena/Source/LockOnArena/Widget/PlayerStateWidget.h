@@ -23,18 +23,31 @@ protected:
 	UFUNCTION()
 	virtual void UpDateCharacterState();
 
+	virtual void UpDateExpProgress(float InDeltaTime);
+	virtual void UpDateHpProgress(float InDeltaTime);
 protected:
 	UCharacterStateComponent* PlayerState;
 
-protected:
+protected: // Exp
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	UProgressBar* ExpProgress = nullptr;
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	UEditableTextBox* CurrentExpText = nullptr;
 
-	float TargetPercent;
-	float CurrentPercent;
+	float ExpTargetPercent; // 변경 후 
+	float ExpCurrentPercent; // 변경 전
 
-	bool bCanTick = false;
+	float HpTargetPercent; // 변경 후
+	float HpCurrentPercent; // 변경 전
+
+	bool bEndExp = true;
+	bool bEndHp = true;
+
+protected: // Hp
+	UPROPERTY(VisibleAnywhere, meta =(BindWidget))
+	UProgressBar* HPProgress = nullptr;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UEditableTextBox* HpCount = nullptr;
 };

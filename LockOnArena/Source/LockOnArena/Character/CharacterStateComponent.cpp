@@ -64,6 +64,13 @@ void UCharacterStateComponent::SetData(const FDataTableRowHandle& RowHandle)
 	//RowHandle.GetRow<>();
 }
 
+void UCharacterStateComponent::ReduceHp(float InDamage)
+{
+	CurrentHp = -InDamage;
+
+	if (CurrentHp < 0) { CurrentHp = 0; }
+}
+
 void UCharacterStateComponent::AddExp(const float InExp)
 {
 	CurrentExp += InExp;
