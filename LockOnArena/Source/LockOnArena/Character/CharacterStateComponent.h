@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Misc/Utils.h"
 
 #include "CharacterStateComponent.generated.h"
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterStateChanged);
 
 USTRUCT()
 struct LOCKONARENA_API FCharacterStateTableRow : public FTableRowBase
@@ -29,6 +31,8 @@ class LOCKONARENA_API UCharacterStateComponent : public UActorComponent
 public:	
 	UCharacterStateComponent();
 
+	UPROPERTY(BlueprintAssignable, Category = "Event")
+	FOnCharacterStateChanged OnCharacterStateChanged;
 protected:
 	virtual void BeginPlay() override;
 
@@ -55,10 +59,30 @@ public:
 public:
 	virtual void SetData(const FDataTableRowHandle& RowHandle);
 
+
 public:
+	virtual float GetCharacterATK() { return CharacterATK; }
+	virtual void AddCharacterATK(const float InATK) { CharacterATK += InATK; }
+public: // Status
+	float CharacterATK = 10.f;
 	float MaxHp = 100.f;
 	float CurrentHp = 100.f;
 
+public:
+	virtual float GetMaxExp() { return MaxExp; }
+	virtual float GetCurrentExp() { return CurrentExp; }	
+
+	virtual int32 GetLevel() { return Level; }
+
+	virtual void AddExp(const float InExp);
+	virtual void LevelUp();
+
+public:
+	float StackLevel = 0;
+protected:
+	int32 Level = 1.f;
+	float MaxExp = 50.f;
+	float CurrentExp = 0.f;
 
 public:
 	bool CanLockOn = true; // 자세한 쿨타임은 skillsystem에서 관리

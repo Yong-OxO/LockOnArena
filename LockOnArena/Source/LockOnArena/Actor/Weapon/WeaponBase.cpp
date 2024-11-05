@@ -121,6 +121,7 @@ void AWeaponBase::SetData(const FDataTableRowHandle& InRowHandle)
 		}
 		{
 			WeaponATK = DataTableRow->WeaponATK;
+			CharacterState->AddCharacterATK(WeaponATK);
 		}
 		{
 			LockOn = NewObject<USkillBaseComponent>(this, DataTableRow->LockOnClass, TEXT("LockOn"));

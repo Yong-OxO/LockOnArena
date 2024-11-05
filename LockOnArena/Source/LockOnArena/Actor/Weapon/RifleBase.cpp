@@ -58,10 +58,10 @@ void ARifleBase::Fire(const FVector Start, const FRotator Rotation)
 
 	TSubclassOf<UCustomDamageType> CustomDamageType;
 
-	UGameplayStatics::ApplyDamage(HitResult.GetActor(), WeaponATK, CharacterController, HitResult.GetActor(), CustomDamageType);
+	UGameplayStatics::ApplyDamage(HitResult.GetActor(), CharacterState->GetCharacterATK(), CharacterController, this, CustomDamageType);
 
 	UE_LOG(LogTemp, Display, TEXT("Ammo : %d"), CurrentAmmo);
-	--CurrentAmmo;
+	//--CurrentAmmo;
 }
 
 void ARifleBase::BeginDestroy()

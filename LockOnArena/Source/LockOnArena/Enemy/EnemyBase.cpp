@@ -6,6 +6,8 @@
 #include "Enemy/EnemyStateComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Enemy/Animation/EnemyAnimInstance.h"
+#include "Character/DefaultCharacter.h"
+#include "Character/CharacterStateComponent.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -52,9 +54,23 @@ void AEnemyBase::SetData(const FDataTableRowHandle& InRowHandle)
 
 float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp, Display, TEXT("Take Damage!"));
+	if (FMath::IsNearlyZero(EnemyState->CurrentHp)) { return 0; }
 
 	EnemyState->ReduceHp(Damage);
+
+	if (EnemyState->CurrentHp <= 0)
+	{
+		// 죽음 몽타주 실행 및 플레이어 경험치 오르기, Collision 끄기 등
+		ADefaultCharacter* CauserPlayer = Cast<ADefaultCharacter>(DamageCauser->GetOwner());
+		if (CauserPlayer == nullptr)
+		{
+			CauserPlayer = Cast<ADefaultCharacter>(DamageCauser->GetOwner()->GetOwner());
+		}
+		UCharacterStateComponent* CauserPlayerState = CauserPlayer->GetState();
+		CauserPlayerState->AddExp(GetState()->EnemyEXP);
+		EnemyState->CurrentHp = 0;
+		return Damage;
+	}
 
 	StackDamage += Damage;
 

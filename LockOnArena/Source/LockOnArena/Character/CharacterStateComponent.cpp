@@ -64,3 +64,30 @@ void UCharacterStateComponent::SetData(const FDataTableRowHandle& RowHandle)
 	//RowHandle.GetRow<>();
 }
 
+void UCharacterStateComponent::AddExp(const float InExp)
+{
+	CurrentExp += InExp;
+	LevelUp();
+	OnCharacterStateChanged.Broadcast();
+}
+
+void UCharacterStateComponent::LevelUp()
+{
+	if (MaxExp <= CurrentExp)
+	{
+		CurrentExp = CurrentExp - MaxExp;
+		MaxExp = MaxExp * 1.1f;
+
+		++Level; // @TODO : 피회복, 최대체력, 공격력 증가 등 SetStatus 함수를 만들고 실행 or 스탯포인트 부여
+		++StackLevel;
+		OnCharacterStateChanged.Broadcast();
+		LevelUp();		
+	}
+	else
+	{
+		return;
+	}
+
+	
+}
+

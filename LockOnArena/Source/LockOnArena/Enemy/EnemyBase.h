@@ -30,6 +30,7 @@ public:
 public:	
 	UPROPERTY(EditAnywhere, Category = "Enemy|Animation")
 	UAnimMontage* HitMontage = nullptr;
+
 };
 
 
@@ -63,6 +64,8 @@ public:
 public:
 	UFUNCTION()
 	virtual void OnMontageEnd(UAnimMontage* Montage, bool bInterrupted);
+
+	virtual UEnemyStateComponent* GetState() { return EnemyState; }
 
 	UPROPERTY(VisibleAnywhere)
 	UEnemyStateComponent* EnemyState = nullptr;

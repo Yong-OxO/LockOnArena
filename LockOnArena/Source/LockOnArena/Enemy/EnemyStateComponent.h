@@ -38,9 +38,10 @@ public:
 	virtual void ReduceHp(const float Damage);
 
 public:
-	float MaxHp = 1000.f;
-	float CurrentHp = 1000.f;
+	float MaxHp = 300.f;
+	float CurrentHp = 300.f;
 	
+	float EnemyEXP = 100.f;
 protected:
 	bool bCanMove = true;
 	bool bCanAttack = true;
