@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Widget/SkillUserWidget.h"
+#include "Widget/InGame/SkillUserWidget.h"
 #include "Components/ProgressBar.h"
 #include "Components/EditableTextBox.h"
 #include "Components/Image.h"

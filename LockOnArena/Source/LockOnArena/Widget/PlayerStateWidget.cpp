@@ -44,6 +44,8 @@ void UPlayerStateWidget::UpDateCharacterState()
 	float CurrentHp = PlayerState->GetCurrentHp();
 	float MaxHp = PlayerState->GetMaxHp();
 
+	HpTargetPercent = CurrentHp / MaxHp;
+
 #define LOCTEXT_NAMESPACE "PlayerHp"
 	FString FormattedString = FString::Printf(TEXT("%.0f / %.0f"), CurrentHp, MaxHp);
 	FText Text = FText::Format(LOCTEXT("ExampleFText", "{0}"), FText::FromString(FormattedString));
@@ -63,6 +65,8 @@ void UPlayerStateWidget::UpDateCharacterState()
 	Text = FText::Format(LOCTEXT("ExampleFText", "{0}"), FText::FromString(FormattedString));
 	CurrentExpText->SetText(Text);
 #undef LOCTEXT_NAMESPACE
+	bEndExp = false;
+	bEndHp = false;
 }
 
 void UPlayerStateWidget::UpDateExpProgress(float InDeltaTime)

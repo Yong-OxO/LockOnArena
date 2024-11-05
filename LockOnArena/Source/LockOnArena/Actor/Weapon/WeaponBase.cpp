@@ -11,7 +11,7 @@
 #include "Skill/SkillBaseComponent.h"
 #include "Widget/DefaultHUD.h"
 #include "Widget/MainWidget.h"
-#include "Widget/SkillUserWidget.h"
+#include "Widget/InGame/SkillUserWidget.h"
 
 
 // Sets default values
