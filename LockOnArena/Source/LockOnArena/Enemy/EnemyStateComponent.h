@@ -37,6 +37,11 @@ public:
 
 	virtual void ReduceHp(const float Damage);
 
+
+public:
+	virtual float GetMaxHp() { return MaxHp; }
+	virtual float GetCurrentHp() { return CurrentHp; }
+
 public:
 	float MaxHp = 300.f;
 	float CurrentHp = 300.f;

@@ -9,6 +9,7 @@
 #include "Character/DefaultCharacter.h"
 #include "Character/CharacterStateComponent.h"
 
+
 // Sets default values
 AEnemyBase::AEnemyBase()
 {
@@ -58,25 +59,38 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 
 	EnemyState->ReduceHp(Damage);
 
-	if (EnemyState->CurrentHp <= 0)
+	ADefaultCharacter* CauserPlayer = Cast<ADefaultCharacter>(DamageCauser->GetOwner());
+	if (CauserPlayer == nullptr) // 발사체 등 Weapon이 직접적인 피해를 주지 않을 때
+	{
+		CauserPlayer = Cast<ADefaultCharacter>(DamageCauser->GetOwner()->GetOwner());
+	}
+
+	CauserPlayer->VisibleEnemyHpBar(this);
+
+	// @TODO : Enemy State에서 Die를 관리하고 Die인지 아닌지로 체크
+	// 최초의 die라면 Collision을 꺼둠으로써 더 이상의 TakeDamage가 호출되지 않도록
+
+	if (FMath::IsNearlyZero(EnemyState->CurrentHp))
 	{
 		// 죽음 몽타주 실행 및 플레이어 경험치 오르기, Collision 끄기 등
-		ADefaultCharacter* CauserPlayer = Cast<ADefaultCharacter>(DamageCauser->GetOwner());
-		if (CauserPlayer == nullptr)
-		{
-			CauserPlayer = Cast<ADefaultCharacter>(DamageCauser->GetOwner()->GetOwner());
-		}
+	
 		UCharacterStateComponent* CauserPlayerState = CauserPlayer->GetState();
 		CauserPlayerState->AddExp(GetState()->EnemyEXP);
 		EnemyState->CurrentHp = 0;
+
+		AnimInstance->StopAllMontages(0.f);
+		AnimInstance->Montage_Play(DataTableRow->DeathMontage);
+
 		return Damage;
 	}
-
+	
 	StackDamage += Damage;
 
 	if (StackDamage >= 100.f) // 일정 이상의 데미지가 누적되면 Montage 재생
 	{
 		StackDamage = FMath::Fmod(StackDamage, 100.f);
+
+		Controller->StopMovement();
 
 		AnimInstance->StopAllMontages(0.f);
 		AnimInstance->Montage_Play(DataTableRow->HitMontage);
@@ -87,6 +101,6 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 
 void AEnemyBase::OnMontageEnd(UAnimMontage* Montage, bool bInterrupted)
 {
-	int a = 0;
+	//Controller->Movement();
 }
 

@@ -45,7 +45,7 @@ void UCharacterStateComponent::SetLockOn(const bool InValue)
 		TimerHandle,   // FTimerHandle 변수
 		this,          // 타이머를 설정할 객체
 		&ThisClass::SetLockOnFalse, // 실행할 함수
-		1.0f,          // 대기 시간(초 단위)
+		0.6f,          // 대기 시간(초 단위)
 		false          // 반복 여부 (false면 한 번만 실행)
 	);
 

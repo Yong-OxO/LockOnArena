@@ -33,17 +33,16 @@ void UEnemyStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UEnemyStateComponent::ReduceHp(const float Damage)
 {
-	if (CurrentHp <= 0)
-	{
-		return;
-	}
+	if (FMath::IsNearlyZero(CurrentHp)) { return; }
 
 	CurrentHp -= Damage;
-	UE_LOG(LogTemp, Display, TEXT("CurrnetHp : %.1f"), CurrentHp);
 
 	if (CurrentHp <= 0)
 	{
+		CurrentHp = 0;
 		UE_LOG(LogTemp, Display, TEXT("Die"));
 	}
+
+	UE_LOG(LogTemp, Display, TEXT("CurrnetHp : %.1f"), CurrentHp);
 }
 

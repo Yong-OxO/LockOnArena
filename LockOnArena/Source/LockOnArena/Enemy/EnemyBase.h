@@ -29,8 +29,9 @@ public:
 
 public:	
 	UPROPERTY(EditAnywhere, Category = "Enemy|Animation")
-	UAnimMontage* HitMontage = nullptr;
-
+	UAnimMontage* HitMontage = nullptr;	
+	UPROPERTY(EditAnywhere, Category = "Enemy|Animation")
+	UAnimMontage* DeathMontage = nullptr;
 };
 
 
@@ -65,6 +66,13 @@ public:
 	UFUNCTION()
 	virtual void OnMontageEnd(UAnimMontage* Montage, bool bInterrupted);
 
+public:
+	virtual FText GetEnemyName() { return EnemyName; }
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "Enemy|Info")
+	FText EnemyName;
+public:
 	virtual UEnemyStateComponent* GetState() { return EnemyState; }
 
 	UPROPERTY(VisibleAnywhere)
@@ -79,4 +87,8 @@ public:
 	UWeaponChildActorComponent* Weapon = nullptr;
 
 	float StackDamage = 0.f; // 일정 스택이 되면 Montage재생
+
+
+
+
 };

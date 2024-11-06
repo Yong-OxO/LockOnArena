@@ -13,6 +13,9 @@
 // 맨손(기본) 애니메이션에서 변경
 // 무기마다 실행시킬 애니메이션 보유중
 // 무기 DataTable로 CharacterDataTable의 값을 변경
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyTakeDamage, const AActor*, Enemy);
+
 class UStaticMeshComponent;
 class UCharacterStateComponent;
 class UWeaponChildActorComponent;
@@ -93,6 +96,10 @@ public: // HUD, Widget
 	UPROPERTY(EditAnywhere, Category = "Widget")
 	ADefaultHUD* DefaultHUD;
 	
+	UFUNCTION()
+	virtual void VisibleEnemyHpBar(const AActor* DamagedEnemy);
+	FOnEnemyTakeDamage OnEnemyTakeDamage;
+
 	// WeaponManage
 public:
 	virtual void WeaponInit() override;

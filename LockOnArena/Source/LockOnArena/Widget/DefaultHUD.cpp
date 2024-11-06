@@ -20,8 +20,6 @@ void ADefaultHUD::BeginPlay()
 	UClass* WidgetClass = LoadClass<UMainWidget>(nullptr, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprint/Widget/UI_InGameMain.UI_InGameMain_C'"));
 	MainWidget = CreateWidget<UMainWidget>(GetWorld(), WidgetClass);
 	MainWidget->AddToViewport();
-
-
 }
 
 void ADefaultHUD::Tick(float DeltaTime)

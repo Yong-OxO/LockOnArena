@@ -125,6 +125,11 @@ void ADefaultCharacter::SwitchWeapon(int InValue)
 	ActiveWeapon->SwapEquipment();
 }
 
+void ADefaultCharacter::VisibleEnemyHpBar(const AActor* DamagedEnemy)
+{
+	OnEnemyTakeDamage.Broadcast(DamagedEnemy);
+}
+
 
 
 

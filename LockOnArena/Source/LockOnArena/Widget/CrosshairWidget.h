@@ -23,6 +23,8 @@ public:
 	void VisibleNormalCrosshair();
 	void VisibleLockOnCrosshair();
 
+
+
 protected:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	UImage* NormalCrosshair = nullptr;

@@ -59,7 +59,7 @@ void USkillLockOn::StartLockOnPlay()
 		TimerHandle,   // FTimerHandle 변수
 		this,          // 타이머를 설정할 객체
 		&ThisClass::StopLockOnPlay, // 실행할 함수
-		1.0f,          // 대기 시간(초 단위)
+		0.5f,          // 대기 시간(초 단위)
 		false          // 반복 여부 (false면 한 번만 실행)
 	);
 }
@@ -75,7 +75,7 @@ void USkillLockOn::StopLockOnPlay()
 		TimerHandle,   // FTimerHandle 변수
 		this,          // 타이머를 설정할 객체
 		&ThisClass::CheckLockOn, // 실행할 함수
-		0.2f,          // 대기 시간(초 단위)
+		0.1f,          // 대기 시간(초 단위)
 		false          // 반복 여부 (false면 한 번만 실행)
 	);
 }
