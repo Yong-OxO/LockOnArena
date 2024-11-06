@@ -115,4 +115,6 @@ protected:
 
 	TArray<UWeaponChildActorComponent*> WeaponInstances;
 	UWeaponChildActorComponent* WeaponInstance;
+
+
 };

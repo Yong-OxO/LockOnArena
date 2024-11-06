@@ -14,4 +14,6 @@ class LOCKONARENA_API ABaseAIController : public AAIController
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void Tick(float DeltaTime) override;
 };

@@ -26,6 +26,8 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual bool IsDie() { return bDied; }
+
 	virtual  bool CanAttack() const { return bCanAttack; }
 	virtual  bool CanMove() const { return bCanMove; }
 
@@ -48,8 +50,11 @@ public:
 	
 	float EnemyEXP = 100.f;
 protected:
+	bool bDied = false;
+
 	bool bCanMove = true;
 	bool bCanAttack = true;
+
 
 	WeaponType EquipmentType;
 };

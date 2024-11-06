@@ -71,19 +71,19 @@ void UPlayerStateWidget::UpDateCharacterState()
 
 void UPlayerStateWidget::UpDateExpProgress(float InDeltaTime)
 {
-	float Alpha = 10 * InDeltaTime;
+	float Alpha = 5 * InDeltaTime;
 	if (PlayerState->StackLevel) // Level 스택이 있을 때
 	{
 		if (FMath::IsNearlyEqual(ExpCurrentPercent, 1, 0.01f))
 		{
 			ExpCurrentPercent = 0.0f;
 			--(PlayerState->StackLevel);
-			Alpha = 10 * InDeltaTime;
+			Alpha = 5 * InDeltaTime;
 		}
 		else
 		{
 			ExpCurrentPercent = FMath::Lerp(ExpCurrentPercent, 1, Alpha);
-			Alpha += InDeltaTime * 5;
+			Alpha += InDeltaTime * 2;
 			ExpProgress->SetPercent(ExpCurrentPercent);
 		}
 	}

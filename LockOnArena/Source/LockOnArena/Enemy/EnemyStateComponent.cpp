@@ -10,7 +10,9 @@ UEnemyStateComponent::UEnemyStateComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	bDied = false;
+	bCanMove = true;
+	bCanAttack = true;
 }
 
 
@@ -33,14 +35,14 @@ void UEnemyStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UEnemyStateComponent::ReduceHp(const float Damage)
 {
-	if (FMath::IsNearlyZero(CurrentHp)) { return; }
+	if (bDied) { return; }
 
 	CurrentHp -= Damage;
 
 	if (CurrentHp <= 0)
 	{
 		CurrentHp = 0;
-		UE_LOG(LogTemp, Display, TEXT("Die"));
+		bDied = true;
 	}
 
 	UE_LOG(LogTemp, Display, TEXT("CurrnetHp : %.1f"), CurrentHp);

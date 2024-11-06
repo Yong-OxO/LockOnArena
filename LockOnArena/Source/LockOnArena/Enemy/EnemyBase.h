@@ -87,8 +87,7 @@ public:
 	UWeaponChildActorComponent* Weapon = nullptr;
 
 	float StackDamage = 0.f; // 일정 스택이 되면 Montage재생
-
-
-
-
+protected:
+	FTimerHandle TimerHandle;
+	virtual void OnDIe();
 };
