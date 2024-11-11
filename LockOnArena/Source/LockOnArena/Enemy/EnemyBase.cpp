@@ -9,6 +9,7 @@
 #include "Character/DefaultCharacter.h"
 #include "Character/CharacterStateComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Skill/Enemy/EnemySkillBase.h"
 
 
 // Sets default values
@@ -22,6 +23,9 @@ AEnemyBase::AEnemyBase()
 	{
 		EnemyState = CreateDefaultSubobject<UEnemyStateComponent>(TEXT("EnemyState"));
 	}
+	{
+		Skill01 = CreateDefaultSubobject<UEnemySkillBase>(TEXT("Skill01"));
+	}
 }
 
 // Called when the game starts or when spawned
@@ -32,6 +36,9 @@ void AEnemyBase::BeginPlay()
 	USkeletalMeshComponent* MeshComponent = GetComponentByClass<USkeletalMeshComponent>();
 	AnimInstance = Cast<UEnemyAnimInstance>(MeshComponent->GetAnimInstance());
 	AnimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
+	{
+		Skill01->SetData(DataTableRow->Skill01);
+	}
 }
 
 // Called every frame

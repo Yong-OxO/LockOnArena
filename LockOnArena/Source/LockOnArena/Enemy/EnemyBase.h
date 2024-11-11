@@ -9,17 +9,24 @@
 class UWeaponChildActorComponent;
 class UEnemyStateComponent;
 class UEnemyAnimInstance;
+class UEnemySkillBase;
 
 USTRUCT()
 struct LOCKONARENA_API FEnemyBaseTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
-public:
+public: // React
 	UPROPERTY(EditAnywhere, Category = "Enemy|Animation")
 	UAnimMontage* HitMontage = nullptr;
 	UPROPERTY(EditAnywhere, Category = "Enemy|Animation")
 	UAnimMontage* DeathMontage = nullptr;
+
+public: // Skill
+	UPROPERTY(EditAnywhere, Category = "Enemy|Skill", meta = (RowType = "/Script/LOCKONARENA.EnemySkillBaseTableRow"))
+	FDataTableRowHandle Skill01;
+	//UPROPERTY(EditAnywhere, Category = "Enemy|Skill")
+	//UAnimMontage* Skill02 = nullptr;
 };
 
 
@@ -51,11 +58,17 @@ public:
 	virtual void OnMontageEnd(UAnimMontage* Montage, bool bInterrupted);
 
 public:
+
+public:
 	virtual FText GetEnemyName() { return EnemyName; }
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Enemy|Info")
 	FText EnemyName;
+
+protected:
+	UEnemySkillBase* Skill01 = nullptr;
+
 public:
 	virtual UEnemyStateComponent* GetState() { return EnemyState; }
 
