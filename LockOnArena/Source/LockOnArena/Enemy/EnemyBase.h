@@ -66,7 +66,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Enemy|Info")
 	FText EnemyName;
 
-protected:
+public:
 	UEnemySkillBase* Skill01 = nullptr;
 
 public:
