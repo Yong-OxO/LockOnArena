@@ -57,4 +57,5 @@ public:
 	UStatusWidget* UI_Status;
 
 	bool bStatusUIActive = false;
+
 };

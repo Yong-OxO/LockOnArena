@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/BaseCharacter.h"
+#include "GameFramework/Character.h"
 #include "EnemyBase.generated.h"
 
 class UWeaponChildActorComponent;
@@ -14,29 +14,17 @@ USTRUCT()
 struct LOCKONARENA_API FEnemyBaseTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
+
 public:
-	UPROPERTY(EditAnywhere, Category = "Enemy|Weapon", meta = (RowType = "/Script/LOCKONARENA.WeaponBaseTableRow"))
-	FDataTableRowHandle WeaponBaseTableRowHandle; // 1
-
-	UPROPERTY(EditAnywhere, Category = "Enemy|Weapon", meta = (RowType = "/Script/LOCKONARENA.WeaponBaseTableRow"))
-	FDataTableRowHandle PunchTableRowHandle; // 2
-
-	UPROPERTY(EditAnywhere, Category = "Enemy|Weapon", meta = (RowType = "/Script/LOCKONARENA.WeaponBaseTableRow"))
-	FDataTableRowHandle KnifeTableRowHandle; // 3
-
-	UPROPERTY(EditAnywhere, Category = "Enemy|Weapon", meta = (RowType = "/Script/LOCKONARENA.RifleTableRow"))
-	FDataTableRowHandle RifleTableRowHandle; // 4
-
-public:	
 	UPROPERTY(EditAnywhere, Category = "Enemy|Animation")
-	UAnimMontage* HitMontage = nullptr;	
+	UAnimMontage* HitMontage = nullptr;
 	UPROPERTY(EditAnywhere, Category = "Enemy|Animation")
 	UAnimMontage* DeathMontage = nullptr;
 };
 
 
 UCLASS()
-class LOCKONARENA_API AEnemyBase : public ABaseCharacter
+class LOCKONARENA_API AEnemyBase : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -54,10 +42,6 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-
-public:
-	virtual void SetData(const FDataTableRowHandle& InRowHandle) override;
 
 public:
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
@@ -83,8 +67,6 @@ public:
 
 	UEnemyAnimInstance* AnimInstance = nullptr;
 
-	UPROPERTY(VisibleAnywhere)
-	UWeaponChildActorComponent* Weapon = nullptr;
 
 	float StackDamage = 0.f; // 일정 스택이 되면 Montage재생
 protected:

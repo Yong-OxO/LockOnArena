@@ -6,9 +6,8 @@
 #include "Enemy/EnemyBase.h"
 #include "SilverDevilEnemy.generated.h"
 
-/**
- * 
- */
+
+
 UCLASS()
 class LOCKONARENA_API ASilverDevilEnemy : public AEnemyBase
 {

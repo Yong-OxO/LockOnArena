@@ -11,7 +11,7 @@
 AHomingProjectile::AHomingProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	InitialLifeSpan = 5.f;
+	InitialLifeSpan = 2.f;
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileStaticMeshComponent"));;
 	RootComponent = StaticMeshComponent;

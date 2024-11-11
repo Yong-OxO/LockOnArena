@@ -6,13 +6,15 @@
 // Sets default values for this component's properties
 UEnemyStateComponent::UEnemyStateComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	bDied = false;
-	bCanMove = true;
-	bCanAttack = true;
+	//bDied = false;
+	//bCanMove = true;
+	//bCanAttack = true;
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/Enemy/DT_EnemyState.DT_EnemyState'"));
+	DataTable = DataTableAsset.Object;
+	DataTableRow = DataTable->FindRow<FEnemyStateTableRow>(FName("SilverDevil"), TEXT("EnemyStateDataTableRow"));
 }
 
 
@@ -21,7 +23,7 @@ void UEnemyStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CurrentHp = MaxHp;	
+	SetState(DataTableRow);
 }
 
 
@@ -29,8 +31,6 @@ void UEnemyStateComponent::BeginPlay()
 void UEnemyStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 void UEnemyStateComponent::ReduceHp(const float Damage)
@@ -46,5 +46,14 @@ void UEnemyStateComponent::ReduceHp(const float Damage)
 	}
 
 	UE_LOG(LogTemp, Display, TEXT("CurrnetHp : %.1f"), CurrentHp);
+}
+
+void UEnemyStateComponent::SetState(const FEnemyStateTableRow* InDataTableRow)
+{
+	MaxHp = InDataTableRow->MaxHp;
+	CurrentHp = MaxHp;
+
+	EnemyEXP = InDataTableRow->EnemyEXP;
+	ATK = InDataTableRow->EnemyATK;
 }
 

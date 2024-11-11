@@ -9,6 +9,20 @@
 #include "EnemyStateComponent.generated.h"
 
 
+USTRUCT()
+struct LOCKONARENA_API FEnemyStateTableRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public: // Status
+	UPROPERTY(EditAnywhere, Category = "Enemy|Status")
+	float MaxHp = 100.f;
+	UPROPERTY(EditAnywhere, Category = "Enemy|Status")
+	float EnemyATK = 10.f;
+	UPROPERTY(EditAnywhere, Category = "Enemy|Status")
+	float EnemyEXP = 100.f;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LOCKONARENA_API UEnemyStateComponent : public UActorComponent
 {
@@ -44,11 +58,18 @@ public:
 	virtual float GetMaxHp() { return MaxHp; }
 	virtual float GetCurrentHp() { return CurrentHp; }
 
+protected:
+	virtual void SetState(const FEnemyStateTableRow* DataTableRow);
+private:
+	UDataTable* DataTable;
+	FEnemyStateTableRow* DataTableRow;
 public:
-	float MaxHp = 300.f;
-	float CurrentHp = 300.f;
+	float MaxHp = 100.f;
+	float CurrentHp = 100.f;
 	
 	float EnemyEXP = 100.f;
+	float ATK = 0.f;
+
 protected:
 	bool bDied = false;
 

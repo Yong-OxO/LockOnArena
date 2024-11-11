@@ -6,9 +6,12 @@
 #include "Blueprint/UserWidget.h"
 #include "StatusWidget.generated.h"
 
-/**
- * 
- */
+class ADefaultCharacter;
+class UCharacterStateComponent;
+class UProgressBar;
+class UEditableTextBox;
+class UButton;
+
 UCLASS()
 class LOCKONARENA_API UStatusWidget : public UUserWidget
 {
@@ -17,5 +20,33 @@ class LOCKONARENA_API UStatusWidget : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 
-public: 
+private:
+	void SetStatus();
+
+	UFUNCTION()
+	void CharacterHpUp();
+
+	UFUNCTION()
+	void CharacterATKUp();
+
+private:
+	ADefaultCharacter* Character;
+	UCharacterStateComponent* CharacterState;
+
+private:
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UEditableTextBox* CharacterHpStat = nullptr;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UEditableTextBox* CharacterATKStat = nullptr;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UEditableTextBox* StatPoint = nullptr;
+	
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UButton* HpUpButton;
+	
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UButton* ATKUpButton;
+
 };

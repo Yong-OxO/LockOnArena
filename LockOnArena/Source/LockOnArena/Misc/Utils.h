@@ -12,6 +12,10 @@
 #include "Utils.generated.h"
 
 
+namespace SocketName
+{
+	static inline FName RightHand = TEXT("RightHand");
+}
 
 UCLASS()
 class UCustomDamageType : public UDamageType

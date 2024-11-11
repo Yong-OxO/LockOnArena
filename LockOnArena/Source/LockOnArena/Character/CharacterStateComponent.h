@@ -65,9 +65,12 @@ public: // Status
 	virtual void AddCharacterATK(const float InATK) { CharacterATK += InATK; }
 
 	virtual float GetCurrentHp() { return CurrentHp; }
+	virtual void HealCurrentHp(const float InHeal);
 	virtual void ReduceHp(float InDamage);
 
 	virtual float GetMaxHp() { return MaxHp; }
+	virtual void AddMaxHp(const float InHp) { MaxHp += InHp; }
+
 public: 
 	float CharacterATK = 10.f;
 	float MaxHp = 100.f;
@@ -83,7 +86,8 @@ public:
 	virtual void LevelUp();
 
 public:
-	float StackLevel = 0;
+	int32 StackLevel = 0;
+	int32 StatPoint = 0;
 protected:
 	int32 Level = 1.f;
 	float MaxExp = 50.f;
