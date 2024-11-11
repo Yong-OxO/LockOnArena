@@ -8,6 +8,9 @@
 
 #include "InGamePlayerController.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStatusUIPressed);
+
+
 class UInputMappingContext;
 class UAction;
 struct FInputActionValue;
@@ -26,6 +29,7 @@ struct LOCKONARENA_API FCharacterControllerTableRow : public FTableRowBase
 	UPROPERTY(EditAnywhere, Category = "IMC")
 	UInputMappingContext* InputMappingContext = nullptr;
 };
+
 
 
 
@@ -75,6 +79,9 @@ protected:
 	UFUNCTION()
 	virtual void OnSkill01(const FInputActionValue& InValue);
 
+	UFUNCTION()
+	virtual void OnStatus(const FInputActionValue& InValue);
+
 protected:
 	UFUNCTION()
 	virtual void ToRun(const float DeltaTime);
@@ -112,4 +119,7 @@ protected:
 
 	// Weapon
 	UWeaponChildActorComponent* WeaponChildActor;
+
+public:
+	FOnStatusUIPressed OnStatusUIPressed;
 };

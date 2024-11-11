@@ -10,12 +10,15 @@ class ADefaultCharacter;
 class UCrosshairWidget;
 class USkillUserWidget;
 class UEnemyHpWidget;
+class UStatusWidget;
+class AInGamePlayerController;
 
 UCLASS()
 class LOCKONARENA_API UMainWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
@@ -29,12 +32,14 @@ public:
 	UFUNCTION()
 	void InvisibleEnemyHpBar();
 
+	UFUNCTION()
+	void ShowHideStatusUI();
 protected:
 	FTimerHandle TimerHandle;
 
 protected:
 	ADefaultCharacter* PlayerCharacter;
-
+	AInGamePlayerController* PlayerController;
 public:
 	virtual  UCrosshairWidget* GetCrosshairWidget() { return UI_InGameCrosshair; }
 
@@ -46,7 +51,10 @@ public:
 	USkillUserWidget* UI_Skill;	
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UEnemyHpWidget* UI_EnemyHp;
+	UEnemyHpWidget* UI_EnemyHp;	
+	
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UStatusWidget* UI_Status;
 
-
+	bool bStatusUIActive = false;
 };

@@ -96,6 +96,12 @@ void AInGamePlayerController::SetupInputComponent()
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Skill01")))
 	{
 		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &ThisClass::OnSkill01);
+	}	
+	
+	//Status
+	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Status")))
+	{
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &ThisClass::OnStatus);
 	}
 }
 
@@ -234,6 +240,11 @@ void AInGamePlayerController::OnSkill01(const FInputActionValue& InValue)
 	}
 
 	Skill->PlaySkill();
+}
+
+void AInGamePlayerController::OnStatus(const FInputActionValue& InValue)
+{
+	OnStatusUIPressed.Broadcast();
 }
 
 void AInGamePlayerController::ToRun(const float DeltaTime)

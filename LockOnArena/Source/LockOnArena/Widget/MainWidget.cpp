@@ -6,15 +6,21 @@
 #include "Widget/CrosshairWidget.h"
 #include "Widget/InGame/SkillUserWidget.h"
 #include "Widget/InGame/EnemyHpWidget.h"
+#include "Widget/InGame/StatusWidget.h"
 #include "Character/DefaultCharacter.h"
-
+#include "Character/InGamePlayerController.h"
 
 void UMainWidget::NativeConstruct()
 {
 	PlayerCharacter = Cast<ADefaultCharacter>(GetOwningPlayerPawn());
+	PlayerController = Cast<AInGamePlayerController>(PlayerCharacter->GetController());
+
 	PlayerCharacter->OnEnemyTakeDamage.AddDynamic(this, &ThisClass::VisibleEnemyHpBar);
+	PlayerController->OnStatusUIPressed.AddDynamic(this, &ThisClass::ShowHideStatusUI);
 
 	UI_EnemyHp->SetVisibility(ESlateVisibility::Hidden);
+	bStatusUIActive = true; // True 상태에서 호출해야 false가 되기 때문
+	ShowHideStatusUI();
 }
 
 void UMainWidget::NativeDestruct()
@@ -50,4 +56,20 @@ void UMainWidget::VisibleEnemyHpBar(const AActor* Enemy)
 void UMainWidget::InvisibleEnemyHpBar()
 {
 	UI_EnemyHp->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UMainWidget::ShowHideStatusUI()
+{
+	if (bStatusUIActive) // 창 끄기
+	{
+		UI_Status->SetVisibility(ESlateVisibility::Hidden);
+		PlayerController->SetShowMouseCursor(false);
+		bStatusUIActive = false;
+	}
+	else // 창띄우기
+	{
+		UI_Status->SetVisibility(ESlateVisibility::Visible);
+		PlayerController->SetShowMouseCursor(true);
+		bStatusUIActive = true;
+	}
 }
