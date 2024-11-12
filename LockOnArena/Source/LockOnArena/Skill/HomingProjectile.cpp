@@ -16,6 +16,7 @@ AHomingProjectile::AHomingProjectile()
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileStaticMeshComponent"));;
 	RootComponent = StaticMeshComponent;
 	StaticMeshComponent->SetCollisionProfileName(TEXT("Projectile"));
+
 	StaticMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnTrigger);
 
 	HomingComponent = CreateDefaultSubobject<UHomingProjectileComponent>(TEXT("HomingComponent"));
@@ -50,9 +51,7 @@ void AHomingProjectile::StartMovement()
 
 void AHomingProjectile::SpawnProjectile(FVector StartLocation, FRotator StartRotation, FVector TargetLocation)
 {
-	SetActorLocation(StartLocation);
-	SetActorRotation(StartRotation);
-	
+	AActor* Test = GetOwner();
 	Weapon = GetOwner<AWeaponBase>();
 	EnemyTargetLocation = Weapon->TargetLocation;
 
@@ -60,6 +59,8 @@ void AHomingProjectile::SpawnProjectile(FVector StartLocation, FRotator StartRot
 	{
 		HomingComponent->SetHomingTarget(EnemyTargetLocation);
 	}
+	SetActorLocation(StartLocation);
+	SetActorRotation(StartRotation);
 }
 
 

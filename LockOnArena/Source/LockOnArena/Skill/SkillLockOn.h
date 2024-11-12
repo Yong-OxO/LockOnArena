@@ -50,8 +50,6 @@ protected:
 	bool bIsLocking = false; // LockOn이 실행중
 
 	bool Overlap = false;
-	UPROPERTY()
-	TArray<FOverlapResult> OverlapResults;
 
 	bool bLockOnSucceed; // LockOn이 끝났을때 에임이 조준 되어있는지
 

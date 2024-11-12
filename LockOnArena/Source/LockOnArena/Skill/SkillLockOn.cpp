@@ -82,6 +82,8 @@ void USkillLockOn::StopLockOnPlay()
 
 void USkillLockOn::LockOn(const float DeltaTime)
 {
+	TArray<FOverlapResult> OverlapResults;
+
 	FVector Location = ControlledCharacter->GetActorLocation();
 	FQuat Quat = ControlledCharacter->GetActorQuat();
 	FCollisionShape Sphere = FCollisionShape::MakeSphere(DetectionDist);
@@ -95,9 +97,14 @@ void USkillLockOn::LockOn(const float DeltaTime)
 
 	if (Overlap) // 탐지 됐다면 회전
 	{
-		FOverlapResult FirstOverlap = OverlapResults[0];
-
-		AEnemyBase* Target = Cast<AEnemyBase>(FirstOverlap.GetActor());
+		FOverlapResult FirstOverlap;
+		AEnemyBase* Target = nullptr;
+		for (int i = 0; i < OverlapResults.Num(); ++i)
+		{
+			FirstOverlap = OverlapResults[i];
+			Target = Cast<AEnemyBase>(FirstOverlap.GetActor());
+			if (IsValid(Target)) { break;}
+		}
 		USkeletalMeshComponent* TargetSkeletal = Target->GetComponentByClass<USkeletalMeshComponent>();
 		// @TODO : SoketName
 		const USkeletalMeshSocket* TargetSocket = TargetSkeletal->GetSocketByName(FName(TEXT("LockOnTarget")));

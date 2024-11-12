@@ -65,9 +65,19 @@ bool UHomingSkill::PlayHoming(const FVector TargetLocation)
 		TArray<AHomingProjectile*> Projectile;
 		for (int i = 0; i < 5; ++i)
 		{
-			//@TODO ActorChildCOmponent로 변경하여 부모클래스 지정해주기
-			Projectile.Add(GetWorld()->SpawnActor<AHomingProjectile>(DataTableRow->ProjectileClass, FVector(0.0, 0.0, 10000.0), SpawnRotation));
-			Projectile[i]->SetOwner(Weapon);
+			//AHomingProjectile* HomingProjectile = GetWorld()->SpawnActorDeferred<AHomingProjectile>(
+			//	AHomingProjectile::StaticClass(),
+			//	FTransform::Identity,
+			//	Weapon,
+			//	ControlledCharacter,
+			//	ESpawnActorCollisionHandlingMethod::Undefined);
+
+			//HomingProjectile->FinishSpawning(FTransform::Identity);
+			//Projectile.Add(HomingProjectile);
+
+			FActorSpawnParameters ActorSpawnParameters;
+			ActorSpawnParameters.Owner = Weapon;
+			Projectile.Add(GetWorld()->SpawnActor<AHomingProjectile>(DataTableRow->ProjectileClass, FVector(0.0, 0.0, 0.0), SpawnRotation, ActorSpawnParameters));
 		}
 
 		Projectile[0]->SpawnProjectile(SpawnLocation, SpawnRotation, TargetLocation);

@@ -23,6 +23,7 @@ void UAN_SilverDevil_ATK01_01::Notify(USkeletalMeshComponent* MeshComp, UAnimSeq
 	AEnemyBase* Enemy = Cast<AEnemyBase>(MeshComp->GetOwner());
 
 #if WITH_EDITOR
+	if (Enemy == nullptr) { return; }
 	if (GIsEditor && Enemy && Enemy->GetWorld() != GWorld) { return; } // 에디터 프리뷰
 #endif
 
@@ -37,18 +38,22 @@ void UAN_SilverDevil_ATK01_01::Notify(USkeletalMeshComponent* MeshComp, UAnimSeq
 	FVector Location = SkeletalMeshComponent->GetSocketLocation(SocketName::RightHand);
 	FRotator Rotation = SkeletalMeshComponent->GetSocketRotation(SocketName::RightHand);
 
-	const FName ProfileName = TEXT("CharacterMesh");
+	const FName ProfileName = TEXT("Enemy");
+
 	TArray<AActor*> IgnoreActors;
 	FHitResult HitResult;
+	
 
 	bool bATKSuccess = UKismetSystemLibrary::SphereTraceSingleByProfile(
 		MeshComp, Location, Location,
-		50, ProfileName, false, IgnoreActors, EDrawDebugTrace::ForDuration,
+		80, ProfileName, false, IgnoreActors, EDrawDebugTrace::ForDuration,
 		HitResult, true);
 
 		if (bATKSuccess)
 		{
 			AActor* DamagedActor = HitResult.GetActor();
+			UE_LOG(LogTemp, Display, TEXT("Hit Success"));
 			UGameplayStatics::ApplyDamage(DamagedActor, ATKFinal, Enemy->GetController(), Enemy, nullptr);
 		}
+		
 }
