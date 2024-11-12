@@ -42,7 +42,13 @@ protected:
 	UFUNCTION()
 	virtual void CheckLockOn();
 
+	UFUNCTION()
+	AEnemyBase* FindTarget();
+
+	float GetAngleBetweenVectors(const FVector& VectorA, const FVector& VectorB);
 protected:
+	AEnemyBase* Target = nullptr;
+
 	float DetectionDist = 0;
 	FVector TargetLocation;
 

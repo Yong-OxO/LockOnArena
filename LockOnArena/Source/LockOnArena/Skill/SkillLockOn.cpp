@@ -55,6 +55,8 @@ void USkillLockOn::StartLockOnPlay()
 	RemainCoolDown = RemainCoolDown;
 	CharacterState->CanLockOn = false;
 
+	Target = FindTarget();
+
 		GetOwner()->GetWorldTimerManager().SetTimer(
 		TimerHandle,   // FTimerHandle 변수
 		this,          // 타이머를 설정할 객체
@@ -82,29 +84,9 @@ void USkillLockOn::StopLockOnPlay()
 
 void USkillLockOn::LockOn(const float DeltaTime)
 {
-	TArray<FOverlapResult> OverlapResults;
-
-	FVector Location = ControlledCharacter->GetActorLocation();
-	FQuat Quat = ControlledCharacter->GetActorQuat();
-	FCollisionShape Sphere = FCollisionShape::MakeSphere(DetectionDist);
-
-	Overlap = GetWorld()->OverlapMultiByChannel(
-		OverlapResults,
-		Location,
-		Quat,
-		ECollisionChannel::ECC_GameTraceChannel1,
-		Sphere);
-
-	if (Overlap) // 탐지 됐다면 회전
+	if (Target) // 탐지 됐다면 회전
 	{
-		FOverlapResult FirstOverlap;
-		AEnemyBase* Target = nullptr;
-		for (int i = 0; i < OverlapResults.Num(); ++i)
-		{
-			FirstOverlap = OverlapResults[i];
-			Target = Cast<AEnemyBase>(FirstOverlap.GetActor());
-			if (IsValid(Target)) { break;}
-		}
+		USpringArmComponent* Arm = ControlledCharacter->GetComponentByClass<USpringArmComponent>();
 		USkeletalMeshComponent* TargetSkeletal = Target->GetComponentByClass<USkeletalMeshComponent>();
 		// @TODO : SoketName
 		const USkeletalMeshSocket* TargetSocket = TargetSkeletal->GetSocketByName(FName(TEXT("LockOnTarget")));
@@ -116,7 +98,6 @@ void USkillLockOn::LockOn(const float DeltaTime)
 		// 돌리면 카메라의 월드 위치를 얻어
 		// 그 위치에서 다시 적을 바라보는 방향을 계산
 		// 그 방향을 다시 케릭터에 적용
-		USpringArmComponent* Arm = ControlledCharacter->GetComponentByClass<USpringArmComponent>();
 
 		FVector ArmLocation = Arm->GetComponentLocation(); //V1.Y = 0.f/* * Mul*/;
 		FRotator TargerRotation = UKismetMathLibrary::FindLookAtRotation(ArmLocation, TargetLocation);
@@ -181,4 +162,67 @@ void USkillLockOn::CheckLockOn()
 	}
 
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+}
+
+AEnemyBase* USkillLockOn::FindTarget()
+{
+	TArray<FOverlapResult> OverlapResults;
+
+	FVector Location = ControlledCharacter->GetActorLocation();
+	FQuat Quat = ControlledCharacter->GetActorQuat();
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(DetectionDist);
+
+	Overlap = GetWorld()->OverlapMultiByChannel(
+		OverlapResults,
+		Location,
+		Quat,
+		ECollisionChannel::ECC_GameTraceChannel1,
+		Sphere);
+
+		USpringArmComponent* Arm = ControlledCharacter->GetComponentByClass<USpringArmComponent>();
+		UCameraComponent* Camera = ControlledCharacter->GetComponentByClass<UCameraComponent>();
+
+		Target = nullptr;
+		Target = Cast<AEnemyBase>(OverlapResults[0].GetActor());
+
+		FOverlapResult FirstOverlap;
+
+		float CurrentAngle = 0; // 현재 가장 작은 각도
+		float TempAngle = 0; // 비교 대상이 되는 각도
+
+		for (int i = 0; i < OverlapResults.Num(); ++i)
+		{
+			FVector TargetVector = Target->GetActorLocation() - Camera->GetComponentLocation();
+			AActor* Temp = OverlapResults[i].GetActor();
+			FVector TempVector = OverlapResults[i].GetActor()->GetActorLocation() - Camera->GetComponentLocation(); // 비교대상
+
+			CurrentAngle = GetAngleBetweenVectors(TargetVector, Camera->GetForwardVector());
+			TempAngle = GetAngleBetweenVectors(TempVector, Camera->GetForwardVector());
+
+			if (TempAngle < CurrentAngle)
+			{
+				FirstOverlap = OverlapResults[i];
+				Target = Cast<AEnemyBase>(OverlapResults[i].GetActor());
+				TargetLocation = Target->GetActorLocation();
+			}
+		}
+	
+	return Target;
+}
+
+float USkillLockOn::GetAngleBetweenVectors(const FVector& VectorA, const FVector& VectorB)
+{
+	FVector NormalizedA = VectorA.GetSafeNormal();
+	FVector NormalizedB = VectorB.GetSafeNormal(); 
+
+	// 벡터의 내적을 계산 
+	float DotProduct = FVector::DotProduct(NormalizedA, NormalizedB); 
+
+	// 코사인의 역함수를 이용해 각도를 라디안 단위로 계산 
+	float AngleInRadians = FMath::Acos(DotProduct); 
+
+	// 라디안을 각도로 변환 
+	float AngleInDegrees = FMath::RadiansToDegrees(AngleInRadians);
+
+	return FMath::Abs(AngleInDegrees);
 }
