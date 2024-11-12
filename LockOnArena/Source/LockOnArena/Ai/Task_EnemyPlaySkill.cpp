@@ -27,14 +27,22 @@ EBTNodeResult::Type UTask_EnemyPlaySkill::ExecuteTask(UBehaviorTreeComponent& Ow
 
 	AEnemyBase* Enemy = Cast<AEnemyBase>(AIController->GetPawn());
 
-	UEnemySkillBase* Skill = Enemy->Skill01;
-	if (Skill->CanPlaySkill())
-	{
-		Skill->PlaySkill();
-		return EBTNodeResult::Succeeded;
+	int32 SkillNum = Enemy->Skills.Num();
+	int32 PlaySkillNum = FMath::RandRange(0, SkillNum - 1);
+
+	for (int i = 0; i < SkillNum; ++i)
+	{	
+		UEnemySkillBase* Skill = Enemy->Skills[PlaySkillNum];
+		if (Skill->CanPlaySkill())
+		{
+			Skill->PlaySkill();
+			return EBTNodeResult::Succeeded;
+		}
+
+		PlaySkillNum = (PlaySkillNum + 1) % SkillNum;
 	}
 
-	return EBTNodeResult::InProgress;
+	return EBTNodeResult::Failed;
 }
 
 void UTask_EnemyPlaySkill::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)

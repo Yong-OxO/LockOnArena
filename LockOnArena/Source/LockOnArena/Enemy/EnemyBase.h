@@ -25,6 +25,9 @@ public: // React
 public: // Skill
 	UPROPERTY(EditAnywhere, Category = "Enemy|Skill", meta = (RowType = "/Script/LOCKONARENA.EnemySkillBaseTableRow"))
 	FDataTableRowHandle Skill01;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy|Skill", meta = (RowType = "/Script/LOCKONARENA.EnemySkillBaseTableRow"))
+	FDataTableRowHandle Skill02;
 	//UPROPERTY(EditAnywhere, Category = "Enemy|Skill")
 	//UAnimMontage* Skill02 = nullptr;
 };
@@ -67,7 +70,9 @@ protected:
 	FText EnemyName;
 
 public:
-	UEnemySkillBase* Skill01 = nullptr;
+	TArray<UEnemySkillBase*> Skills;
+	UEnemySkillBase* Skill01;
+	UEnemySkillBase* Skill02;
 
 public:
 	virtual UEnemyStateComponent* GetState() { return EnemyState; }

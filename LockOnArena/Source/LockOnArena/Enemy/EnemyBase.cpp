@@ -25,6 +25,9 @@ AEnemyBase::AEnemyBase()
 	}
 	{
 		Skill01 = CreateDefaultSubobject<UEnemySkillBase>(TEXT("Skill01"));
+		Skill02 = CreateDefaultSubobject<UEnemySkillBase>(TEXT("Skill02"));
+		Skills.Add(Skill01);
+		Skills.Add(Skill02);
 	}
 }
 
@@ -37,7 +40,8 @@ void AEnemyBase::BeginPlay()
 	AnimInstance = Cast<UEnemyAnimInstance>(MeshComponent->GetAnimInstance());
 	AnimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
 	{
-		Skill01->SetData(DataTableRow->Skill01);
+		Skills[0]->SetData(DataTableRow->Skill01);
+		Skills[1]->SetData(DataTableRow->Skill02);
 	}
 }
 
@@ -108,7 +112,7 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 
 void AEnemyBase::OnMontageEnd(UAnimMontage* Montage, bool bInterrupted)
 {
-
+	int a = 0;
 }
 
 void AEnemyBase::OnDIe()

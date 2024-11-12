@@ -58,6 +58,7 @@ public:
 	virtual float GetMaxHp() { return MaxHp; }
 	virtual float GetCurrentHp() { return CurrentHp; }
 
+	virtual float GetATK() { return ATK; }
 protected:
 	virtual void SetState(const FEnemyStateTableRow* DataTableRow);
 private:
@@ -68,7 +69,7 @@ public:
 	float CurrentHp = 100.f;
 	
 	float EnemyEXP = 100.f;
-	float ATK = 0.f;
+	float ATK = 10.f;
 
 protected:
 	bool bDied = false;

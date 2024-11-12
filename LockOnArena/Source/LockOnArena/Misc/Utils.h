@@ -14,7 +14,10 @@
 
 namespace SocketName
 {
-	static inline FName RightHand = TEXT("RightHand");
+	static inline FName RightHand = TEXT("RightHandSocket");
+	static inline FName LeftHand = TEXT("LeftHandSocket");
+	static inline FName RightWing = TEXT("RightWingSocket");
+	static inline FName LeftWing = TEXT("LeftWingSocket");
 }
 
 UCLASS()
