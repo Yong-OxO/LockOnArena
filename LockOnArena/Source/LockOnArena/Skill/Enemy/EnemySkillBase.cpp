@@ -5,6 +5,7 @@
 #include "Enemy/EnemyBase.h"
 #include "Enemy/EnemyStateComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Enemy/Animation/EnemyAnimInstance.h"
 
 UEnemySkillBase::UEnemySkillBase()
 {
@@ -43,7 +44,10 @@ void UEnemySkillBase::SetData(const FDataTableRowHandle& InHandle)
 
 bool UEnemySkillBase::CanPlaySkill()
 {
-	UAnimInstance* AnimInstance = ControlledEnemy->GetMesh()->GetAnimInstance();
+	ControlledEnemy = GetOwner<AEnemyBase>();
+	EnemyState = ControlledEnemy->GetState();
+
+	UEnemyAnimInstance* AnimInstance = ControlledEnemy->AnimInstance;
 
 	if (FMath::IsNearlyZero(RemainCoolDown) && !AnimInstance->IsAnyMontagePlaying())
 	{
@@ -54,10 +58,12 @@ bool UEnemySkillBase::CanPlaySkill()
 
 void UEnemySkillBase::PlaySkill()
 {
-	if (!CanPlaySkill()) { return; }
-
 	ControlledEnemy = GetOwner<AEnemyBase>();
 	EnemyState = ControlledEnemy->GetState();
+
+	if (!CanPlaySkill()) { return; }
+
+
 
 	if (RemainCoolDown > 0.f)	{ return; }
 
