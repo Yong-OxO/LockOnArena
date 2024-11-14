@@ -179,6 +179,7 @@ AEnemyBase* USkillLockOn::FindTarget()
 		ECollisionChannel::ECC_GameTraceChannel1,
 		Sphere);
 
+	if (OverlapResults.Num() == 0) { return nullptr; }
 		USpringArmComponent* Arm = ControlledCharacter->GetComponentByClass<USpringArmComponent>();
 		UCameraComponent* Camera = ControlledCharacter->GetComponentByClass<UCameraComponent>();
 
@@ -189,6 +190,8 @@ AEnemyBase* USkillLockOn::FindTarget()
 
 		float CurrentAngle = 0; // 현재 가장 작은 각도
 		float TempAngle = 0; // 비교 대상이 되는 각도
+
+
 
 		for (int i = 0; i < OverlapResults.Num(); ++i)
 		{
