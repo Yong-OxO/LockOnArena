@@ -23,7 +23,6 @@ void UArenaGameInstance::OnPostLoadMapWithWorld(UWorld* LoadedWorld)
 {
 	if (IsMoviePlayerEnabled()) 
 	{ 
-		// MoviePlayer를 초기화하고 로딩 스크린을 표시합니다. 
 		GetMoviePlayer()->PlayMovie();
 	}
 }
