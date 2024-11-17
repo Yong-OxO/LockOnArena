@@ -9,8 +9,12 @@ public class LockOnArena : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG"});
-
+        PublicDependencyModuleNames.AddRange(
+             new string[]
+             {
+                "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput",
+                "UMG", "MoviePlayer", "AIModule", "Paper2D", "Slate", "SlateCore"
+             });
         PrivateDependencyModuleNames.AddRange(new string[] { });
 
         PublicIncludePaths.AddRange(new string[]

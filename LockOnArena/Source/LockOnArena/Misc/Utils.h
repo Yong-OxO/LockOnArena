@@ -20,6 +20,11 @@ namespace SocketName
 	static inline FName LeftWing = TEXT("LeftWingSocket");
 }
 
+namespace CollisionProfileName
+{
+	static inline FName Portal = TEXT("Portal");
+}
+
 UCLASS()
 class UCustomDamageType : public UDamageType
 {
