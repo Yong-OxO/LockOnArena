@@ -11,6 +11,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Character/InGamePlayerController.h"
 #include "Widget/DefaultHUD.h"
+#include "GameMode/ArenaGameInstance.h"
+#include "Subsystem/CharacterSaveSubsystem.h"
 
 
 // Sets default values
@@ -25,7 +27,8 @@ ADefaultCharacter::ADefaultCharacter()
 
 
 	CharacterState = CreateDefaultSubobject<UCharacterStateComponent>(TEXT("CharacterState"));
-	CharacterState = DataTableRow->CharacterState;
+
+
 	/*static ConstructorHelpers::FObjectFinder<AActor> WeaponAsset(TEXT("/Script/Engine.Blueprint'/Game/Blueprint/Actor/Weapon/BP_Rifle.BP_Rifle'"));
 	Weapon_Static->SetStaticMesh(WeaponAsset.Object);*/
 	{
@@ -54,7 +57,10 @@ void ADefaultCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	CharacterState->SetData(DataTableRow->CharacterStateTableRowHandle);
 	WeaponInit();
+	UArenaGameInstance* ArenaGameInstance = Cast<UArenaGameInstance>(GetGameInstance());
+	ArenaGameInstance->CharacterSaveSubsystem->LoadCharacterState(this);
 }
 
 // Called every frame

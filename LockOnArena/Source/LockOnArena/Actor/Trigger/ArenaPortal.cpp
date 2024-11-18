@@ -4,9 +4,8 @@
 #include "Actor/Trigger/ArenaPortal.h"
 #include "Misc/Utils.h"
 #include "Components/BoxComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
-#include "MoviePlayer.h"
+#include "GameMode/ArenaGameInstance.h"
 
 AArenaPortal::AArenaPortal()
 {
@@ -30,24 +29,7 @@ void AArenaPortal::BeginPlay()
 
 void AArenaPortal::OnTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!WidgetClass)
-	{
-		ensureMsgf(false, TEXT("WidgetClass is nullptr"));
-		return;
-	}
-	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), WidgetClass);
+	UArenaGameInstance* GameInstance = Cast<UArenaGameInstance>(GetGameInstance());
 
-	if (IsMoviePlayerEnabled())
-	{
-		FLoadingScreenAttributes LoadingScreenAttributes;
-		LoadingScreenAttributes.WidgetLoadingScreen = Widget->TakeWidget();
-		//LoadingScreenAttributes.WidgetLoadingScreen = FLoadingScreenAttributes::NewTestLoadingScreenWidget();
-		LoadingScreenAttributes.MinimumLoadingScreenDisplayTime = 3.f;
-		LoadingScreenAttributes.bAutoCompleteWhenLoadingCompletes = true;
-		LoadingScreenAttributes.bAllowEngineTick = true;
-
-		GetMoviePlayer()->SetupLoadingScreen(LoadingScreenAttributes);
-	}
-
-	UGameplayStatics::OpenLevelBySoftObjectPtr(this, NextLevel);
+	GameInstance->AsyncOpenLevel(WidgetClass, NextLevel);
 }

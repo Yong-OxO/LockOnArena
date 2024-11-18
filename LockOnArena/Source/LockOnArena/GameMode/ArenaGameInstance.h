@@ -7,6 +7,9 @@
 #include "ArenaGameInstance.generated.h"
 
 
+class UUserWidget;
+class UCharacterSaveSubsystem;
+
 UCLASS()
 class LOCKONARENA_API UArenaGameInstance : public UGameInstance
 {
@@ -14,5 +17,8 @@ class LOCKONARENA_API UArenaGameInstance : public UGameInstance
 	public: 
 		virtual void Init() override;
 
+		virtual void AsyncOpenLevel(TSubclassOf<UUserWidget> WidgetClass, TSoftObjectPtr<UWorld> NextLevel);
 		virtual void OnPostLoadMapWithWorld(UWorld* LoadedWorld);
+
+		UCharacterSaveSubsystem* CharacterSaveSubsystem;
 };

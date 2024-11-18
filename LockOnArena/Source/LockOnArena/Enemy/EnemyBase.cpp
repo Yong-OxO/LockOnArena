@@ -43,6 +43,8 @@ void AEnemyBase::BeginPlay()
 		Skills[0]->SetData(DataTableRow->Skill01);
 		Skills[1]->SetData(DataTableRow->Skill02);
 	}
+
+	AnimInstance->Montage_Play(DataTableRow->InitMontage);
 }
 
 // Called every frame

@@ -13,9 +13,7 @@ UCharacterStateComponent::UCharacterStateComponent()
 	// @TODO : RowName namespace
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Character/DT_CharacterState.DT_CharacterState'"));
 	UDataTable* DataTable = DataTableAsset.Object;
-	FCharacterStateTableRow* DataTableRow = DataTable->FindRow<FCharacterStateTableRow>(FName("Default"), TEXT("CharacterState DataTableRow"));
-
-	MaxHp = DataTableRow->MaxHp;
+	//FCharacterStateTableRow* DataTableRow = DataTable->FindRow<FCharacterStateTableRow>(FName("Default"), TEXT("CharacterState DataTableRow"));
 }
 
 
@@ -31,8 +29,6 @@ void UCharacterStateComponent::BeginPlay()
 void UCharacterStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-
 }
 
 void UCharacterStateComponent::SetLockOn(const bool InValue)
@@ -60,8 +56,12 @@ void UCharacterStateComponent::SetLockOnFalse()
 
 void UCharacterStateComponent::SetData(const FDataTableRowHandle& RowHandle)
 {
-	int a = 0;
-	//RowHandle.GetRow<>();
+	FCharacterStateTableRow* DataRow = RowHandle.GetRow<FCharacterStateTableRow>(TEXT("DataRow"));
+
+	MaxHp = DataRow->MaxHp;
+	CharacterATK = DataRow->CharacterATK;
+	Level = DataRow->Level;
+	MaxExp = DataRow->MaxExp;
 }
 
 void UCharacterStateComponent::HealCurrentHp(const float InHeal)
@@ -69,6 +69,10 @@ void UCharacterStateComponent::HealCurrentHp(const float InHeal)
 	if (CurrentHp > 0)
 	{
 		CurrentHp += InHeal;
+		if (CurrentHp > MaxHp)
+		{
+			CurrentHp = MaxHp;
+		}
 	}
 }
 
