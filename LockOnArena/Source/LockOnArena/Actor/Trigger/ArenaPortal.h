@@ -7,11 +7,13 @@
 #include "ArenaPortal.generated.h"
 
 
+class USceneComponent;
 class UBoxComponent;
 class UUserWidget;
 
+
 UCLASS()
-class LOCKONARENA_API AArenaPortal : public ATriggerBase
+class LOCKONARENA_API AArenaPortal : public AActor
 {
 	GENERATED_BODY()
 public:
@@ -21,6 +23,9 @@ public:
 	virtual void BeginPlay() override;
 
 public:
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USceneComponent> SceneComponent = nullptr;
+	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UBoxComponent> Portal;
 

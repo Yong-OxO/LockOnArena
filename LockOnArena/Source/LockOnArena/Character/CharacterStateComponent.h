@@ -92,6 +92,9 @@ public: // Status
 
 	virtual bool CanUseShop() { return bCanShop; }
 	virtual void SetUseShop(const bool InCanUseShop) { bCanShop = InCanUseShop; }
+
+	virtual int32 GetStatPoint() { return StatPoint; }
+	virtual void SetStatPoint(const int32 InStatPoint) { StatPoint = InStatPoint; }
 public: 
 	float CharacterATK = 10.f;
 	float MaxHp = 100.f;

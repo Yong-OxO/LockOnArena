@@ -23,6 +23,7 @@ public:
 
 protected:
 	int32 Level = 0;
+	int32 StatPoint = 0;
 	float ATK = 0;
 	float MaxHp = 0;
 	float MaxExp = 0;

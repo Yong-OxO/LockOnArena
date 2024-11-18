@@ -10,6 +10,7 @@ class UWeaponChildActorComponent;
 class UEnemyStateComponent;
 class UEnemyAnimInstance;
 class UEnemySkillBase;
+class ABossClearPortal;
 
 USTRUCT()
 struct LOCKONARENA_API FEnemyBaseTableRow : public FTableRowBase
@@ -92,4 +93,8 @@ public:
 protected:
 	FTimerHandle TimerHandle;
 	virtual void OnDIe();
+
+public:
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<ABossClearPortal> ClearPortal = nullptr;
 };

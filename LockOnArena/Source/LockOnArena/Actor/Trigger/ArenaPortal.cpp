@@ -3,6 +3,7 @@
 
 #include "Actor/Trigger/ArenaPortal.h"
 #include "Misc/Utils.h"
+#include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "GameMode/ArenaGameInstance.h"
@@ -12,12 +13,15 @@ AArenaPortal::AArenaPortal()
 	PrimaryActorTick.bCanEverTick = true;
 	bGenerateOverlapEventsDuringLevelStreaming = true;
 
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	SetRootComponent(SceneComponent);
+
 	Portal = CreateDefaultSubobject<UBoxComponent>(TEXT("Portal"));
-	SetRootComponent(Portal);
+	Portal->SetupAttachment(RootComponent);
 	Portal->SetCollisionProfileName(CollisionProfileName::Portal);
 	Portal->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
-	Portal->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnTrigger);	
+	Portal->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnTrigger);
 }
 
 void AArenaPortal::BeginPlay()

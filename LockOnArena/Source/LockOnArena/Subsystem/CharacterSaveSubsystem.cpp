@@ -15,6 +15,7 @@ void UCharacterSaveSubsystem::SaveCharacterState(ADefaultCharacter* Character)
 {
 	UCharacterStateComponent* CharacterState = Character->GetState();
 	Level = CharacterState->GetCharacterLevel();
+	StatPoint = CharacterState->GetStatPoint();
 	ATK = CharacterState->GetCharacterATK();
 	MaxHp = CharacterState->GetMaxHp();
 	MaxExp = CharacterState->GetMaxExp();
@@ -27,6 +28,7 @@ void UCharacterSaveSubsystem::LoadCharacterState(ADefaultCharacter* Character)
 	if (Level == 0) { return; }
 	UCharacterStateComponent* CharacterState = Character->GetState();
 	CharacterState->SetCharacterLevel(Level);
+	CharacterState->SetStatPoint(StatPoint);
 	CharacterState->SetCharacterATK(ATK);
 	CharacterState->SetMaxHp(MaxHp);
 	CharacterState->SetMaxExp(MaxExp);
@@ -34,6 +36,7 @@ void UCharacterSaveSubsystem::LoadCharacterState(ADefaultCharacter* Character)
 
 	CharacterState->HealCurrentHp(MaxHp);
 	CharacterState->SetUseShop(bShop);
+	
 
 	CharacterState->OnCharacterStateChanged.Broadcast();
 }

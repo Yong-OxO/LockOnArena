@@ -11,7 +11,7 @@ UCharacterStateComponent::UCharacterStateComponent()
 	EquipmentType = WeaponType::NonWeapon;
 	
 	// @TODO : RowName namespace
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Character/DT_CharacterState.DT_CharacterState'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/DT_CharacterState.DT_CharacterState'"));
 	UDataTable* DataTable = DataTableAsset.Object;
 	//FCharacterStateTableRow* DataTableRow = DataTable->FindRow<FCharacterStateTableRow>(FName("Default"), TEXT("CharacterState DataTableRow"));
 }

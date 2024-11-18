@@ -12,7 +12,7 @@ class UBoxComponent;
 class UStaticMeshComponent;
 
 UCLASS()
-class LOCKONARENA_API ABlockShopStar : public ATriggerBase
+class LOCKONARENA_API ABlockShopStar : public AActor
 {
 	GENERATED_BODY()
 	

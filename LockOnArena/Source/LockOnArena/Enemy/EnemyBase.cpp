@@ -10,7 +10,7 @@
 #include "Character/CharacterStateComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Skill/Enemy/EnemySkillBase.h"
-
+#include "Actor/Trigger/BossClearPortal.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -67,6 +67,7 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 	if (EnemyState->IsDie()) { return 0.f; }
 
 	ADefaultCharacter* CauserPlayer = Cast<ADefaultCharacter>(DamageCauser->GetOwner());
+
 	if (CauserPlayer == nullptr) // 발사체 등 Weapon이 직접적인 피해를 주지 않을 때
 	{
 		CauserPlayer = Cast<ADefaultCharacter>(DamageCauser->GetOwner()->GetOwner());
@@ -75,13 +76,16 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 	EnemyState->ReduceHp(Damage);
 	CauserPlayer->VisibleEnemyHpBar(this);
 
-	if (EnemyState->IsDie())
+	if (EnemyState->IsDie()) // 최초 사망판정시
 	{
 		SetActorEnableCollision(false);
 		if (Controller) { Controller->StopMovement(); }
 
 		UCharacterStateComponent* CauserPlayerState = CauserPlayer->GetState();
 		CauserPlayerState->AddExp(GetState()->EnemyEXP);
+		CauserPlayerState->SetUseShop(true);
+		ClearPortal->ActivePortal();
+		
 
 		AnimInstance->StopAllMontages(0.f);
 		AnimInstance->Montage_Play(DataTableRow->DeathMontage);
