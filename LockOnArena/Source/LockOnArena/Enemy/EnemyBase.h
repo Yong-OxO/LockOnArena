@@ -16,11 +16,13 @@ struct LOCKONARENA_API FEnemyBaseTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
-public: // React
+public: // Reacta
 	UPROPERTY(EditAnywhere, Category = "Enemy|Animation")
 	UAnimMontage* HitMontage = nullptr;
 	UPROPERTY(EditAnywhere, Category = "Enemy|Animation")
-	UAnimMontage* DeathMontage = nullptr;
+	UAnimMontage* DeathMontage = nullptr;	
+	UPROPERTY(EditAnywhere, Category = "Enemy|Animation")
+	UAnimMontage* InitMontage = nullptr;
 
 public: // Skill
 	UPROPERTY(EditAnywhere, Category = "Enemy|Skill", meta = (RowType = "/Script/LOCKONARENA.EnemySkillBaseTableRow"))

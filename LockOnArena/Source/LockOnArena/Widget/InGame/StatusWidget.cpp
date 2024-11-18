@@ -15,6 +15,7 @@ void UStatusWidget::NativeConstruct()
 
 	Character = Cast<ADefaultCharacter>(GetOwningPlayerPawn());
 	CharacterState = Character->GetState();
+	//CharacterState->OnCharacterStateChanged.AddDynamic(this, &UStatusWidget::SetStatus);
 
 	{
 		HpUpButton->OnClicked.RemoveDynamic(this, &ThisClass::CharacterHpUp);

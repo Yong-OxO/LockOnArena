@@ -17,7 +17,13 @@ struct LOCKONARENA_API FCharacterStateTableRow : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, Category = "CharacterState|Status")
-	float MaxHp;
+	float MaxHp = 100.f;
+	UPROPERTY(EditAnywhere, Category = "CharacterState|Status")
+	float CharacterATK = 10.f;
+	UPROPERTY(EditAnywhere, Category = "CharacterState|Status")
+	int32 Level = 1.f;
+	UPROPERTY(EditAnywhere, Category = "CharacterState|Status")
+	float MaxExp = 50.f;
 };
 
 
@@ -61,7 +67,11 @@ public:
 
 
 public: // Status
+	virtual int32 GetCharacterLevel() { return Level; }
+	virtual void SetCharacterLevel(const int32 InLevel) { Level = InLevel; }
+
 	virtual float GetCharacterATK() { return CharacterATK; }
+	virtual void SetCharacterATK(const float InATK) { CharacterATK = InATK; }
 	virtual void AddCharacterATK(const float InATK) { CharacterATK += InATK; }
 
 	virtual float GetCurrentHp() { return CurrentHp; }
@@ -69,20 +79,25 @@ public: // Status
 	virtual void ReduceHp(float InDamage);
 
 	virtual float GetMaxHp() { return MaxHp; }
+	virtual void SetMaxHp(const float InMaxHp) { MaxHp = InMaxHp; }
 	virtual void AddMaxHp(const float InHp) { MaxHp += InHp; }
 
+	virtual float GetMaxExp() { return MaxExp; }
+	virtual void SetMaxExp(const float InMaxExp) { MaxExp = InMaxExp; }
+
+	virtual float GetCurrentExp() { return CurrentExp; }
+	virtual void SetCurrentExp(const float InExp) { CurrentExp = InExp; }
+
+	virtual void AddExp(const float InExp);
+
+	virtual bool CanUseShop() { return bCanShop; }
+	virtual void SetUseShop(const bool InCanUseShop) { bCanShop = InCanUseShop; }
 public: 
 	float CharacterATK = 10.f;
 	float MaxHp = 100.f;
 	float CurrentHp = 100.f;
 
 public:
-	virtual float GetMaxExp() { return MaxExp; }
-	virtual float GetCurrentExp() { return CurrentExp; }	
-
-	virtual int32 GetLevel() { return Level; }
-
-	virtual void AddExp(const float InExp);
 	virtual void LevelUp();
 
 public:
@@ -93,6 +108,7 @@ protected:
 	float MaxExp = 50.f;
 	float CurrentExp = 0.f;
 
+	bool bCanShop = false;
 public:
 	bool CanLockOn = true; // 자세한 쿨타임은 skillsystem에서 관리
 

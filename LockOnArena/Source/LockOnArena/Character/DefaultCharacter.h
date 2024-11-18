@@ -41,8 +41,8 @@ public:
 	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.RifleTableRow"))
 	FDataTableRowHandle RifleTableRowHandle; // 4
 
-	UPROPERTY(EditAnywhere)
-	UCharacterStateComponent* CharacterState = nullptr;
+	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.CharacterStateTableRow"))
+	FDataTableRowHandle CharacterStateTableRowHandle;
 };
 
 
