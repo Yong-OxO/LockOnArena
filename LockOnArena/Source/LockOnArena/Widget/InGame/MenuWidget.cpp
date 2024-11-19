@@ -9,6 +9,8 @@
 #include "Character/InGamePlayerController.h"
 #include "Character/CharacterStateComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "SaveGame/CharacterSaveGame.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void UMenuWidget::NativeConstruct()
@@ -56,4 +58,9 @@ void UMenuWidget::OnSettingBtn()
 
 void UMenuWidget::OnExitBtn()
 {
+	FString MyPlayerName = TEXT("PlayerOne");
+	UCharacterSaveGame* SaveGameInstance = Cast<UCharacterSaveGame>(UGameplayStatics::CreateSaveGameObject(UCharacterSaveGame::StaticClass()));
+	SaveGameInstance->PlayerName = MyPlayerName;
+
+	UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->PlayerName, 0);
 }
