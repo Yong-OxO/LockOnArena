@@ -24,4 +24,26 @@ public:
 
     UPROPERTY(VisibleAnywhere, Category = Basic)
     uint32 UserIndex;
+
+protected:
+	UPROPERTY()
+	int32 Level = 0;
+
+	UPROPERTY()
+	int32 StatPoint = 0;
+
+	UPROPERTY()
+	float ATK = 0;
+
+	UPROPERTY()
+	float MaxHp = 0;
+
+	UPROPERTY()
+	float MaxExp = 0;
+
+	UPROPERTY()
+	float Exp = 0;
+
+	UPROPERTY()
+	bool bShop = false;
 };
