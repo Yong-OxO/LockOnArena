@@ -7,6 +7,7 @@
 #include "Widget/InGame/SkillUserWidget.h"
 #include "Widget/InGame/EnemyHpWidget.h"
 #include "Widget/InGame/StatusWidget.h"
+#include "Widget/InGame/MenuWidget.h"
 #include "Character/DefaultCharacter.h"
 #include "Character/InGamePlayerController.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
@@ -21,8 +22,8 @@ void UMainWidget::NativeConstruct()
 
 	UI_EnemyHp->SetVisibility(ESlateVisibility::Hidden);
 
-	bStatusUIActive = true; // True 상태에서 호출해야 false가 되기 때문
-	ShowHideStatusUI();
+	UI_Status->RemoveFromViewport();
+	UI_Menu->RemoveFromViewport();
 }
 
 void UMainWidget::NativeDestruct()
@@ -87,4 +88,8 @@ void UMainWidget::ShowHideStatusUI()
 
 		bStatusUIActive = true;
 	}
+}
+
+void UMainWidget::ShowHideMenuUI()
+{
 }

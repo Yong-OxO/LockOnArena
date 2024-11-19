@@ -11,6 +11,7 @@ class UCrosshairWidget;
 class USkillUserWidget;
 class UEnemyHpWidget;
 class UStatusWidget;
+class UMenuWidget;
 class AInGamePlayerController;
 
 UCLASS()
@@ -33,7 +34,10 @@ public:
 	void InvisibleEnemyHpBar();
 
 	UFUNCTION()
-	void ShowHideStatusUI();
+	void ShowHideStatusUI();	
+
+	UFUNCTION()
+	void ShowHideMenuUI();
 protected:
 	FTimerHandle TimerHandle;
 
@@ -56,6 +60,10 @@ public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UStatusWidget* UI_Status;
 
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UMenuWidget* UI_Menu;
+
 	bool bStatusUIActive = false;
+	bool bMenuUIActive = false;
 
 };
