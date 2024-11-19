@@ -34,10 +34,10 @@ public:
 	void InvisibleEnemyHpBar();
 
 	UFUNCTION()
-	void ShowHideStatusUI();	
+	void ShowHideStatusUI(const FName EventName);
 
 	UFUNCTION()
-	void ShowHideMenuUI();
+	void ShowHideMenuUI(const FName EventName);
 protected:
 	FTimerHandle TimerHandle;
 

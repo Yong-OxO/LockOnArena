@@ -10,6 +10,7 @@
 #include "Actor/Weapon/WeaponBase.h"
 #include "Actor/Weapon/WeaponChildActorComponent.h"
 #include "Skill/SkillBaseComponent.h"
+#include "Widget/EventDispatcher/UIEventDispatcher.h"
 
 AInGamePlayerController::AInGamePlayerController()
 {
@@ -39,6 +40,9 @@ void AInGamePlayerController::BeginPlay()
 		CharacterMovement->JumpZVelocity = 530.f;
 		CharacterMovement->AirControl = 0.2f;
 		CharacterMovement->MaxWalkSpeed = WalkSpeed;
+	}
+	{
+		UIEventDispatcher = NewObject<UUIEventDispatcher>(this);
 	}
 }
 
@@ -98,10 +102,15 @@ void AInGamePlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &ThisClass::OnSkill01);
 	}	
 	
-	//Status
+	// UI
 	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Status")))
 	{
 		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &ThisClass::OnStatus);
+	}	
+
+	if (const UInputAction* InputAction = FUtils::FindActionFromName(IMC_Default, FName("IA_Menu")))
+	{
+		EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &ThisClass::OnMenu);
 	}
 }
 
@@ -242,9 +251,21 @@ void AInGamePlayerController::OnSkill01(const FInputActionValue& InValue)
 	Skill->PlaySkill();
 }
 
+// UI
 void AInGamePlayerController::OnStatus(const FInputActionValue& InValue)
 {
-	OnStatusUIPressed.Broadcast();
+	UIEventDispatcher->BroadCastUIEvent(UIEventName::Status);
+}
+
+void AInGamePlayerController::OnMenu(const FInputActionValue& InValue)
+{
+	if (!bPause)
+	{
+		UIEventDispatcher->BroadCastUIEvent(UIEventName::Menu);
+		bPause = true;
+		return;
+	}
+	bPause = false;
 }
 
 void AInGamePlayerController::ToRun(const float DeltaTime)

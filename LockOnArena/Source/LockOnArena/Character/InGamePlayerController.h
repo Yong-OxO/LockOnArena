@@ -8,9 +8,6 @@
 
 #include "InGamePlayerController.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStatusUIPressed);
-
-
 class UInputMappingContext;
 class UAction;
 struct FInputActionValue;
@@ -20,6 +17,7 @@ class UCharacterStateComponent;
 
 class UWeaponChildActorComponent;
 class AWeaponBase;
+class UUIEventDispatcher;
 
 USTRUCT()
 struct LOCKONARENA_API FCharacterControllerTableRow : public FTableRowBase
@@ -82,6 +80,10 @@ protected:
 	UFUNCTION()
 	virtual void OnStatus(const FInputActionValue& InValue);
 
+	UFUNCTION()
+	virtual void OnMenu(const FInputActionValue& InValue);
+	// Pause시 위젯에서 입력을 받아 해제하는데, 퍼즈 해제 후 Controller가 바로 입력을 받아 문제 발생
+	bool bPause = false; 
 protected:
 	UFUNCTION()
 	virtual void ToRun(const float DeltaTime);
@@ -121,5 +123,5 @@ protected:
 	UWeaponChildActorComponent* WeaponChildActor;
 
 public:
-	FOnStatusUIPressed OnStatusUIPressed;
+	UUIEventDispatcher* UIEventDispatcher = nullptr;
 };

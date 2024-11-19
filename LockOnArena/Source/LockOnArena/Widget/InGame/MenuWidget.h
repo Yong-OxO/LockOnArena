@@ -17,7 +17,9 @@ class LOCKONARENA_API UMenuWidget : public UUserWidget
 	
 protected:
 	virtual void NativeConstruct() override;
+	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
+	bool bKeyDown = false;
 protected:
 	ADefaultCharacter* Character;
 	UCharacterStateComponent* CharacterState;

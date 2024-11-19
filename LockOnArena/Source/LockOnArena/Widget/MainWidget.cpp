@@ -3,14 +3,17 @@
 
 
 #include "Widget/MainWidget.h"
+#include "Misc/Utils.h"
 #include "Widget/CrosshairWidget.h"
 #include "Widget/InGame/SkillUserWidget.h"
 #include "Widget/InGame/EnemyHpWidget.h"
 #include "Widget/InGame/StatusWidget.h"
 #include "Widget/InGame/MenuWidget.h"
+#include "Widget/EventDispatcher/UIEventDispatcher.h"
 #include "Character/DefaultCharacter.h"
 #include "Character/InGamePlayerController.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 void UMainWidget::NativeConstruct()
 {
@@ -18,7 +21,9 @@ void UMainWidget::NativeConstruct()
 	PlayerController = Cast<AInGamePlayerController>(PlayerCharacter->GetController());
 
 	PlayerCharacter->OnEnemyTakeDamage.AddDynamic(this, &ThisClass::VisibleEnemyHpBar);
-	PlayerController->OnStatusUIPressed.AddDynamic(this, &ThisClass::ShowHideStatusUI);
+
+	PlayerController->UIEventDispatcher->UIEventDelegate.AddDynamic(this, &ThisClass::ShowHideStatusUI);
+	PlayerController->UIEventDispatcher->UIEventDelegate.AddDynamic(this, &ThisClass::ShowHideMenuUI);
 
 	UI_EnemyHp->SetVisibility(ESlateVisibility::Hidden);
 
@@ -61,8 +66,10 @@ void UMainWidget::InvisibleEnemyHpBar()
 	UI_EnemyHp->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UMainWidget::ShowHideStatusUI()
+void UMainWidget::ShowHideStatusUI(const FName EventName)
 {
+	if (!(EventName == UIEventName::Status)) { return; }
+
 	if (bStatusUIActive) // 창 끄기
 	{
 		UI_Status->RemoveFromViewport();
@@ -90,6 +97,34 @@ void UMainWidget::ShowHideStatusUI()
 	}
 }
 
-void UMainWidget::ShowHideMenuUI()
+void UMainWidget::ShowHideMenuUI(const FName EventName)
 {
+	if (!(EventName == UIEventName::Menu)) { return; }
+
+	if (PlayerController->IsPaused()) // 창 끄기
+	{
+		UI_Menu->RemoveFromViewport();
+		PlayerController->SetPause(true);
+		UGameplayStatics::SetGamePaused(PlayerController, false);
+
+		FInputModeGameOnly InputModeGame;
+		PlayerController->SetInputMode(InputModeGame);
+
+		PlayerController->SetShowMouseCursor(false);
+
+		bMenuUIActive = false;
+	}
+
+	else // 창띄우기
+	{
+		UI_Menu->AddToViewport();
+		UGameplayStatics::SetGamePaused(PlayerController, true);
+		
+		FInputModeGameAndUI InputModeGame;
+		PlayerController->SetInputMode(InputModeGame);
+
+		PlayerController->SetShowMouseCursor(true);
+
+		bMenuUIActive = true;
+	}
 }

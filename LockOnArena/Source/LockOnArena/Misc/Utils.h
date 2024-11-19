@@ -24,6 +24,11 @@ namespace CollisionProfileName
 {
 	static inline FName Portal = TEXT("Portal");
 }
+namespace UIEventName
+{
+	static inline FName Status = TEXT("Status");
+	static inline FName Menu = TEXT("Menu");
+}
 
 UCLASS()
 class UCustomDamageType : public UDamageType
