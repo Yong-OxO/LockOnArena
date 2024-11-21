@@ -16,6 +16,7 @@
 #include "Subsystem/CharacterSaveSubsystem.h"
 #include "Skill/SkillDamageType.h"
 #include "Engine/DamageEvents.h"
+#include "Character/Animation/AnimInstance/InGameAnimInstance.h"
 
 
 // Sets default values

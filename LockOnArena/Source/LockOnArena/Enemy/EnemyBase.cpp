@@ -47,8 +47,19 @@ void AEnemyBase::BeginPlay()
 		Skills[1]->SetData(DataTableRow->Skill02);
 		Skills[2]->SetData(DataTableRow->Skill03);
 	}
+	{
+		AnimInstance->Montage_Play(DataTableRow->InitMontage);
 
-	AnimInstance->Montage_Play(DataTableRow->InitMontage);
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+		GetWorld()->GetTimerManager().SetTimer(
+			TimerHandle,
+			this,
+			&ThisClass::OnInit,
+			DataTableRow->InitMontage->GetPlayLength(),
+			false);
+
+		SetActorEnableCollision(false);
+	}
 }
 
 // Called every frame
@@ -95,6 +106,7 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 		AnimInstance->Montage_Play(DataTableRow->DeathMontage);
 
 		// 다른 Montage 재생중 Die가 발생하면 기존 Montage가 종료되면서 OnMontageEnd가 실행되므로 따로 관리가 필요하다.
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 		GetWorld()->GetTimerManager().SetTimer(
 			TimerHandle,
 			this,
@@ -123,6 +135,11 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 void AEnemyBase::OnMontageEnd(UAnimMontage* Montage, bool bInterrupted)
 {
 	int a = 0;
+}
+
+void AEnemyBase::OnInit()
+{
+	SetActorEnableCollision(true);
 }
 
 void AEnemyBase::OnDIe()

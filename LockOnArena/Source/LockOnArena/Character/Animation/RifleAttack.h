@@ -10,6 +10,7 @@
 
 struct FEffectTableRow;
 class AEffect;
+class USoundBase;
 UCLASS()
 class LOCKONARENA_API URifleAttack : public UAnimNotify
 {
@@ -22,6 +23,9 @@ public:
 public:
 	UPROPERTY(EditAnywhere, Category = "Effect", meta = (RowType = "/Script/LOCKONARENA.EffectTableRow"))
 	FDataTableRowHandle RowHandle;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> Sound;
 
 	FEffectTableRow* DataRow;
 

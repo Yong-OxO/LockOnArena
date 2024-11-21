@@ -10,6 +10,8 @@
 #include "Camera/CameraComponent.h"
 #include "Actor/Weapon/RifleBase.h"
 #include "Character/DefaultCharacter.h"
+#include "Sound/SoundBase.h"
+#include "Kismet/GameplayStatics.h"
 
 URifleAttack::URifleAttack()
 {
@@ -54,6 +56,7 @@ void URifleAttack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* A
 			ensure(false); // 둘 다 아닐때는 Montage가 재생이 안되어 Notify 호출 x
 		}
 
+		UGameplayStatics::PlaySoundAtLocation(Weapon->GetWorld(), Sound, Weapon->GetActorLocation(), 0.03f);
 		Effect = MeshComp->GetWorld()->SpawnActor<AEffect>();
 		Effect->Play(RowHandle, SpawnLocation, SpawnRotation);
 	}

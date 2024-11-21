@@ -44,7 +44,10 @@ public:
 	UAnimMontage* WeaponAttackMontage = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
-	UAnimMontage* WeaponChangeMontage = nullptr;
+	UAnimMontage* WeaponChangeMontage = nullptr;	
+
+	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
+	UAnimMontage* UnEquipWeaponMontage = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon|Animation")
 	UAnimMontage* UnEquipWeapon = nullptr;
