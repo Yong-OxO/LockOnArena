@@ -61,8 +61,11 @@ public:
 	virtual float GetATK() { return ATK; }
 protected:
 	virtual void SetState(const FEnemyStateTableRow* DataTableRow);
-private:
-	UDataTable* DataTable;
+
+public:
+	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.EnemyStateTableRow"))
+	FDataTableRowHandle CharacterStateTableRowHandle;
+
 	FEnemyStateTableRow* DataTableRow;
 public:
 	float MaxHp = 100.f;

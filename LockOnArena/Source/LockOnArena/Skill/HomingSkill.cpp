@@ -60,6 +60,7 @@ bool UHomingSkill::PlayHoming(const FVector TargetLocation)
 		
 		// 쿨타임은 그대로 가도록
 		ControlledCharacter->ActiveWeapon->CustomTimeDilation = 1.f / 0.3f;
+		ControlledCharacter->CustomTimeDilation = 1.f / 0.3f;
 
 
 		TArray<AHomingProjectile*> Projectile;
@@ -103,4 +104,5 @@ void UHomingSkill::ResetTimeDilation()
 {
 	UGameplayStatics::SetGlobalTimeDilation(GetOwner()->GetWorld(), 1.0f);
 	ControlledCharacter->ActiveWeapon->CustomTimeDilation = 1.f;
+	ControlledCharacter->CustomTimeDilation = 1.f;
 }

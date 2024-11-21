@@ -12,9 +12,8 @@ UEnemyStateComponent::UEnemyStateComponent()
 	//bCanMove = true;
 	//bCanAttack = true;
 
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/Enemy/DT_EnemyState.DT_EnemyState'"));
-	DataTable = DataTableAsset.Object;
-	DataTableRow = DataTable->FindRow<FEnemyStateTableRow>(FName("SilverDevil"), TEXT("EnemyStateDataTableRow"));
+	//static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/Blueprint/Data/Enemy/DT_EnemyState.DT_EnemyState'"));
+	//DataTable = DataTableAsset.Object;
 }
 
 
@@ -23,6 +22,7 @@ void UEnemyStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	DataTableRow = CharacterStateTableRowHandle.GetRow<FEnemyStateTableRow>(TEXT("DataTableRow"));
 	SetState(DataTableRow);
 }
 
