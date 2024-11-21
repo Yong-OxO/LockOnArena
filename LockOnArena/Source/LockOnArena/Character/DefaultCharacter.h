@@ -47,7 +47,13 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Character|Animation")
-	UAnimMontage* HitMontage = nullptr;
+	UAnimMontage* HitMontage = nullptr;	
+
+	UPROPERTY(EditAnywhere, Category = "Character|Animation")
+	UAnimMontage* SkillHitMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Character|Animation")
+	UAnimMontage* KneelToStand = nullptr;
 	
 	UPROPERTY(EditAnywhere, Category = "Character|Animation")
 	UAnimMontage* DeathMontage = nullptr;
@@ -79,11 +85,17 @@ public:
 	virtual UCharacterStateComponent* GetState() { return CharacterState; }
 
 	FTimerHandle TimerHandle;
+	FTimerHandle SKillHitTimerHandle;
 	UFUNCTION()
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	UFUNCTION()
+	virtual void OnSkillHit();
+
+	UFUNCTION()
 	virtual void OnDIe();
+
+
 public:
 	UPROPERTY(EditAnywhere)
 	UCharacterStateComponent* CharacterState = nullptr;

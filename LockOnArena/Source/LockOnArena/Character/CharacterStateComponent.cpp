@@ -59,9 +59,12 @@ void UCharacterStateComponent::SetData(const FDataTableRowHandle& RowHandle)
 	FCharacterStateTableRow* DataRow = RowHandle.GetRow<FCharacterStateTableRow>(TEXT("DataRow"));
 
 	MaxHp = DataRow->MaxHp;
+	CurrentHp = DataRow->MaxHp;
 	CharacterATK = DataRow->CharacterATK;
 	Level = DataRow->Level;
 	MaxExp = DataRow->MaxExp;
+
+	OnCharacterStateChanged.Broadcast();
 }
 
 void UCharacterStateComponent::HealCurrentHp(const float InHeal)
@@ -135,5 +138,22 @@ void UCharacterStateComponent::SetSuperAmmo(const float InSuperAmmoTime)
 void UCharacterStateComponent::OffSuperAmmo()
 {
 	bSuperAmmo = false;
+}
+
+void UCharacterStateComponent::SetCannotMove(const float InCannotMoveTime)
+{
+	bCanMove = false;
+
+	GetWorld()->GetTimerManager().SetTimer(
+		SuperAmmoTimerHandle,
+		this,
+		&ThisClass::OffCannotMove,
+		InCannotMoveTime,
+		false);
+}
+
+void UCharacterStateComponent::OffCannotMove()
+{
+	bCanMove = true;
 }
 

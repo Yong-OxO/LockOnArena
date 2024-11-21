@@ -27,6 +27,7 @@ void URifleAttack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* A
 	ADefaultCharacter* Owner = Cast<ADefaultCharacter>(MeshComp->GetOwner());
 
 #if WITH_EDITOR
+	if (!Owner) { return; }
 	if (GIsEditor && Owner && Owner->GetWorld() != GWorld) { return; } // 에디터 프리뷰
 #endif
 

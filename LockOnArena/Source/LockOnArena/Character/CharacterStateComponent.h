@@ -121,6 +121,11 @@ public:
 	virtual void SetSuperAmmo(const float InSuperAmmoTime);
 	virtual void OffSuperAmmo();
 
+	virtual void SetCannotMove(const float InCannotMoveTime);
+	virtual void OffCannotMove();
+	FTimerHandle MoveTimerHandle;
+
+
 public:
 	bool CanLockOn = true; // 자세한 쿨타임은 skillsystem에서 관리
 

@@ -41,6 +41,7 @@ void AEnemyBase::BeginPlay()
 	USkeletalMeshComponent* MeshComponent = GetComponentByClass<USkeletalMeshComponent>();
 	AnimInstance = Cast<UEnemyAnimInstance>(MeshComponent->GetAnimInstance());
 	AnimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
+
 	{
 		Skills[0]->SetData(DataTableRow->Skill01);
 		Skills[1]->SetData(DataTableRow->Skill02);

@@ -14,7 +14,8 @@
 #include "Widget/DefaultHUD.h"
 #include "GameMode/ArenaGameInstance.h"
 #include "Subsystem/CharacterSaveSubsystem.h"
-
+#include "Skill/SkillDamageType.h"
+#include "Engine/DamageEvents.h"
 
 
 // Sets default values
@@ -188,11 +189,43 @@ float ADefaultCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEven
 
 	if (!CharacterState->IsSuperAmmo())
 	{
-		AnimInstance->StopAllMontages(0.f);
-		AnimInstance->Montage_Play(DataTableRow->HitMontage);
+		// Skill로 피해를 입을 때
+		if (DamageEvent.DamageTypeClass == USkillDamageType::StaticClass()) 
+		{
+			AnimInstance->StopAllMontages(0.f);
+
+			float SkillHitMontageTime = DataTableRow->SkillHitMontage->GetPlayLength()/2.1 + DataTableRow->KneelToStand->GetPlayLength();
+
+			CharacterState->SetSuperAmmo(SkillHitMontageTime * 1.1);
+			CharacterState->SetCannotMove(SkillHitMontageTime * 1.1);
+
+			AnimInstance->Montage_Play(DataTableRow->SkillHitMontage);
+
+			GetWorld()->GetTimerManager().SetTimer(
+				SKillHitTimerHandle,
+				this,
+				&ThisClass::OnSkillHit,
+				DataTableRow->SkillHitMontage->GetPlayLength() - 0.1f,
+				false);
+			
+		}
+		else // 일반 공격일 때
+		{
+			float SkillHitMontageTime = DataTableRow->HitMontage->GetPlayLength();
+			CharacterState->SetCannotMove(SkillHitMontageTime * 0.7);
+			AnimInstance->StopAllMontages(0.f);
+			AnimInstance->Montage_Play(DataTableRow->HitMontage);
+		}
 	}
 
 	return Damage;
+}
+
+void ADefaultCharacter::OnSkillHit()
+{
+	UInGameAnimInstance* AnimInstance = Cast<UInGameAnimInstance>(GetMesh()->GetAnimInstance());
+	AnimInstance->Montage_Play(DataTableRow->KneelToStand);
+	CharacterState->SetSuperAmmo(1.f);
 }
 
 void ADefaultCharacter::OnDIe()

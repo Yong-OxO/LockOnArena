@@ -127,8 +127,6 @@ void AInGamePlayerController::OnMove(const FInputActionValue& InValue)
 {
 	if (!CharacterState->CanMove() || CharacterState->GetLockOn()) { return; }
 
-	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
-
 	const FVector2D InputVector = InValue.Get<FVector2D>();
 
 	const FRotator CharacterRotation = ControlledCharacter->GetActorRotation();
@@ -153,7 +151,7 @@ void AInGamePlayerController::OnMove(const FInputActionValue& InValue)
 
 void AInGamePlayerController::OnLook(const FInputActionValue& InValue)
 {
-	ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
+	//ControlledCharacter = CastChecked<ADefaultCharacter>(GetPawn());
 	if (CharacterState->GetLockOn()) // LockOn중이면 마우스 움직임 x
 	{
 		return;
