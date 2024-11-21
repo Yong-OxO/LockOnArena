@@ -22,6 +22,7 @@ class UWeaponChildActorComponent;
 class UCameraComponent;
 class USpringArmComponent;
 class ADefaultHUD;
+class AInGamePlayerController;
 
 USTRUCT()
 struct LOCKONARENA_API FDefaultCharacterTableRow : public FTableRowBase
@@ -43,6 +44,13 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.CharacterStateTableRow"))
 	FDataTableRowHandle CharacterStateTableRowHandle;
+
+public:
+	UPROPERTY(EditAnywhere, Category = "Character|Animation")
+	UAnimMontage* HitMontage = nullptr;
+	
+	UPROPERTY(EditAnywhere, Category = "Character|Animation")
+	UAnimMontage* DeathMontage = nullptr;
 };
 
 
@@ -69,21 +77,23 @@ public:
 	virtual void SetData(const FDataTableRowHandle& InRowHandle) override;
 
 	virtual UCharacterStateComponent* GetState() { return CharacterState; }
+
+	FTimerHandle TimerHandle;
+	UFUNCTION()
+	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	UFUNCTION()
+	virtual void OnDIe();
 public:
-	//UPROPERTY(EditAnywhere)
-	//UStaticMeshComponent* Weapon_Static = nullptr;
-
-	//UPROPERTY(EditAnywhere)
-	//USkeletalMeshComponent* Weapon_Skeletal = nullptr;
-
 	UPROPERTY(EditAnywhere)
 	UCharacterStateComponent* CharacterState = nullptr;
+
+	UPROPERTY()
+	AInGamePlayerController* PlayerController = nullptr;
 
 	UDataTable* DataTable = nullptr;
 
 	const FDefaultCharacterTableRow* DataTableRow = nullptr;
-	//UPROPERTY(EditAnywhere, meta = (RowType = "/Script/LOCKONARENA.DefaultCharacterTableRow"))
-	//FDataTableRowHandle CharacterDataRowHandle;
 
 public: // Camera
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
@@ -100,8 +110,8 @@ public: // HUD, Widget
 	virtual void VisibleEnemyHpBar(const AActor* DamagedEnemy);
 	FOnEnemyTakeDamage OnEnemyTakeDamage;
 
-	// WeaponManage
-public:
+	
+public: // WeaponManage
 	virtual void WeaponInit() override;
 	virtual void SwitchWeapon(int InValue);
 

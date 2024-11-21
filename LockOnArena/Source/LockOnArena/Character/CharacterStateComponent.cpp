@@ -78,9 +78,18 @@ void UCharacterStateComponent::HealCurrentHp(const float InHeal)
 
 void UCharacterStateComponent::ReduceHp(float InDamage)
 {
-	CurrentHp = -InDamage;
+	if (bDied) { return; }
 
-	if (CurrentHp < 0) { CurrentHp = 0; }
+	CurrentHp -= InDamage;
+
+	if (CurrentHp <= 0)
+	{
+		CurrentHp = 0;
+		bDied = true;
+		OnCharacterStateChanged.Broadcast();
+	}
+
+	OnCharacterStateChanged.Broadcast();
 }
 
 void UCharacterStateComponent::AddExp(const float InExp)
@@ -109,5 +118,22 @@ void UCharacterStateComponent::LevelUp()
 	}
 
 	
+}
+
+void UCharacterStateComponent::SetSuperAmmo(const float InSuperAmmoTime)
+{
+	bSuperAmmo = true;
+
+	GetWorld()->GetTimerManager().SetTimer(
+		SuperAmmoTimerHandle,
+		this,
+		&ThisClass::OffSuperAmmo,
+		InSuperAmmoTime,
+		false);
+}
+
+void UCharacterStateComponent::OffSuperAmmo()
+{
+	bSuperAmmo = false;
 }
 

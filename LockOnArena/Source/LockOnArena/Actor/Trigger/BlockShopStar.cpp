@@ -35,5 +35,6 @@ void ABlockShopStar::OnTrigger(UPrimitiveComponent* OverlappedComponent, AActor*
 	if (CharacterState->CanUseShop())
 	{
 		StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		StaticMeshComponent->SetStaticMesh(nullptr);
 	}
 }

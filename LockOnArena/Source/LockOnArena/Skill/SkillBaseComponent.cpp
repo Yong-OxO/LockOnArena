@@ -46,10 +46,9 @@ void USkillBaseComponent::PlaySkill()
 	Controller = ControlledCharacter->GetController<AInGamePlayerController>();
 	CharacterState = ControlledCharacter->GetState();
 
-	if (bCanPlay == false || RemainCoolDown > 0.f)
-	{
-		return;
-	}
+	if (bCanPlay == false || RemainCoolDown > 0.f) { return; }
+
+	if (bSuperAmmo) { CharacterState->SetSuperAmmo(SuperAmmoTime); }
 }
 
 float USkillBaseComponent::GetMaxCooldown()

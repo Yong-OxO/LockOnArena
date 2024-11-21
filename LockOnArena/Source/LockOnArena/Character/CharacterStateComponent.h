@@ -112,10 +112,21 @@ protected:
 	float CurrentExp = 0.f;
 
 	bool bCanShop = false;
+
+public:
+	virtual bool IsDie() { return bDied; }
+
+	virtual bool IsSuperAmmo() { return bSuperAmmo; }
+	FTimerHandle SuperAmmoTimerHandle;
+	virtual void SetSuperAmmo(const float InSuperAmmoTime);
+	virtual void OffSuperAmmo();
+
 public:
 	bool CanLockOn = true; // 자세한 쿨타임은 skillsystem에서 관리
 
 protected:
+	bool bDied = false;
+	bool bSuperAmmo = false;
 	bool bCanMove = true;
 	bool bCanAttack = true;
 
@@ -146,7 +157,7 @@ protected:
 	bool bLockOnSuccessed = false;
 	bool bLockOnPlay = false;
 	float CD_LockOn;
-	float CD_RemainLockOn;	
+	float CD_RemainLockOn;
 	
 	float CD_Skill01;
 	float CD_RemainSkill01;

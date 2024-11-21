@@ -2,9 +2,10 @@
 
 
 #include "Character/DefaultCharacter.h"
+#include "Character/CharacterStateComponent.h"
+#include "Character/Animation/AnimInstance/InGameAnimInstance.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "CharacterStateComponent.h"
 #include "Actor/Weapon/WeaponChildActorComponent.h"
 #include "Subsystem/WeaponSubsystem.h"
 #include "Camera/CameraComponent.h"
@@ -13,6 +14,7 @@
 #include "Widget/DefaultHUD.h"
 #include "GameMode/ArenaGameInstance.h"
 #include "Subsystem/CharacterSaveSubsystem.h"
+
 
 
 // Sets default values
@@ -61,6 +63,7 @@ void ADefaultCharacter::BeginPlay()
 	WeaponInit();
 	UArenaGameInstance* ArenaGameInstance = Cast<UArenaGameInstance>(GetGameInstance());
 	ArenaGameInstance->CharacterSaveSubsystem->LoadCharacterState(this);
+	PlayerController = Cast<AInGamePlayerController>(GetController());
 }
 
 // Called every frame
@@ -142,5 +145,58 @@ void ADefaultCharacter::VisibleEnemyHpBar(const AActor* DamagedEnemy)
 void ADefaultCharacter::SetData(const FDataTableRowHandle& InRowHandle)
 {
 	int a = 10;
+}
+
+float ADefaultCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (CharacterState->IsDie()) { return 0.f; }
+
+	UInGameAnimInstance* AnimInstance = Cast<UInGameAnimInstance>(GetMesh()->GetAnimInstance());
+	//AnimInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnMontageEnd);
+
+
+	ADefaultCharacter* CauserPlayer = Cast<ADefaultCharacter>(DamageCauser->GetOwner());
+
+	if (CauserPlayer == nullptr) // 발사체 등 Weapon이 직접적인 피해를 주지 않을 때
+	{
+		CauserPlayer = Cast<ADefaultCharacter>(DamageCauser->GetOwner()->GetOwner());
+	}
+
+	CharacterState->ReduceHp(Damage);
+
+	if (CharacterState->IsDie()) // 최초 사망판정시
+	{
+		SetActorEnableCollision(false);
+		if (PlayerController) { PlayerController->DisableInput(PlayerController); }
+
+
+		AnimInstance->StopAllMontages(0.f);
+		AnimInstance->Montage_Play(DataTableRow->DeathMontage);
+
+		// 다른 Montage 재생중 Die가 발생하면 기존 Montage가 종료되면서 OnMontageEnd가 실행되므로 따로 관리가 필요하다.
+		GetWorld()->GetTimerManager().SetTimer(
+			TimerHandle,
+			this,
+			&ThisClass::OnDIe,
+			DataTableRow->DeathMontage->GetPlayLength() - 0.2f,
+			false);
+
+		return Damage;
+	}
+
+	Controller->StopMovement();
+
+	if (!CharacterState->IsSuperAmmo())
+	{
+		AnimInstance->StopAllMontages(0.f);
+		AnimInstance->Montage_Play(DataTableRow->HitMontage);
+	}
+
+	return Damage;
+}
+
+void ADefaultCharacter::OnDIe()
+{
+	Destroy();
 }
 

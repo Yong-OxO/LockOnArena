@@ -43,9 +43,7 @@ void UEnemyStateComponent::ReduceHp(const float Damage)
 	{
 		CurrentHp = 0;
 		bDied = true;
-	}
-
-	UE_LOG(LogTemp, Display, TEXT("CurrnetHp : %.1f"), CurrentHp);
+	}	
 }
 
 void UEnemyStateComponent::SetState(const FEnemyStateTableRow* InDataTableRow)
