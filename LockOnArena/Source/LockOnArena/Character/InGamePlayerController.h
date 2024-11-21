@@ -17,7 +17,7 @@ class UCharacterStateComponent;
 
 class UWeaponChildActorComponent;
 class AWeaponBase;
-class UUIEventDispatcher;
+class UUIEventSubsystem;
 
 USTRUCT()
 struct LOCKONARENA_API FCharacterControllerTableRow : public FTableRowBase
@@ -123,5 +123,5 @@ protected:
 	UWeaponChildActorComponent* WeaponChildActor;
 
 public:
-	UUIEventDispatcher* UIEventDispatcher = nullptr;
+	UUIEventSubsystem* UIEventSubsystem = nullptr;
 };

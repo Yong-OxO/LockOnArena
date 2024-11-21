@@ -2,7 +2,7 @@
 
 
 #include "Widget/InGame/MenuWidget.h"
-#include "Widget/EventDispatcher/UIEventDispatcher.h"
+#include "Subsystem/UIEventSubsystem.h"
 #include "Misc/Utils.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
@@ -44,8 +44,8 @@ FReply UMenuWidget::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent
 	if (bKeyDown) { return Super::NativeOnKeyDown(InGeometry, InKeyEvent); }
 	if (InKeyEvent.GetKey() == EKeys::Q) 
 	{
-		AInGamePlayerController* Controller = Cast<AInGamePlayerController>(Character->GetController());
-		Controller->UIEventDispatcher->BroadCastUIEvent(UIEventName::Menu);
+		UUIEventSubsystem* UIEventSubsystem = GetGameInstance()->GetSubsystem<UUIEventSubsystem>();		
+		UIEventSubsystem->BroadCastUIEvent(UIEventName::Menu);
 		bKeyDown = true;
 	}
 
@@ -54,8 +54,8 @@ FReply UMenuWidget::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent
 
 void UMenuWidget::OnContinueBtn()
 {	
-	AInGamePlayerController* Controller = Cast<AInGamePlayerController>(Character->GetController());
-	Controller->UIEventDispatcher->BroadCastUIEvent(UIEventName::Menu);
+	UUIEventSubsystem* UIEventSubsystem = GetGameInstance()->GetSubsystem<UUIEventSubsystem>();
+	UIEventSubsystem->BroadCastUIEvent(UIEventName::Menu);
 }
 
 void UMenuWidget::OnSettingBtn()

@@ -9,7 +9,7 @@
 #include "Widget/InGame/EnemyHpWidget.h"
 #include "Widget/InGame/StatusWidget.h"
 #include "Widget/InGame/MenuWidget.h"
-#include "Widget/EventDispatcher/UIEventDispatcher.h"
+#include "Subsystem/UIEventSubsystem.h"
 #include "Character/DefaultCharacter.h"
 #include "Character/InGamePlayerController.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
@@ -22,8 +22,9 @@ void UMainWidget::NativeConstruct()
 
 	PlayerCharacter->OnEnemyTakeDamage.AddDynamic(this, &ThisClass::VisibleEnemyHpBar);
 
-	PlayerController->UIEventDispatcher->UIEventDelegate.AddDynamic(this, &ThisClass::ShowHideStatusUI);
-	PlayerController->UIEventDispatcher->UIEventDelegate.AddDynamic(this, &ThisClass::ShowHideMenuUI);
+	UUIEventSubsystem* UIEventSubsystem = GetGameInstance()->GetSubsystem<UUIEventSubsystem>();
+	UIEventSubsystem->UIEventDelegate.AddDynamic(this, &ThisClass::ShowHideStatusUI);
+	UIEventSubsystem->UIEventDelegate.AddDynamic(this, &ThisClass::ShowHideMenuUI);
 
 	UI_EnemyHp->SetVisibility(ESlateVisibility::Hidden);
 

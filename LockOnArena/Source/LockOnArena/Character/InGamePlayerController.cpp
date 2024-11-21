@@ -10,7 +10,7 @@
 #include "Actor/Weapon/WeaponBase.h"
 #include "Actor/Weapon/WeaponChildActorComponent.h"
 #include "Skill/SkillBaseComponent.h"
-#include "Widget/EventDispatcher/UIEventDispatcher.h"
+#include "Subsystem/UIEventSubsystem.h"
 
 AInGamePlayerController::AInGamePlayerController()
 {
@@ -42,7 +42,7 @@ void AInGamePlayerController::BeginPlay()
 		CharacterMovement->MaxWalkSpeed = WalkSpeed;
 	}
 	{
-		UIEventDispatcher = NewObject<UUIEventDispatcher>(this);
+		UIEventSubsystem = GetGameInstance()->GetSubsystem<UUIEventSubsystem>();
 	}
 }
 
@@ -254,14 +254,14 @@ void AInGamePlayerController::OnSkill01(const FInputActionValue& InValue)
 // UI
 void AInGamePlayerController::OnStatus(const FInputActionValue& InValue)
 {
-	UIEventDispatcher->BroadCastUIEvent(UIEventName::Status);
+	UIEventSubsystem->BroadCastUIEvent(UIEventName::Status);
 }
 
 void AInGamePlayerController::OnMenu(const FInputActionValue& InValue)
 {
 	if (!bPause)
 	{
-		UIEventDispatcher->BroadCastUIEvent(UIEventName::Menu);
+		UIEventSubsystem->BroadCastUIEvent(UIEventName::Menu);
 		bPause = true;
 		return;
 	}

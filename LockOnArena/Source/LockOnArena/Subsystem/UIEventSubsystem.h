@@ -3,19 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "UIEventDispatcher.generated.h"
-
+#include "Subsystems/Subsystem.h"
+#include "UIEventSubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUIEventDelegate, const FName, EventName);
 
 
 UCLASS()
-class LOCKONARENA_API UUIEventDispatcher : public UObject
+class LOCKONARENA_API UUIEventSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 	
-
 public:
 	FUIEventDelegate UIEventDelegate;
 
