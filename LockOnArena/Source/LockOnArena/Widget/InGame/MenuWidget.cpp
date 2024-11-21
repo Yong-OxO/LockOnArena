@@ -5,6 +5,7 @@
 #include "Widget/EventDispatcher/UIEventDispatcher.h"
 #include "Misc/Utils.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanel.h"
 #include "Character/DefaultCharacter.h"
 #include "Character/InGamePlayerController.h"
 #include "Character/CharacterStateComponent.h"
@@ -22,15 +23,20 @@ void UMenuWidget::NativeConstruct()
 	{
 		ContinueBtn->OnClicked.RemoveDynamic(this, &ThisClass::OnContinueBtn);
 		SettingBtn->OnClicked.RemoveDynamic(this, &ThisClass::OnSettingBtn);
-		ExitBtn->OnClicked.RemoveDynamic(this, &ThisClass::OnExitBtn);
+		ExitBtn->OnClicked.RemoveDynamic(this, &ThisClass::OnExitWindowBtn);
+		ExitYes->OnClicked.RemoveDynamic(this, &ThisClass::OnExitYesBtn);
+		ExitNo->OnClicked.RemoveDynamic(this, &ThisClass::OnExitNoBtn);
 
 		ContinueBtn->OnClicked.AddDynamic(this, &ThisClass::OnContinueBtn);
 		SettingBtn->OnClicked.AddDynamic(this, &ThisClass::OnSettingBtn);
-		ExitBtn->OnClicked.AddDynamic(this, &ThisClass::OnExitBtn);
+		ExitBtn->OnClicked.AddDynamic(this, &ThisClass::OnExitWindowBtn);
+		ExitYes->OnClicked.AddDynamic(this, &ThisClass::OnExitYesBtn);
+		ExitNo->OnClicked.AddDynamic(this, &ThisClass::OnExitNoBtn);
 	}
 	bIsFocusable = true;
 	SetKeyboardFocus();
 	bKeyDown = false;
+	ExitWindow->SetVisibility(ESlateVisibility::Hidden);
 }
 
 FReply UMenuWidget::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
@@ -56,11 +62,25 @@ void UMenuWidget::OnSettingBtn()
 {
 }
 
-void UMenuWidget::OnExitBtn()
+void UMenuWidget::OnExitWindowBtn()
+{	
+	ExitWindow->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UMenuWidget::OnExitYesBtn()
 {
+	AInGamePlayerController* Controller = Cast<AInGamePlayerController>(Character->GetController());
+
 	FString MyPlayerName = TEXT("PlayerOne");
 	UCharacterSaveGame* SaveGameInstance = Cast<UCharacterSaveGame>(UGameplayStatics::CreateSaveGameObject(UCharacterSaveGame::StaticClass()));
 	SaveGameInstance->PlayerName = MyPlayerName;
 
 	UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->PlayerName, 0);
+
+	UKismetSystemLibrary::QuitGame(GetWorld(), Controller, EQuitPreference::Quit, false);
+}
+
+void UMenuWidget::OnExitNoBtn()
+{
+	ExitWindow->SetVisibility(ESlateVisibility::Hidden);
 }

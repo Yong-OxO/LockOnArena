@@ -71,9 +71,15 @@ public:
 	float EnemyEXP = 100.f;
 	float ATK = 10.f;
 
+public:
+	virtual bool IsSuperAmmo() { return bSuperAmmo; }
+	FTimerHandle SuperAmmoTimerHandle;
+	virtual void SetSuperAmmo(const float InSuperAmmoTime);
+	virtual void OffSuperAmmo();
+
 protected:
 	bool bDied = false;
-
+	bool bSuperAmmo = false;
 	bool bCanMove = true;
 	bool bCanAttack = true;
 

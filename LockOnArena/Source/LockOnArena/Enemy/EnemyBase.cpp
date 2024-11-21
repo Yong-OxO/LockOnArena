@@ -26,8 +26,10 @@ AEnemyBase::AEnemyBase()
 	{
 		Skill01 = CreateDefaultSubobject<UEnemySkillBase>(TEXT("Skill01"));
 		Skill02 = CreateDefaultSubobject<UEnemySkillBase>(TEXT("Skill02"));
+		Skill03 = CreateDefaultSubobject<UEnemySkillBase>(TEXT("Skill03"));
 		Skills.Add(Skill01);
 		Skills.Add(Skill02);
+		Skills.Add(Skill03);
 	}
 }
 
@@ -42,6 +44,7 @@ void AEnemyBase::BeginPlay()
 	{
 		Skills[0]->SetData(DataTableRow->Skill01);
 		Skills[1]->SetData(DataTableRow->Skill02);
+		Skills[2]->SetData(DataTableRow->Skill03);
 	}
 
 	AnimInstance->Montage_Play(DataTableRow->InitMontage);
@@ -103,7 +106,7 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 	
 	StackDamage += Damage;
 
-	if (StackDamage >= 100.f) // 일정 이상의 데미지가 누적되면 Montage 재생
+	if (StackDamage >= 100.f && !EnemyState->IsSuperAmmo()) // 일정 이상의 데미지가 누적되면 Montage 재생
 	{
 		StackDamage = FMath::Fmod(StackDamage, 100.f);
 

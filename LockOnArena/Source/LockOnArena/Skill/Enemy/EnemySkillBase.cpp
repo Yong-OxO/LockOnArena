@@ -63,8 +63,6 @@ void UEnemySkillBase::PlaySkill()
 
 	if (!CanPlaySkill()) { return; }
 
-
-
 	if (RemainCoolDown > 0.f)	{ return; }
 
 	UAnimInstance* AnimInstance = ControlledEnemy->GetMesh()->GetAnimInstance();
@@ -72,6 +70,11 @@ void UEnemySkillBase::PlaySkill()
 	{
 		AnimInstance->Montage_Play(SkillMontage);
 		RemainCoolDown = MaxCooldown;
+
+		if (DataRow->IsSuperAmmo)
+		{
+			EnemyState->SetSuperAmmo(DataRow->SuperAmmoTime);
+		}
 	}
 }
 

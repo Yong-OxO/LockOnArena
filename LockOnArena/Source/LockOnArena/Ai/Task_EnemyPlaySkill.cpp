@@ -28,7 +28,7 @@ EBTNodeResult::Type UTask_EnemyPlaySkill::ExecuteTask(UBehaviorTreeComponent& Ow
 	AEnemyBase* Enemy = Cast<AEnemyBase>(AIController->GetPawn());
 
 	int32 SkillNum = Enemy->Skills.Num();
-	int32 PlaySkillNum = FMath::RandRange(0, SkillNum - 1);
+	int32 PlaySkillNum = FMath::RandRange(1, SkillNum - 1); // 인덱스값으로 사용하기때문에 -1
 
 	for (int i = 0; i < SkillNum; ++i)
 	{	
@@ -40,6 +40,14 @@ EBTNodeResult::Type UTask_EnemyPlaySkill::ExecuteTask(UBehaviorTreeComponent& Ow
 		}
 
 		PlaySkillNum = (PlaySkillNum + 1) % SkillNum;
+
+		if (PlaySkillNum == 0) { ++PlaySkillNum; }
+	}
+
+	if (Enemy->Skills[0]->CanPlaySkill())
+	{
+		Enemy->Skills[0]->PlaySkill();
+		return EBTNodeResult::Succeeded;
 	}
 
 	return EBTNodeResult::Failed;

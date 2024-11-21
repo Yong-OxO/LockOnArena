@@ -7,6 +7,7 @@
 #include "Character/InGamePlayerController.h"
 #include "Character/CharacterStateComponent.h"
 #include "Misc/Utils.h"
+#include "Actor/Effect/Effect.h"
 
 ARifleBase::ARifleBase()
 {
@@ -19,11 +20,13 @@ void ARifleBase::SetData(const FDataTableRowHandle& InHandle)
 
 	DataRow = InHandle.GetRow<FRifleTableRow>(TEXT("DataRow"));
 	FireRange = DataRow->FireRange;
+	HitEffectRowHandle = DataRow->HitEffectRowHandle;
 }
 
 void ARifleBase::Attack()
 {
 	if (CurrentAmmo <= 0) { return; }
+
 	Super::Attack();
 
 	UE_LOG(LogTemp, Display, TEXT("Rifle Attack"));
@@ -62,6 +65,24 @@ void ARifleBase::Fire(const FVector Start, const FRotator Rotation)
 
 	UE_LOG(LogTemp, Display, TEXT("Ammo : %d"), CurrentAmmo);
 	//--CurrentAmmo;
+
+	{	
+		bool EffectSucceed = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		StartLocation,
+		EndLocation,
+		ECollisionChannel::ECC_WorldStatic,
+		CollisionQueryParams);
+
+		if (EffectSucceed)
+		{
+			FVector EffectLocation = HitResult.Location;
+			FRotator EffectRotation = (-GetActorForwardVector()).Rotation();
+
+			HitEffect = GetWorld()->SpawnActor<AEffect>();
+			HitEffect->Play(HitEffectRowHandle, EffectLocation, EffectRotation);
+		}
+	}
 }
 
 void ARifleBase::BeginDestroy()

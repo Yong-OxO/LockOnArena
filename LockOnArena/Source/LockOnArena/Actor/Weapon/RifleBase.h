@@ -6,6 +6,9 @@
 #include "Actor/Weapon/WeaponBase.h"
 #include "RifleBase.generated.h"
 
+
+class AEffect;
+
 USTRUCT()
 struct LOCKONARENA_API FRifleTableRow : public FWeaponBaseTableRow
 {
@@ -15,6 +18,11 @@ struct LOCKONARENA_API FRifleTableRow : public FWeaponBaseTableRow
 	int32 MaxAmmo = 30;
 	UPROPERTY(EditAnywhere)
 	float FireRange = 3000.f;
+
+	UPROPERTY(EditAnywhere, Category = "Effect", meta = (RowType = "/Script/LOCKONARENA.EffectTableRow"))
+	FDataTableRowHandle HitEffectRowHandle;
+
+
 };
 
 
@@ -25,6 +33,11 @@ class LOCKONARENA_API ARifleBase : public AWeaponBase
 	
 public:
 	ARifleBase();
+
+public:
+	UPROPERTY(EditAnywhere, Category = "Effect", meta = (RowType = "/Script/LOCKONARENA.EffectTableRow"))
+	FDataTableRowHandle HitEffectRowHandle;
+
 public:
 	virtual void SetData(const FDataTableRowHandle& InHandle) override;
 
@@ -44,4 +57,6 @@ public:
 	int32 CurrentAmmo;
 	
 	float FireRange;
+
+	AEffect* HitEffect;
 };

@@ -9,11 +9,13 @@
 FEffectTableRow::FEffectTableRow()
 	: EffectClass(AEffect::StaticClass())
 {
+
 }
 
 // Sets default values
 AEffect::AEffect()
 {
+	InitialLifeSpan = 1.0f;
 	PrimaryActorTick.bCanEverTick = true;
 
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));

@@ -9,6 +9,7 @@
 class UButton;
 class ADefaultCharacter;
 class UCharacterStateComponent;
+class UCanvasPanel;
 
 UCLASS()
 class LOCKONARENA_API UMenuWidget : public UUserWidget
@@ -34,6 +35,15 @@ public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	UButton* ExitBtn;
 
+
+	// Exit 최종 확인 Window
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UCanvasPanel* ExitWindow;
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UButton* ExitYes;
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UButton* ExitNo;
+
 private:
 	UFUNCTION()
 	void OnContinueBtn();
@@ -42,5 +52,11 @@ private:
 	void OnSettingBtn();
 
 	UFUNCTION()
-	void OnExitBtn();
+	void OnExitWindowBtn();	
+
+	UFUNCTION()
+	void OnExitYesBtn();	
+	
+	UFUNCTION()
+	void OnExitNoBtn();
 };

@@ -55,3 +55,20 @@ void UEnemyStateComponent::SetState(const FEnemyStateTableRow* InDataTableRow)
 	ATK = InDataTableRow->EnemyATK;
 }
 
+void UEnemyStateComponent::SetSuperAmmo(const float InSuperAmmoTime)
+{
+	bSuperAmmo = true;
+
+	GetWorld()->GetTimerManager().SetTimer(
+		SuperAmmoTimerHandle,
+		this,
+		&ThisClass::OffSuperAmmo,
+		InSuperAmmoTime,
+		false);
+}
+
+void UEnemyStateComponent::OffSuperAmmo()
+{
+	bSuperAmmo = false;
+}
+
