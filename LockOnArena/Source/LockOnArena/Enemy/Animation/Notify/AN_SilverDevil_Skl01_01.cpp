@@ -47,7 +47,7 @@ void UAN_SilverDevil_Skl01_01::Notify(USkeletalMeshComponent* MeshComp, UAnimSeq
 
 	bool bATKSuccess = UKismetSystemLibrary::SphereTraceSingleByProfile(
 		MeshComp, Location, Location,
-		100, ProfileName, false, IgnoreActors, EDrawDebugTrace::ForDuration,
+		100, ProfileName, false, IgnoreActors, EDrawDebugTrace::None,
 		HitResult, true);
 
 	if (bATKSuccess)
